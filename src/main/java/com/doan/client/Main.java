@@ -4,12 +4,14 @@
  */
 package com.doan.client;
 
-import java.io.IOException;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+
+import java.io.IOException;
 
 /**
  *
@@ -18,7 +20,7 @@ import javafx.stage.Stage;
 public class Main extends Application {
 
     @Override
-    public void start(Stage primaryStage) throws IOException {
+    public void start(Stage primaryStage) throws IOException, UnirestException {
 
         Parent root = FXMLLoader.load(getClass().getResource("/com/doan/client/View/Home.fxml"));
 
@@ -29,6 +31,9 @@ public class Main extends Application {
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
         primaryStage.show();
+
+
+
 
     }
 

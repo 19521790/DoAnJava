@@ -6,6 +6,8 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.paint.LinearGradient?>
@@ -13,17 +15,56 @@
 <?import javafx.scene.text.Font?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.doan.client.Controller.HomeController">
-    <children>
-        <Label alignment="CENTER" prefHeight="28.0" prefWidth="74.0" text="Zyan">
+    <Label alignment="CENTER" prefHeight="28.0" prefWidth="74.0" text="Zyan">
+        <font>
+            <Font name=".VnArial Bold" size="30.0" />
+        </font>
+        <textFill>
+            <LinearGradient startX="0.4962121221152219">
+                <stops>
+                    <Stop>
+                        <color>
+                            <Color red="0.019999999552965164" green="0.4545328915119171" blue="1.0" />
+                        </color>
+                    </Stop>
+                    <Stop offset="1.0">
+                        <color>
+                            <Color red="1.1102230246251565E-16" green="0.699999988079071" blue="1.0" />
+                        </color>
+                    </Stop>
+                </stops>
+            </LinearGradient>
+        </textFill>
+    </Label>
+    <AnchorPane fx:id="overlay" onMouseClicked="#hideOverlay" prefHeight="600.0" prefWidth="1100.0" style="-fx-background-color: rgba(0, 0, 0, 0.3);" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+    <AnchorPane fx:id="loginForm" layoutX="364.0" layoutY="95.0" prefHeight="410.0" prefWidth="372.0" style="-fx-background-color: white; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.75), 5, 0, 0, 0);">
+        <opaqueInsets>
+            <Insets />
+        </opaqueInsets>
+      <AnchorPane fx:id="asynchronousLogin" layoutX="56.0" layoutY="248.0" prefHeight="46.0" prefWidth="262.0" visible="false">
+         <children>
+            <Label layoutX="44.0" layoutY="5.0" prefHeight="36.0" prefWidth="86.0" text="Please wait ">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <ImageView fitHeight="36.0" fitWidth="46.0" layoutX="131.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@Image/loader-loading.gif" />
+               </image>
+            </ImageView>
+         </children>
+      </AnchorPane>
+        <Label alignment="CENTER" layoutX="149.0" layoutY="29.0" prefHeight="28.0" prefWidth="74.0" text="Zyan">
             <font>
                 <Font name=".VnArial Bold" size="30.0" />
             </font>
             <textFill>
-                <LinearGradient endX="1.0" endY="1.0" startX="0.4962121221152219">
+                <LinearGradient startX="0.4962121221152219">
                     <stops>
                         <Stop>
                             <color>
-                                <Color red="0.019999999552965164" green="0.4545328915119171" blue="1.0" />
+                                <Color red="0.019607843831181526" green="0.45490196347236633" blue="1.0" />
                             </color>
                         </Stop>
                         <Stop offset="1.0">
@@ -35,96 +76,72 @@
                 </LinearGradient>
             </textFill>
         </Label>
-        <AnchorPane fx:id="overlay" onMouseClicked="#hideOverlay" prefHeight="600.0" prefWidth="1100.0" style="-fx-background-color: rgba(0, 0, 0, 0.3);" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-        <AnchorPane fx:id="loginForm" layoutX="364.0" layoutY="95.0" prefHeight="410.0" prefWidth="372.0" style="-fx-background-color: white; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.75), 5, 0, 0, 0);">
-            <opaqueInsets>
-                <Insets />
-            </opaqueInsets>
-            <children>
-                <Label alignment="CENTER" layoutX="149.0" layoutY="29.0" prefHeight="28.0" prefWidth="74.0" text="Zyan">
-                    <font>
-                        <Font name=".VnArial Bold" size="30.0" />
-                    </font>
-                    <textFill>
-                        <LinearGradient endX="1.0" endY="1.0" startX="0.4962121221152219">
-                            <stops>
-                                <Stop>
-                                    <color>
-                                        <Color red="0.019607843831181526" green="0.45490196347236633" blue="1.0" />
-                                    </color>
-                                </Stop>
-                                <Stop offset="1.0">
-                                    <color>
-                                        <Color red="1.1102230246251565E-16" green="0.699999988079071" blue="1.0" />
-                                    </color>
-                                </Stop>
-                            </stops>
-                        </LinearGradient>
-                    </textFill>
-                </Label>
-                <TextField fx:id="userName" focusTraversable="false" layoutX="49.0" layoutY="125.0" prefHeight="36.0" prefWidth="273.0" promptText="Username">
-                    <font>
-                        <Font size="15.0" />
-                    </font>
-                </TextField>
-                <Label fx:id="errorLogin" alignment="CENTER" layoutX="34.0" layoutY="81.0" prefHeight="18.0" prefWidth="302.0" text="Login to continue">
+        <TextField fx:id="userName" focusTraversable="false" layoutX="49.0" layoutY="125.0" prefHeight="36.0" prefWidth="273.0" promptText="Username">
+            <font>
+                <Font size="15.0" />
+            </font>
+        </TextField>
+        <Label fx:id="errorLogin" alignment="CENTER" layoutX="34.0" layoutY="81.0" prefHeight="18.0" prefWidth="302.0" text="Login to continue">
+            <font>
+                <Font size="15.0" />
+            </font>
+        </Label>
+        <PasswordField fx:id="passWord" focusTraversable="false" layoutX="49.0" layoutY="179.0" prefHeight="36.0" prefWidth="274.0" promptText="Password">
+            <font>
+                <Font size="15.0" />
+            </font>
+        </PasswordField>
+        <AnchorPane fx:id="loginPanel" layoutX="16.0" layoutY="228.0" prefHeight="181.0" prefWidth="337.0">
+            <AnchorPane layoutX="31.0" layoutY="111.0" onMouseClicked="#googleLogin" prefHeight="36.0" prefWidth="274.0" style="-fx-border-radius: 10px; -fx-border-color: black; -fx-border-width: 0.2px;">
+                <Label layoutX="89.0" layoutY="7.0" prefHeight="22.0" prefWidth="165.0" text="Continue with Google">
                     <font>
                         <Font size="15.0" />
                     </font>
                 </Label>
-                <PasswordField fx:id="passWord" focusTraversable="false" layoutX="49.0" layoutY="179.0" prefHeight="36.0" prefWidth="274.0" promptText="Password">
-                    <font>
-                        <Font size="15.0" />
-                    </font>
-                </PasswordField>
-                <Button layoutX="80.0" layoutY="245.0" mnemonicParsing="false" onMouseClicked="#userLogin" prefHeight="36.0" prefWidth="86.0" style="-fx-background-color: #0574ff;" text="Login" textFill="WHITE">
-                    <font>
-                        <Font name="System Bold" size="15.0" />
-                    </font>
-                    <cursor>
-                        <Cursor fx:constant="HAND" />
-                    </cursor>
-                </Button>
-                <Button layoutX="201.0" layoutY="245.0" mnemonicParsing="false" onMouseClicked="#guestLogin" prefHeight="36.0" prefWidth="74.0" style="-fx-background-color: #0574ff;" text="Guest" textFill="WHITE">
-                    <font>
-                        <Font name="System Bold" size="15.0" />
-                    </font>
-                    <cursor>
-                        <Cursor fx:constant="HAND" />
-                    </cursor>
-                </Button>
-                <Label layoutX="49.0" layoutY="314.0" onMouseClicked="#resetPassWord" text="Forgot Password?" textFill="#0574ff" underline="true">
-                    <cursor>
-                        <Cursor fx:constant="HAND" />
-                    </cursor>
-                    <font>
-                        <Font name="System Bold" size="12.0" />
-                    </font>
-                </Label>
-                <Label layoutX="270.0" layoutY="315.0" onMouseClicked="#createAccount" text="Create one" textFill="#0574ff" underline="true">
-                    <cursor>
-                        <Cursor fx:constant="HAND" />
-                    </cursor>
-                    <font>
-                        <Font name="System Bold" size="12.0" />
-                    </font>
-                </Label>
-                <Label layoutX="154.0" layoutY="315.0" text="Don't have account?" />
-                <AnchorPane layoutX="48.0" layoutY="351.0" onMouseClicked="#googleLogin" prefHeight="36.0" prefWidth="274.0" style="-fx-border-radius: 10px; -fx-border-color: black; -fx-border-width: 0.2px;">
-                    <children>
-                        <Label layoutX="89.0" layoutY="7.0" prefHeight="22.0" prefWidth="165.0" text="Continue with Google">
-                            <font>
-                                <Font size="15.0" />
-                            </font>
-                        </Label>
-<!--                        <ImageView fitHeight="22.0" fitWidth="47.0" layoutX="40.0" layoutY="7.0" pickOnBounds="true" preserveRatio="true">-->
-<!--                            <image>-->
-<!--                                <Image url="@../../icon/google.png" />-->
-<!--                            </image>-->
-<!--                        </ImageView>-->
-                    </children>
-                </AnchorPane>
-            </children>
+            <ImageView fitHeight="29.0" fitWidth="38.0" layoutX="24.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@Image/google.png" />
+               </image>
+            </ImageView>
+                <!--                        <ImageView fitHeight="22.0" fitWidth="47.0" layoutX="40.0" layoutY="7.0" pickOnBounds="true" preserveRatio="true">-->
+                <!--                            <image>-->
+                <!--                                <Image url="@../../icon/google.png" />-->
+                <!--                            </image>-->
+                <!--                        </ImageView>-->
+            </AnchorPane>
+            <Label layoutX="132.0" layoutY="79.0" text="Don't have account?" />
+            <Label layoutX="247.0" layoutY="79.0" onMouseClicked="#createAccount" text="Create one" textFill="#0574ff" underline="true">
+                <cursor>
+                    <Cursor fx:constant="HAND" />
+                </cursor>
+                <font>
+                    <Font name="System Bold" size="12.0" />
+                </font>
+            </Label>
+            <Label layoutX="23.0" layoutY="79.0" onMouseClicked="#resetPassWord" text="Forgot Password?" textFill="#0574ff" underline="true">
+                <cursor>
+                    <Cursor fx:constant="HAND" />
+                </cursor>
+                <font>
+                    <Font name="System Bold" size="12.0" />
+                </font>
+            </Label>
+            <Button layoutX="193.0" layoutY="17.0" mnemonicParsing="false" onMouseClicked="#guestLogin" prefHeight="36.0" prefWidth="74.0" style="-fx-background-color: #0574ff;" text="Guest" textFill="WHITE">
+                <font>
+                    <Font name="System Bold" size="15.0" />
+                </font>
+                <cursor>
+                    <Cursor fx:constant="HAND" />
+                </cursor>
+            </Button>
+            <Button layoutX="54.0" layoutY="17.0" mnemonicParsing="false" onMouseClicked="#userLogin" prefHeight="36.0" prefWidth="86.0" style="-fx-background-color: #0574ff;" text="Login" textFill="WHITE">
+                <font>
+                    <Font name="System Bold" size="15.0" />
+                </font>
+                <cursor>
+                    <Cursor fx:constant="HAND" />
+                </cursor>
+            </Button>
         </AnchorPane>
-    </children>
+    </AnchorPane>
 </AnchorPane>
