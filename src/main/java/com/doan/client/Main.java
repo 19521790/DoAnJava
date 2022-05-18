@@ -4,6 +4,12 @@
  */
 package com.doan.client;
 
+import com.doan.client.Model.User;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.JsonNode;
+import com.mashape.unirest.http.ObjectMapper;
+import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -31,8 +37,26 @@ public class Main extends Application {
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
         primaryStage.show();
+        Unirest.setObjectMapper(new ObjectMapper() {
+            com.fasterxml.jackson.databind.ObjectMapper mapper
+                    = new com.fasterxml.jackson.databind.ObjectMapper();
 
+            public String writeValue(Object value) {
+                try {
+                    return mapper.writeValueAsString(value);
+                } catch (JsonProcessingException e) {
+                    throw new RuntimeException(e);
+                }
+            }
 
+            public <T> T readValue(String value, Class<T> valueType) {
+                try {
+                    return mapper.readValue(value, valueType);
+                } catch (JsonProcessingException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
 
 
     }

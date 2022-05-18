@@ -12,17 +12,19 @@ import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 
+import javax.mail.*;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Properties;
 import java.util.ResourceBundle;
 
 
@@ -32,10 +34,27 @@ import java.util.ResourceBundle;
  * @author Admin
  */
 public class HomeController implements Initializable {
+    public Button validCodeBtn;
+    public TextField privateCode;
+    public AnchorPane privateCodeForm;
+    public Label privateCodeText;
+    public Label changePasswordText;
+    public PasswordField firstPassword;
+    public PasswordField secondPassword;
+    public AnchorPane changePasswordForm;
+    public Button changePasswordBtn;
 
     @FXML
     public AnchorPane loginPanel;
     public AnchorPane asynchronousLogin;
+    public Label forgotPasswordBtn;
+    public TextField userNameReset;
+    public TextField emailReset;
+    public Button getPasswordBtn;
+    public Label backToLoginBtn;
+    public AnchorPane resetPasswordForm;
+    public AnchorPane loadingResetPassword;
+    public AnchorPane loadingChangePassword;
     @FXML
     private AnchorPane overlay;
     @FXML
@@ -46,10 +65,13 @@ public class HomeController implements Initializable {
     private Label errorLogin;
     @FXML
     private PasswordField passWord;
- 
+
+    private String privateCodeMail= "";
+    User userGlobal = new User();
     /**
      * Initializes the controller class.
      */
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
@@ -61,10 +83,6 @@ public class HomeController implements Initializable {
         setVisibleLogin(false);
     }
 
-    @FXML
-    private void resetPassWord(MouseEvent event) {
-        System.out.println("hello world");
-    }
 
     @FXML
     private void guestLogin(MouseEvent event) {
@@ -91,17 +109,17 @@ public class HomeController implements Initializable {
 
         } else {
             loginPanel.setVisible(false);
-        asynchronousLogin.setVisible(true);
+            asynchronousLogin.setVisible(true);
             new Thread(() -> {
-                HttpResponse<JsonNode> apiResponse = null;
-                try {
-                    apiResponse = Unirest.get("http://localhost:8080/findUserByNameAndPassword/"+ userName.getText() +"/" + passWord.getText()).asJson();
+                    HttpResponse<JsonNode> apiResponse = null;
+                    try {
+                        apiResponse = Unirest.get("http://localhost:8080/findUserByNameAndPassword/"+ userName.getText() +"/" + passWord.getText()).asJson();
                     User user = new Gson().fromJson(apiResponse.getBody().toString(), User.class);
                     if (user.getName() != null){
                         Platform.runLater(new Runnable(){
                             @Override
                             public void run() {
-                                System.out.println("test");
+
                                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                                 alert.setHeaderText("Login Success");
                                 alert.setContentText("Hello " + user.getDisplayName());
@@ -127,7 +145,7 @@ public class HomeController implements Initializable {
                 }
 
             }).start();
-            System.out.println("after asynchronous");
+
 
         }
     }
@@ -138,6 +156,146 @@ public class HomeController implements Initializable {
 
     @FXML
     private void googleLogin(MouseEvent event) {
+
     }
 
+    public void getPassword(ActionEvent actionEvent) {
+            loadingResetPassword.setVisible(true);
+            getPasswordBtn.setVisible(false);
+            new Thread(()->{
+                try {
+                    HttpResponse<JsonNode>  apiResetPassword= Unirest.get("http://localhost:8080/findUserByNameAndEmail/"+userNameReset.getText() +"/"+emailReset.getText()).asJson();
+                   userGlobal = new Gson().fromJson(apiResetPassword.getBody().toString(), User.class);
+                    if (userGlobal.getName() == null){
+                        loadingResetPassword.setVisible(false);
+                        getPasswordBtn.setVisible(true);
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                Alert alert = new Alert(Alert.AlertType.WARNING);
+                                alert.setHeaderText("User not exist");
+                                alert.show();
+                            }
+                        });
+                    }else{
+                        String to = emailReset.getText();
+
+                        // Sender's email ID needs to be mentioned
+                        String from = "TesterSendingMessage@gmail.com";
+
+                        // Assuming you are sending email from through gmails smtp
+                        String host = "smtp.gmail.com";
+                        Properties properties = System.getProperties();
+
+                        // Setup mail server
+                        properties.put("mail.smtp.host", host);
+                        properties.put("mail.smtp.port", "465");
+                        properties.put("mail.smtp.ssl.enable", "true");
+                        properties.put("mail.smtp.auth", "true");
+                        // Get the Session object.// and pass username and password
+                        Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
+                            protected PasswordAuthentication getPasswordAuthentication() {
+                                return new PasswordAuthentication("TesterSendingMessage@gmail.com", "tester7890@.");
+                            }
+                        });
+                        // Used to debug SMTP issues
+                        session.setDebug(true);
+                        try {
+                            // Create a default MimeMessage object.
+                            MimeMessage message = new MimeMessage(session);
+
+                            // Set From: header field of the header.
+                            message.setFrom(new InternetAddress(from));
+
+                            // Set To: header field of the header.
+                            message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+
+                            // Set Subject: header field
+                            message.setSubject("Password reset DoAnJava!");
+                            double privateCode= Math.random()*100000;
+
+                            privateCodeMail= String.format("%.0f", privateCode);
+
+                            message.setText("This is your code: " +privateCodeMail);
+
+
+                            Transport.send(message);
+                            getPasswordBtn.setVisible(true);
+                            loadingResetPassword.setVisible(false);
+                            privateCodeForm.setVisible(true);
+                        } catch (MessagingException mex) {
+                            mex.printStackTrace();
+                        }
+                    }
+                } catch (UnirestException e) {
+                    throw new RuntimeException(e);
+                }
+            }).start();
+
+    }
+    public void backToLoginFunction(){
+        loginForm.setVisible(true);
+        resetPasswordForm.setVisible(false);
+        privateCodeForm.setVisible(false);
+        getPasswordBtn.setVisible(true);
+        loadingResetPassword.setVisible(false);
+        changePasswordForm.setVisible(false);
+    }
+    public void backToLogin(MouseEvent mouseEvent) {
+backToLoginFunction();
+    }
+
+    public void forgotPassWord(MouseEvent mouseEvent) {
+        loginForm.setVisible(false);
+        resetPasswordForm.setVisible(true);
+    }
+
+    public void validCode(ActionEvent actionEvent) {
+        if (privateCode.getText().equals(privateCodeMail)){
+            changePasswordForm.setVisible(true);
+
+        }else{
+            privateCodeText.setText("Your private code is wrong");
+        }
+    }
+
+    public void changePassword(ActionEvent actionEvent) throws UnirestException {
+        if (firstPassword.getText().length()<4){
+            changePasswordText.setText("Your password must have at least 4 character");
+        }
+       else if (firstPassword.getText().equals(secondPassword.getText())){
+            loadingChangePassword.setVisible(true);
+            changePasswordBtn.setVisible(false);
+            new Thread(()->{
+                userGlobal.setPassword(firstPassword.getText());
+                HttpResponse<JsonNode> jsonResponse
+                        = null;
+                try {
+                    jsonResponse = Unirest.post("http://localhost:8080/updateUserPassword").header("Content-Type", "application/json")
+                    .body(userGlobal)
+                    .asJson();
+
+                     Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                Alert alert = new Alert(Alert.AlertType.WARNING);
+                                alert.setHeaderText("Change password success");
+                                alert.show();
+                            }
+                     });
+                     backToLoginFunction();
+                    loadingChangePassword.setVisible(false);
+                    changePasswordBtn.setVisible(true);
+                } catch (UnirestException e) {
+                    throw new RuntimeException(e);
+                }
+
+
+
+            }).start();
+
+        }else{
+            changePasswordText.setText("Your Password's not same as Confirm password");
+        }
+    }
 }

@@ -5,6 +5,10 @@ module com.doan.client {
     requires gson;
     requires lombok;
     requires unirest.java;
+    requires java.mail;
+    requires com.fasterxml.jackson.databind;
+    requires com.fasterxml.jackson.core;
+    requires com.fasterxml.jackson.annotation;
     opens com.doan.client to javafx.fxml;
     exports com.doan.client;
     exports com.doan.client.Controller;
