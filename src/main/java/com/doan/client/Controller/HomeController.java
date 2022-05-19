@@ -18,10 +18,12 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.FileChooser;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Properties;
@@ -55,6 +57,15 @@ public class HomeController implements Initializable {
     public AnchorPane resetPasswordForm;
     public AnchorPane loadingResetPassword;
     public AnchorPane loadingChangePassword;
+    public Label imageText;
+    public Button uploadImageBtn;
+    public Button createAccountBtn;
+    public Button createNewAccountBtn;
+    public TextField newPassword;
+    public TextField newUsername;
+    public TextField newEmail;
+    public TextField lastName;
+    public TextField firstName;
     @FXML
     private AnchorPane overlay;
     @FXML
@@ -68,22 +79,15 @@ public class HomeController implements Initializable {
 
     private String privateCodeMail= "";
     User userGlobal = new User();
+    File file;
     /**
      * Initializes the controller class.
      */
-
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
         setVisibleLogin(true);
     }
-
-    @FXML
-    private void hideOverlay(MouseEvent event) {
-        setVisibleLogin(false);
-    }
-
-
     @FXML
     private void guestLogin(MouseEvent event) {
         setVisibleLogin(false);
@@ -242,7 +246,7 @@ public class HomeController implements Initializable {
         changePasswordForm.setVisible(false);
     }
     public void backToLogin(MouseEvent mouseEvent) {
-backToLoginFunction();
+        backToLoginFunction();
     }
 
     public void forgotPassWord(MouseEvent mouseEvent) {
@@ -289,13 +293,39 @@ backToLoginFunction();
                 } catch (UnirestException e) {
                     throw new RuntimeException(e);
                 }
-
-
-
             }).start();
 
         }else{
             changePasswordText.setText("Your Password's not same as Confirm password");
+        }
+    }
+
+    public void uploadImage(ActionEvent actionEvent) throws UnirestException {
+
+        FileChooser fc= new FileChooser();
+        fc.setTitle("Select your Image");
+        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image Files","*.png","*.jpg"));
+        file = fc.showOpenDialog(null);
+        if (file != null){
+            imageText.setText(file.getName());
+        }
+
+    }
+
+    public void createNewAccount(ActionEvent actionEvent) throws UnirestException {
+        if (firstName.getText().isEmpty() || lastName.getText().isEmpty() || newEmail.getText().isEmpty()|| newUsername.getText().isEmpty() || newPassword.getText().isEmpty() || imageText.getText().equals("")) {
+            Alert alert = new Alert(Alert.AlertType.WARNING, "Please fill all information");
+            alert.show();
+        }
+       else if (newPassword.getText().length()<4){
+                Alert alert= new Alert(Alert.AlertType.WARNING, "Your pass word must have more than 3 characters");
+                alert.show();
+          }
+       else{
+            String displayName= lastName.getText() +" " + firstName.getText();
+            String json = "{\"name\":\""+newUsername.getText()+"\",\"displayName\":\""+displayName+"\", \"email\":\""+newEmail.getText()+"\", \"password\":\""+newPassword.getText()+"\"}";
+            System.out.println(json);
+          HttpResponse<JsonNode> jsonNode= Unirest.post("http://localhost:8080/createUser").field("file", file).field("json", json).asJson();
         }
     }
 }
