@@ -9,6 +9,7 @@ module com.doan.client {
     requires com.fasterxml.jackson.databind;
     requires com.fasterxml.jackson.core;
     requires com.fasterxml.jackson.annotation;
+    requires imageio.jxl;
     opens com.doan.client to javafx.fxml;
     exports com.doan.client;
     exports com.doan.client.Controller;

@@ -15,8 +15,10 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -32,7 +34,9 @@ public class Main extends Application {
 
         Scene scene = new Scene(root);
 
-//        primaryStage.getIcons().add(new Image("/icon/logo.png"));
+
+
+        primaryStage.getIcons().add(new Image(getClass().getResource("/com/doan/client/View/Image/icon.jpg").toExternalForm()));
         primaryStage.setTitle("Zyan");
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);

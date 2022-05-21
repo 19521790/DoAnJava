@@ -66,6 +66,8 @@ public class HomeController implements Initializable {
     public TextField newEmail;
     public TextField lastName;
     public TextField firstName;
+    public AnchorPane asynchronousAddUser;
+    public AnchorPane createNewAccountForm;
     @FXML
     private AnchorPane overlay;
     @FXML
@@ -117,7 +119,7 @@ public class HomeController implements Initializable {
             new Thread(() -> {
                     HttpResponse<JsonNode> apiResponse = null;
                     try {
-                        apiResponse = Unirest.get("http://localhost:8080/findUserByNameAndPassword/"+ userName.getText() +"/" + passWord.getText()).asJson();
+                    apiResponse = Unirest.get("http://localhost:8080/findUserByNameAndPassword/"+ userName.getText() +"/" + passWord.getText()).asJson();
                     User user = new Gson().fromJson(apiResponse.getBody().toString(), User.class);
                     if (user.getName() != null){
                         Platform.runLater(new Runnable(){
@@ -156,6 +158,8 @@ public class HomeController implements Initializable {
 
     @FXML
     private void createAccount(MouseEvent event) {
+        createNewAccountForm.setVisible(true);
+        loginForm.setVisible(false);
     }
 
     @FXML
@@ -322,10 +326,53 @@ public class HomeController implements Initializable {
                 alert.show();
           }
        else{
-            String displayName= lastName.getText() +" " + firstName.getText();
-            String json = "{\"name\":\""+newUsername.getText()+"\",\"displayName\":\""+displayName+"\", \"email\":\""+newEmail.getText()+"\", \"password\":\""+newPassword.getText()+"\"}";
-            System.out.println(json);
-          HttpResponse<JsonNode> jsonNode= Unirest.post("http://localhost:8080/createUser").field("file", file).field("json", json).asJson();
+           asynchronousAddUser.setVisible(true);
+           createNewAccountBtn.setVisible(false);
+
+            new Thread(()->{
+
+                try {
+                    String displayName= lastName.getText() +" " + firstName.getText();
+                    String json = "{\"name\":\""+newUsername.getText()+"\",\"displayName\":\""+displayName+"\", \"email\":\""+newEmail.getText()+"\", \"password\":\""+newPassword.getText()+"\"}";
+                    System.out.println(json);
+
+                    HttpResponse<String> a= Unirest.post("http://localhost:8080/createUser").field("file", file).field("json", json).asString();
+                    if (a.getBody().equals("true")){
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                Alert alert= new Alert(Alert.AlertType.INFORMATION);
+                                alert.setHeaderText("Your account has been created!");
+                                alert.show();
+                            }
+
+                        });
+                    }else{
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                Alert alert= new Alert(Alert.AlertType.WARNING);
+                                alert.setHeaderText("Your Username or Email has existed");
+                                alert.show();
+                            }
+                        });
+                    }
+                    asynchronousAddUser.setVisible(false);
+                    createNewAccountBtn.setVisible(true);
+                    if (a.getBody().equals("true")){
+                        loginForm.setVisible(true);
+                        createNewAccountForm.setVisible(false);
+                    }
+                } catch (UnirestException e) {
+                    throw new RuntimeException(e);
+                }
+
+            }).start();
         }
+    }
+
+    public void backToLoginForm(MouseEvent mouseEvent) {
+        loginForm.setVisible(true);
+        createNewAccountForm.setVisible(false);
     }
 }
