@@ -4,10 +4,8 @@
  */
 package com.doan.client;
 
-import com.doan.client.Model.User;
+import com.doan.client.Controller.HomeController;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.ObjectMapper;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
@@ -16,9 +14,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
-import java.io.File;
 import java.io.IOException;
 
 /**
@@ -30,13 +28,11 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws IOException, UnirestException {
 
-        Parent root = FXMLLoader.load(getClass().getResource("/com/doan/client/View/Home.fxml"));
-
+        FXMLLoader fxmlLoader= new FXMLLoader(getClass().getResource("/com/doan/client/View/Home.fxml"));
+        Parent root = fxmlLoader.load();
         Scene scene = new Scene(root);
 
-
-
-        primaryStage.getIcons().add(new Image(getClass().getResource("/com/doan/client/View/Image/icon.jpg").toExternalForm()));
+        primaryStage.getIcons().add(new Image(getClass().getResource("/com/doan/client/Image/icon.jpg").toExternalForm()));
         primaryStage.setTitle("Zyan");
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
