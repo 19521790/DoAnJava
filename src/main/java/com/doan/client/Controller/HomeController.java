@@ -110,16 +110,7 @@ public class HomeController implements Initializable {
 
     public void toggleBtn(ActionEvent actionEvent) {
         ToggleButton toggleButton = (ToggleButton) actionEvent.getSource();
-//        toggleButton.setStyle("-fx-background-color: #3b75ff; -fx-text-fill: white");
-//        try{
-//            FontAwesomeIconView fontAwesomeIconView = (FontAwesomeIconView)toggleButton.getGraphic();
-//            fontAwesomeIconView.setFill(Paint.valueOf("white"));
-//        }
-//        catch (Exception e){
-//
-//            MaterialIconView fontAwesomeIconView = (MaterialIconView) toggleButton.getGraphic();
-//            fontAwesomeIconView.setFill(Paint.valueOf("white"));
-//        }
+
         List<Toggle> toggleButtonList = toggleButton.getToggleGroup().getToggles();
 
         for (int i = 0; i < toggleButtonList.size(); i++) {
