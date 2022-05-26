@@ -124,7 +124,7 @@ public class LoginFormController implements Initializable {
             new Thread(() -> {
                 HttpResponse<JsonNode> apiResponse = null;
                 try {
-                    apiResponse = Unirest.get("http://localhost:8080/findUserByNameAndPassword/"+ userName.getText() +"/" + passWord.getText()).asJson();
+                    apiResponse = Unirest.get("http://localhost:8080/user/findUserByNameAndPassword/"+ userName.getText() +"/" + passWord.getText()).asJson();
                     User user = new Gson().fromJson(apiResponse.getBody().toString(), User.class);
                     if (user.getName() != null){
                         Platform.runLater(new Runnable(){
@@ -180,7 +180,7 @@ public class LoginFormController implements Initializable {
         getPasswordBtn.setVisible(false);
         new Thread(()->{
             try {
-                HttpResponse<JsonNode>  apiResetPassword= Unirest.get("http://localhost:8080/findUserByNameAndEmail/"+userNameReset.getText() +"/"+emailReset.getText()).asJson();
+                HttpResponse<JsonNode>  apiResetPassword= Unirest.get("http://localhost:8080/user/findUserByNameAndEmail/"+userNameReset.getText() +"/"+emailReset.getText()).asJson();
                 userGlobal = new Gson().fromJson(apiResetPassword.getBody().toString(), User.class);
                 if (userGlobal.getName() == null){
                     loadingResetPassword.setVisible(false);
@@ -287,7 +287,7 @@ public class LoginFormController implements Initializable {
                 HttpResponse<JsonNode> jsonResponse
                         = null;
                 try {
-                    jsonResponse = Unirest.post("http://localhost:8080/updateUserPassword").header("Content-Type", "application/json")
+                    jsonResponse = Unirest.post("http://localhost:8080/user/updateUserPassword").header("Content-Type", "application/json")
                             .body(userGlobal)
                             .asJson();
 
@@ -344,7 +344,7 @@ public class LoginFormController implements Initializable {
                     String json = "{\"name\":\""+newUsername.getText()+"\",\"displayName\":\""+displayName+"\", \"email\":\""+newEmail.getText()+"\", \"password\":\""+newPassword.getText()+"\"}";
                     System.out.println(json);
 
-                    HttpResponse<String> a= Unirest.post("http://localhost:8080/createUser").field("file", file).field("json", json).asString();
+                    HttpResponse<String> a= Unirest.post("http://localhost:8080/user/createUser").field("file", file).field("json", json).asString();
                     if (a.getBody().equals("true")){
                         Platform.runLater(new Runnable() {
                             @Override
