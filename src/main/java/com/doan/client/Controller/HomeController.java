@@ -50,12 +50,14 @@ public class HomeController implements Initializable {
     public Separator logoutBtnSeparator;
     public Label logoutBtn;
     public Label openLoginAccount;
-
+    public AnchorPane accountAnchorPane;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         loginPaneFromHome.setVisible(true);
         FXMLLoader loginFxmlLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/LoginForm.fxml"));
+
+
         try {
             AnchorPane newLoginPane = loginFxmlLoader.load();
             LoginFormController loginFormController = loginFxmlLoader.getController();
@@ -86,6 +88,15 @@ public class HomeController implements Initializable {
         System.out.println(image);
         login = true;
         logoutBtn.setDisable(false);
+        FXMLLoader  accountFxmlLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/AccountSetting.fxml"));
+        try {
+            accountAnchorPane= accountFxmlLoader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        AccountSettingController accountSettingController= accountFxmlLoader.getController();
+        accountSettingController.setUser(user);
+
 
     }
 
@@ -145,15 +156,7 @@ public class HomeController implements Initializable {
             loginPaneFromHome.setVisible(true);
 
         }else{
-            FXMLLoader loginFxmlLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/AccountSetting.fxml"));
-            try {
-                AnchorPane accountSetting = loginFxmlLoader.load();
-//                LoginFormController loginFormController = loginFxmlLoader.getController();
-
-                mainBoard.getChildren().setAll(accountSetting);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            mainBoard.getChildren().setAll(accountAnchorPane);
         }
     }
 
