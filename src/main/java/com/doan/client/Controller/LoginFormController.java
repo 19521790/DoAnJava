@@ -14,12 +14,10 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 
 import javax.mail.*;
@@ -28,7 +26,6 @@ import javax.mail.internet.MimeMessage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Objects;
 import java.util.Properties;
 import java.util.ResourceBundle;
 
@@ -48,7 +45,7 @@ public class LoginFormController implements Initializable {
     public PasswordField secondPassword;
     public AnchorPane changePasswordForm;
     public Button changePasswordBtn;
-    public HomeController homeController;
+    public MainController mainController;
 
     @FXML
     public AnchorPane loginPanel;
@@ -102,7 +99,7 @@ public class LoginFormController implements Initializable {
 
     public void setVisibleLogin(boolean x) {
 
-        homeController.setLoginPaneVisible();
+        mainController.setLoginPaneVisible();
     }
 
     @FXML
@@ -140,7 +137,7 @@ public class LoginFormController implements Initializable {
                                 setVisibleLogin(false);
                             }
                         });
-                    homeController.setUser(user);
+                    mainController.setUser(user);
                     }else{
                         Platform.runLater(new Runnable() {
                             @Override

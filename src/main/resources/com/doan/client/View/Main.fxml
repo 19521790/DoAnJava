@@ -18,7 +18,7 @@
 <?import javafx.scene.paint.Stop?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="parentHomePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.doan.client.Controller.HomeController">
+<AnchorPane fx:id="parentHomePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.doan.client.Controller.MainController">
    <AnchorPane layoutX="-1.0" prefHeight="600.0" prefWidth="200.0" style="-fx-background-color: white;">
       <children>
           <Label alignment="CENTER" layoutX="61.0" layoutY="14.0" prefHeight="28.0" prefWidth="74.0" text="Zyan">
@@ -44,7 +44,7 @@
           </Label>
          <VBox layoutY="83.0" prefHeight="372.0" prefWidth="196.0">
             <children>
-               <ToggleButton fx:id="touchBtn1" alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" onAction="#toggleBtn" prefHeight="33.0" prefWidth="165.0" style="-fx-background-color: white;" text="Home">
+               <ToggleButton fx:id="homeBtn" alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" onAction="#toggleBtn" prefHeight="33.0" prefWidth="165.0" style="-fx-background-color: white;" text="Home">
                   <toggleGroup>
                      <ToggleGroup fx:id="Group1" />
                   </toggleGroup>
@@ -58,7 +58,7 @@
                      <Insets left="30.0" />
                   </padding>
                </ToggleButton>
-               <ToggleButton fx:id="touchBtn2" alignment="BASELINE_LEFT" graphicTextGap="12.0" layoutX="25.0" layoutY="197.0" mnemonicParsing="false" onAction="#toggleBtn" prefHeight="33.0" prefWidth="165.0" style="-fx-background-color: white;" text="News" toggleGroup="$Group1">
+               <ToggleButton fx:id="newsBtn" alignment="BASELINE_LEFT" graphicTextGap="12.0" layoutX="25.0" layoutY="197.0" mnemonicParsing="false" onAction="#toggleBtn" prefHeight="33.0" prefWidth="165.0" style="-fx-background-color: white;" text="News" toggleGroup="$Group1">
                   <graphic>
                      <FontAwesomeIconView glyphName="MUSIC" />
                   </graphic>
@@ -76,7 +76,7 @@
                   <font>
                      <Font size="15.0" />
                   </font></Label>
-               <ToggleButton alignment="BASELINE_LEFT" graphicTextGap="10.0" layoutX="25.0" layoutY="197.0" mnemonicParsing="false" onAction="#toggleBtn" prefHeight="33.0" prefWidth="165.0" style="-fx-background-color: white;" text="Like" toggleGroup="$Group1">
+               <ToggleButton fx:id="likeBtn" alignment="BASELINE_LEFT" graphicTextGap="10.0" layoutX="25.0" layoutY="197.0" mnemonicParsing="false" onAction="#toggleBtn" prefHeight="33.0" prefWidth="165.0" style="-fx-background-color: white;" text="Like" toggleGroup="$Group1">
                   <font>
                      <Font size="15.0" />
                   </font>
@@ -87,7 +87,7 @@
                      <Insets left="30.0" />
                   </padding>
                </ToggleButton>
-               <ToggleButton alignment="BASELINE_LEFT" graphicTextGap="10.0" layoutX="25.0" layoutY="128.0" mnemonicParsing="false" onAction="#toggleBtn" prefHeight="35.0" prefWidth="165.0" style="-fx-background-color: white;" text="Album" toggleGroup="$Group1">
+               <ToggleButton fx:id="albumBtn" alignment="BASELINE_LEFT" graphicTextGap="10.0" layoutX="25.0" layoutY="128.0" mnemonicParsing="false" onAction="#toggleBtn" prefHeight="35.0" prefWidth="165.0" style="-fx-background-color: white;" text="Album" toggleGroup="$Group1">
                   <font>
                      <Font size="15.0" />
                   </font>
@@ -98,7 +98,7 @@
                      <MaterialIconView glyphName="LIBRARY_MUSIC" text="" />
                   </graphic>
                </ToggleButton>
-               <ToggleButton alignment="BASELINE_LEFT" graphicTextGap="10.0" layoutX="25.0" layoutY="144.0" mnemonicParsing="false" onAction="#toggleBtn" prefHeight="37.0" prefWidth="165.0" style="-fx-background-color: white;" text="Download" toggleGroup="$Group1">
+               <ToggleButton fx:id="downloadBtn" alignment="BASELINE_LEFT" graphicTextGap="10.0" layoutX="25.0" layoutY="144.0" mnemonicParsing="false" onAction="#toggleBtn" prefHeight="37.0" prefWidth="165.0" style="-fx-background-color: white;" text="Download" toggleGroup="$Group1">
                   <font>
                      <Font size="15.0" />
                   </font>
@@ -109,7 +109,7 @@
                      <FontAwesomeIconView glyphName="DOWNLOAD" />
                   </graphic>
                </ToggleButton>
-               <ToggleButton alignment="BASELINE_LEFT" graphicTextGap="14.0" layoutX="25.0" layoutY="186.0" mnemonicParsing="false" onAction="#toggleBtn" prefHeight="34.0" prefWidth="165.0" style="-fx-background-color: white;" text="Follows" toggleGroup="$Group1">
+               <ToggleButton fx:id="followsBtn" alignment="BASELINE_LEFT" graphicTextGap="14.0" layoutX="25.0" layoutY="186.0" mnemonicParsing="false" onAction="#toggleBtn" prefHeight="34.0" prefWidth="165.0" style="-fx-background-color: white;" text="Follows" toggleGroup="$Group1">
                   <font>
                      <Font size="15.0" />
                   </font>
@@ -125,7 +125,7 @@
                      <Font size="15.0" />
                   </font>
                </Label>
-               <Button mnemonicParsing="false" style="-fx-background-color: #3b75ff;" text="Add" textFill="WHITE">
+               <Button mnemonicParsing="false" onAction="#setActiveComponent" style="-fx-background-color: #3b75ff;" text="Add" textFill="WHITE">
                   <graphic>
                      <FontAwesomeIconView fill="WHITE" glyphName="PLUS" />
                   </graphic>

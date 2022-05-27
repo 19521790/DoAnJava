@@ -4,7 +4,6 @@
  */
 package com.doan.client;
 
-import com.doan.client.Controller.HomeController;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mashape.unirest.http.ObjectMapper;
 import com.mashape.unirest.http.Unirest;
@@ -14,7 +13,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -23,12 +21,12 @@ import java.io.IOException;
  *
  * @author Admin
  */
-public class Main extends Application {
+public class RunProgram extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException, UnirestException {
 
-        FXMLLoader fxmlLoader= new FXMLLoader(getClass().getResource("/com/doan/client/View/Home.fxml"));
+        FXMLLoader fxmlLoader= new FXMLLoader(getClass().getResource("/com/doan/client/View/Main.fxml"));
         Parent root = fxmlLoader.load();
         Scene scene = new Scene(root);
 

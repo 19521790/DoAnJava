@@ -6,9 +6,7 @@ package com.doan.client.Controller;
 
 
 import com.doan.client.Model.User;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
-import de.jensd.fx.glyphs.materialicons.MaterialIcon;
 import de.jensd.fx.glyphs.materialicons.MaterialIconView;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
@@ -18,7 +16,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 
@@ -34,12 +31,12 @@ import java.util.ResourceBundle;
  *
  * @author Admin
  */
-public class HomeController implements Initializable {
+public class MainController implements Initializable {
 
     public AnchorPane parentHomePane;
 
     public AnchorPane loginPaneFromHome;
-    public User user= null;
+    public User user = null;
     public ImageView imageUser;
     public AnchorPane accountSetting;
     public boolean login = false;
@@ -52,21 +49,37 @@ public class HomeController implements Initializable {
     public Label openLoginAccount;
     public AnchorPane accountAnchorPane;
     public Button testBtn;
+    public ToggleButton newsBtn;
+    public ToggleButton likeBtn;
+    public ToggleButton albumBtn;
+    public ToggleButton downloadBtn;
+    public ToggleButton followsBtn;
+    public ToggleButton homeBtn;
+    public AnchorPane homePane;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         loginPaneFromHome.setVisible(true);
         FXMLLoader loginFxmlLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/LoginForm.fxml"));
-
+        FXMLLoader homeFxmlLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/Home.fxml"));
 
         try {
+            //login
             AnchorPane newLoginPane = loginFxmlLoader.load();
             LoginFormController loginFormController = loginFxmlLoader.getController();
             loginPaneFromHome.getChildren().add(newLoginPane);
-            loginFormController.homeController = this;
+            loginFormController.mainController = this;
+            // home
+            homePane = homeFxmlLoader.load();
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        //avatar
+        setAvatarUser();
+
+    }
+    public  void setAvatarUser(){
         Rectangle clip = new Rectangle();
         clip.setWidth(40);
         clip.setHeight(40);
@@ -74,10 +87,7 @@ public class HomeController implements Initializable {
         clip.setArcWidth(40);
         imageUser.setClip(clip);
         accountSetting.setVisible(false);
-
-
     }
-
     public void setLoginPaneVisible() {
         loginPaneFromHome.setVisible(false);
     }
@@ -89,13 +99,13 @@ public class HomeController implements Initializable {
         System.out.println(image);
         login = true;
         logoutBtn.setDisable(false);
-        FXMLLoader  accountFxmlLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/AccountSetting.fxml"));
+        FXMLLoader accountFxmlLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/AccountSetting.fxml"));
         try {
-            accountAnchorPane= accountFxmlLoader.load();
+            accountAnchorPane = accountFxmlLoader.load();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        AccountSettingController accountSettingController= accountFxmlLoader.getController();
+        AccountSettingController accountSettingController = accountFxmlLoader.getController();
         accountSettingController.setUser(user);
 
 
@@ -121,8 +131,11 @@ public class HomeController implements Initializable {
     }
 
     public void toggleBtn(ActionEvent actionEvent) {
-        ToggleButton toggleButton = (ToggleButton) actionEvent.getSource();
 
+        ToggleButton toggleButton = (ToggleButton) actionEvent.getSource();
+        if (!toggleButton.isSelected()){
+            toggleButton.fire();
+        }
         List<Toggle> toggleButtonList = toggleButton.getToggleGroup().getToggles();
 
         for (int i = 0; i < toggleButtonList.size(); i++) {
@@ -137,6 +150,7 @@ public class HomeController implements Initializable {
                     MaterialIconView fontAwesomeIconView = (MaterialIconView) indexToggleButton.getGraphic();
                     fontAwesomeIconView.setFill(Paint.valueOf("white"));
                 }
+                pushScreen(indexToggleButton);
             } else {
                 indexToggleButton.setStyle("-fx-background-color: white; -fx-text-fill: black");
                 try {
@@ -151,12 +165,18 @@ public class HomeController implements Initializable {
 
     }
 
+    public void pushScreen(ToggleButton toggleButton) {
+        if (toggleButton.getId().equals("homeBtn")) {
+            mainBoard.getChildren().setAll(homePane);
+        }
+    }
+
     public void showAccountForm(MouseEvent mouseEvent) {
         accountSetting.setVisible(false);
-        if (user==null){
+        if (user == null) {
             loginPaneFromHome.setVisible(true);
 
-        }else{
+        } else {
             mainBoard.getChildren().setAll(accountAnchorPane);
         }
     }
@@ -167,16 +187,21 @@ public class HomeController implements Initializable {
         alert.setHeaderText("Are you sure want to logout?");
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.OK) {
-            user=null;
+            user = null;
             imageUser.setImage(new Image("http://localhost:8080/image/anonymous.png"));
             logoutBtn.setDisable(true);
             accountSetting.setVisible(false);
             Alert logoutPopup = new Alert(Alert.AlertType.INFORMATION);
             logoutPopup.setHeaderText("Logout Success");
             logoutPopup.show();
+            homeBtn.fire();
 
         }
 
 
+    }
+
+    public void setActiveComponent(ActionEvent actionEvent) {
+        homeBtn.fire();
     }
 }
