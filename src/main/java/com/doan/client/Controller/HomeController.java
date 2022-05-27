@@ -51,6 +51,7 @@ public class HomeController implements Initializable {
     public Label logoutBtn;
     public Label openLoginAccount;
     public AnchorPane accountAnchorPane;
+    public Button testBtn;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {

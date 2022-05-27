@@ -287,7 +287,7 @@ public class LoginFormController implements Initializable {
                 HttpResponse<JsonNode> jsonResponse
                         = null;
                 try {
-                    jsonResponse = Unirest.post("http://localhost:8080/user/updateUserPassword").header("Content-Type", "application/json")
+                    jsonResponse = Unirest.post("http://localhost:8080/user/updatePassword").header("Content-Type", "application/json")
                             .body(userGlobal)
                             .asJson();
 
