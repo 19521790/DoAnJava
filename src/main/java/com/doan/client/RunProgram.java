@@ -29,12 +29,14 @@ public class RunProgram extends Application {
         FXMLLoader fxmlLoader= new FXMLLoader(getClass().getResource("/com/doan/client/View/Main.fxml"));
         Parent root = fxmlLoader.load();
         Scene scene = new Scene(root);
-
         primaryStage.getIcons().add(new Image(getClass().getResource("/com/doan/client/Image/icon.jpg").toExternalForm()));
         primaryStage.setTitle("Zyan");
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
         primaryStage.show();
+
+
+
         Unirest.setObjectMapper(new ObjectMapper() {
             com.fasterxml.jackson.databind.ObjectMapper mapper
                     = new com.fasterxml.jackson.databind.ObjectMapper();

@@ -14,11 +14,17 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
@@ -81,9 +87,10 @@ public class LoginFormController implements Initializable {
     @FXML
     private PasswordField passWord;
 
-    private String privateCodeMail= "";
+    private String privateCodeMail = "";
     User userGlobal = new User();
     File file;
+
     /**
      * Initializes the controller class.
      */
@@ -92,6 +99,7 @@ public class LoginFormController implements Initializable {
         // TODO
 
     }
+
     @FXML
     private void guestLogin(MouseEvent event) {
         setVisibleLogin(false);
@@ -121,24 +129,54 @@ public class LoginFormController implements Initializable {
             new Thread(() -> {
                 HttpResponse<JsonNode> apiResponse = null;
                 try {
-                    apiResponse = Unirest.get("http://localhost:8080/user/findUserByNameAndPassword/"+ userName.getText() +"/" + passWord.getText()).asJson();
+                    apiResponse = Unirest.get("http://localhost:8080/user/findUserByNameAndPassword/" + userName.getText() + "/" + passWord.getText()).asJson();
                     User user = new Gson().fromJson(apiResponse.getBody().toString(), User.class);
-                    if (user.getName() != null){
-                        Platform.runLater(new Runnable(){
-                            @Override
-                            public void run() {
+                    if (user.getName() != null) {
+                        System.out.println(user.getRole());
+                        if (user.getRole().equals("user")) {
+                            Platform.runLater(new Runnable() {
+                                @Override
+                                public void run() {
 
-                                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                                alert.setHeaderText("Login Success");
-                                alert.setContentText("Hello " + user.getDisplayName());
-                                loginPanel.setVisible(true);
-                                asynchronousLogin.setVisible(false);
-                                alert.show();
-                                setVisibleLogin(false);
-                            }
-                        });
-                    mainController.setUser(user);
-                    }else{
+                                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                                    alert.setHeaderText("Login Success");
+                                    alert.setContentText("Hello " + user.getDisplayName());
+                                    loginPanel.setVisible(true);
+                                    asynchronousLogin.setVisible(false);
+                                    alert.show();
+                                    setVisibleLogin(false);
+                                }
+                            });
+                            mainController.setUser(user);
+                        }else{
+
+                            Platform.runLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Node source = (Node) event.getSource();
+                                    Stage stage = (Stage) source.getScene().getWindow();
+                                    stage.close();
+
+                                    Stage primaryStage= new Stage();
+                                    FXMLLoader adminFxmlLoader= new FXMLLoader(getClass().getResource("/com/doan/client/View/AdminPage.fxml"));
+                                    Parent root = null;
+                                    try {
+                                        root = adminFxmlLoader.load();
+                                    } catch (IOException e) {
+                                        throw new RuntimeException(e);
+                                    }
+                                    Scene scene = new Scene(root);
+
+                                    primaryStage.getIcons().add(new Image(getClass().getResource("/com/doan/client/Image/icon.jpg").toExternalForm()));
+                                    primaryStage.setTitle("Zyan");
+                                    primaryStage.setScene(scene);
+                                    primaryStage.setResizable(false);
+                                    primaryStage.show();
+                                }
+                            });
+
+                        }
+                    } else {
                         Platform.runLater(new Runnable() {
                             @Override
                             public void run() {
@@ -175,11 +213,11 @@ public class LoginFormController implements Initializable {
     public void getPassword(ActionEvent actionEvent) {
         loadingResetPassword.setVisible(true);
         getPasswordBtn.setVisible(false);
-        new Thread(()->{
+        new Thread(() -> {
             try {
-                HttpResponse<JsonNode>  apiResetPassword= Unirest.get("http://localhost:8080/user/findUserByNameAndEmail/"+userNameReset.getText() +"/"+emailReset.getText()).asJson();
+                HttpResponse<JsonNode> apiResetPassword = Unirest.get("http://localhost:8080/user/findUserByNameAndEmail/" + userNameReset.getText() + "/" + emailReset.getText()).asJson();
                 userGlobal = new Gson().fromJson(apiResetPassword.getBody().toString(), User.class);
-                if (userGlobal.getName() == null){
+                if (userGlobal.getName() == null) {
                     loadingResetPassword.setVisible(false);
                     getPasswordBtn.setVisible(true);
                     Platform.runLater(new Runnable() {
@@ -190,7 +228,7 @@ public class LoginFormController implements Initializable {
                             alert.show();
                         }
                     });
-                }else{
+                } else {
                     String to = emailReset.getText();
 
                     // Sender's email ID needs to be mentioned
@@ -225,11 +263,11 @@ public class LoginFormController implements Initializable {
 
                         // Set Subject: header field
                         message.setSubject("Password reset DoAnJava!");
-                        double privateCode= Math.random()*100000;
+                        double privateCode = Math.random() * 100000;
 
-                        privateCodeMail= String.format("%.0f", privateCode);
+                        privateCodeMail = String.format("%.0f", privateCode);
 
-                        message.setText("This is your code: " +privateCodeMail);
+                        message.setText("This is your code: " + privateCodeMail);
 
 
                         Transport.send(message);
@@ -246,7 +284,8 @@ public class LoginFormController implements Initializable {
         }).start();
 
     }
-    public void backToLoginFunction(){
+
+    public void backToLoginFunction() {
         loginForm.setVisible(true);
         resetPasswordForm.setVisible(false);
         privateCodeForm.setVisible(false);
@@ -254,6 +293,7 @@ public class LoginFormController implements Initializable {
         loadingResetPassword.setVisible(false);
         changePasswordForm.setVisible(false);
     }
+
     public void backToLogin(MouseEvent mouseEvent) {
         backToLoginFunction();
     }
@@ -264,22 +304,21 @@ public class LoginFormController implements Initializable {
     }
 
     public void validCode(ActionEvent actionEvent) {
-        if (privateCode.getText().equals(privateCodeMail)){
+        if (privateCode.getText().equals(privateCodeMail)) {
             changePasswordForm.setVisible(true);
 
-        }else{
+        } else {
             privateCodeText.setText("Your private code is wrong");
         }
     }
 
     public void changePassword(ActionEvent actionEvent) throws UnirestException {
-        if (firstPassword.getText().length()<4){
+        if (firstPassword.getText().length() < 4) {
             changePasswordText.setText("Your password must have at least 4 character");
-        }
-        else if (firstPassword.getText().equals(secondPassword.getText())){
+        } else if (firstPassword.getText().equals(secondPassword.getText())) {
             loadingChangePassword.setVisible(true);
             changePasswordBtn.setVisible(false);
-            new Thread(()->{
+            new Thread(() -> {
                 userGlobal.setPassword(firstPassword.getText());
                 HttpResponse<JsonNode> jsonResponse
                         = null;
@@ -304,59 +343,57 @@ public class LoginFormController implements Initializable {
                 }
             }).start();
 
-        }else{
+        } else {
             changePasswordText.setText("Your Password's not same as Confirm password");
         }
     }
 
     public void uploadImage(ActionEvent actionEvent) throws UnirestException {
 
-        FileChooser fc= new FileChooser();
+        FileChooser fc = new FileChooser();
         fc.setTitle("Select your Image");
-        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image Files","*.png","*.jpg"));
+        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg"));
         file = fc.showOpenDialog(null);
-        if (file != null){
+        if (file != null) {
             imageText.setText(file.getName());
         }
 
     }
 
     public void createNewAccount(ActionEvent actionEvent) throws UnirestException {
-        if (firstName.getText().isEmpty() || lastName.getText().isEmpty() || newEmail.getText().isEmpty()|| newUsername.getText().isEmpty() || newPassword.getText().isEmpty() || imageText.getText().equals("")) {
+        if (firstName.getText().isEmpty() || lastName.getText().isEmpty() || newEmail.getText().isEmpty() || newUsername.getText().isEmpty() || newPassword.getText().isEmpty() || imageText.getText().equals("")) {
             Alert alert = new Alert(Alert.AlertType.WARNING, "Please fill all information");
             alert.show();
-        }
-        else if (newPassword.getText().length()<4){
-            Alert alert= new Alert(Alert.AlertType.WARNING, "Your pass word must have more than 3 characters");
+        } else if (newPassword.getText().length() < 4) {
+            Alert alert = new Alert(Alert.AlertType.WARNING, "Your pass word must have more than 3 characters");
             alert.show();
-        }
-        else{
+        } else {
             asynchronousAddUser.setVisible(true);
             createNewAccountBtn.setVisible(false);
 
-            new Thread(()->{
+            new Thread(() -> {
 
                 try {
-                    String displayName= lastName.getText() +" " + firstName.getText();
-                    String json = "{\"name\":\""+newUsername.getText()+"\",\"displayName\":\""+displayName+"\", \"email\":\""+newEmail.getText()+"\", \"password\":\""+newPassword.getText()+"\"}";
+                    String displayName = lastName.getText() + " " + firstName.getText();
+                    String json = "{\"name\":\"" + newUsername.getText() + "\",\"displayName\":\"" + displayName + "\", \"email\":\"" + newEmail.getText() + "\", \"password\":\"" + newPassword.getText() + "\"}";
                     System.out.println(json);
 
-                    HttpResponse<String> a= Unirest.post("http://localhost:8080/user/createUser").field("file", file).field("json", json).asString();
-                    if (a.getBody().equals("true")){
+                    HttpResponse<String> a = Unirest.post("http://localhost:8080/user/createUser").field("file", file).field("json", json).asString();
+                    if (a.getBody().equals("true")) {
                         Platform.runLater(new Runnable() {
                             @Override
                             public void run() {
-                                Alert alert= new Alert(Alert.AlertType.INFORMATION);
+                                Alert alert = new Alert(Alert.AlertType.INFORMATION);
                                 alert.setHeaderText("Your account has been created!");
                                 alert.show();
                             }
 
                         });
-                    }else{
+                    } else {
                         Platform.runLater(new Runnable() {
                             @Override
                             public void run() {
-                                Alert alert= new Alert(Alert.AlertType.WARNING);
+                                Alert alert = new Alert(Alert.AlertType.WARNING);
                                 alert.setHeaderText("Your Username or Email has existed");
                                 alert.show();
                             }
@@ -364,7 +401,7 @@ public class LoginFormController implements Initializable {
                     }
                     asynchronousAddUser.setVisible(false);
                     createNewAccountBtn.setVisible(true);
-                    if (a.getBody().equals("true")){
+                    if (a.getBody().equals("true")) {
                         loginForm.setVisible(true);
                         createNewAccountForm.setVisible(false);
                     }
