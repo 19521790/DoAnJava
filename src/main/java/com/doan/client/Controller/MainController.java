@@ -77,6 +77,7 @@ public class MainController implements Initializable {
         }
         //avatar
         setAvatarUser();
+        homeBtn.fire();
 
     }
     public  void setAvatarUser(){
@@ -138,8 +139,8 @@ public class MainController implements Initializable {
         }
         List<Toggle> toggleButtonList = toggleButton.getToggleGroup().getToggles();
 
-        for (int i = 0; i < toggleButtonList.size(); i++) {
-            ToggleButton indexToggleButton = (ToggleButton) toggleButtonList.get(i);
+        for (Toggle toggle : toggleButtonList) {
+            ToggleButton indexToggleButton = (ToggleButton) toggle;
             if (indexToggleButton.isSelected()) {
                 indexToggleButton.setStyle("-fx-background-color: #3b75ff; -fx-text-fill: white");
                 try {
