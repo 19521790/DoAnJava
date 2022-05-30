@@ -8,9 +8,9 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="600.0" prefWidth="900.0" style="-fx-background-color: #f5f6fc;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.doan.client.Controller.AccountSettingController">
+<AnchorPane prefHeight="560.0" prefWidth="1000.0" style="-fx-background-color: #f5f6fc;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.doan.client.Controller.AccountSettingController">
    <children>
-      <Label layoutX="233.0" layoutY="82.0" prefHeight="41.0" prefWidth="85.0" text="Username:">
+      <Label layoutX="170.0" layoutY="82.0" prefHeight="41.0" prefWidth="85.0" text="Username:">
          <font>
             <Font size="18.0" />
          </font>
@@ -20,38 +20,38 @@
             <Font size="24.0" />
          </font>
       </Label>
-      <TextField fx:id="nameInf" editable="false" layoutX="344.0" layoutY="83.0" prefHeight="35.0" prefWidth="293.0" text="Name">
+      <TextField fx:id="nameInf" editable="false" layoutX="289.0" layoutY="83.0" prefHeight="35.0" prefWidth="293.0" text="Name">
          <font>
             <Font size="18.0" />
          </font>
       </TextField>
-      <Label layoutX="233.0" layoutY="136.0" prefHeight="41.0" prefWidth="85.0" text="Email:">
+      <Label layoutX="170.0" layoutY="138.0" prefHeight="41.0" prefWidth="85.0" text="Email:">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <TextField fx:id="emailInf" editable="false" layoutX="344.0" layoutY="139.0" prefHeight="29.0" prefWidth="293.0" text="Email">
+      <TextField fx:id="emailInf" editable="false" layoutX="289.0" layoutY="139.0" prefHeight="29.0" prefWidth="293.0" text="Email">
          <font>
             <Font size="18.0" />
          </font>
       </TextField>
-      <Label layoutX="233.0" layoutY="199.0" prefHeight="41.0" prefWidth="85.0" text="Full Name:">
+      <Label layoutX="170.0" layoutY="199.0" prefHeight="41.0" prefWidth="85.0" text="Full Name:">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <TextField fx:id="fullnameInf" editable="false" layoutX="344.0" layoutY="199.0" prefHeight="41.0" prefWidth="293.0" text="FullName">
+      <TextField fx:id="fullnameInf" editable="false" layoutX="289.0" layoutY="199.0" prefHeight="41.0" prefWidth="293.0" text="FullName">
          <font>
             <Font size="18.0" />
          </font>
       </TextField>
-      <Label layoutX="233.0" layoutY="256.0" prefHeight="41.0" prefWidth="85.0" text="Image:">
+      <Label layoutX="657.0" layoutY="82.0" prefHeight="41.0" prefWidth="85.0" text="Image:">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <ImageView fx:id="imageInf" fitHeight="103.0" fitWidth="143.0" layoutX="344.0" layoutY="256.0" pickOnBounds="true" preserveRatio="true" />
-      <AnchorPane fx:id="changeNewPasswordForm" layoutX="133.0" layoutY="367.0" prefHeight="165.0" prefWidth="534.0">
+      <ImageView fx:id="imageInf" fitHeight="103.0" fitWidth="143.0" layoutX="742.0" layoutY="87.0" pickOnBounds="true" preserveRatio="true" />
+      <AnchorPane fx:id="changeNewPasswordForm" layoutX="77.0" layoutY="267.0" prefHeight="165.0" prefWidth="534.0" visible="false">
          <children>
             <Label layoutX="74.0" layoutY="13.0" prefHeight="41.0" prefWidth="121.0" text="Old password:">
                <font>
@@ -85,9 +85,10 @@
             </PasswordField>
          </children>
       </AnchorPane>
-      <Button fx:id="changeNewPasswordBtn" layoutX="350.0" layoutY="400.0" mnemonicParsing="false" onAction="#changeNewPassword" prefHeight="35.0" prefWidth="143.0" style="-fx-background-color: #3b75ff;" text="Change Password" textFill="WHITE">
+      <Button fx:id="changeNewPasswordBtn" layoutX="292.0" layoutY="280.0" mnemonicParsing="false" onAction="#changeNewPassword" prefHeight="35.0" prefWidth="143.0" style="-fx-background-color: #3b75ff;" text="Change Password" textFill="WHITE">
          <font>
             <Font size="15.0" />
-         </font></Button>
+         </font>
+      </Button>
    </children>
 </AnchorPane>

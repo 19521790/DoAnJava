@@ -106,7 +106,9 @@ public class AccountSettingController implements Initializable {
             }
         } else {
             changeNewPasswordForm.setVisible(true);
-            changeNewPasswordBtn.setLayoutY(550);
+
+
+            changeNewPasswordBtn.setLayoutY(450);
             changeNewPasswordBtn.setText("Save");
         }
 

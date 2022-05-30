@@ -8,6 +8,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 /**
  *
  * @author Admin
@@ -17,12 +21,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class User {
 
-    int id;
-    String name;
-    String email;
-    String displayName;
-    String password;
-    String role = "user";
-    String image;
+    private String id;
+    private String name;
+    private String email;
+    private String displayName;
+    private String password;
+    private String image;
+    private String role = "user";
+    private List<String> idPlaylists = new ArrayList<String>();
+    private Date createdAt;
+    private Date updatedAt;
 
 }

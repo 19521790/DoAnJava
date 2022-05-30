@@ -1,0 +1,47 @@
+.default_color{
+    -fx-background-color: #3b75ff;
+}
+.jfx-slider > .colored-track {
+
+    -fx-background-color: #3b75ff;
+}
+.jfx-slider > .thumb {
+    -fx-background-color: #3b75ff;
+
+}
+.jfx-slider > .animated-thumb {
+    -fx-background-color: #3b75ff;
+}
+.timelineProgress .track {
+    -fx-pref-height: 5;
+    -fx-pref-width: 452;
+}
+
+.timelineProgress .animated-thumb{
+    -fx-opacity: 0;
+}
+.background_shadow{
+    -fx-background-color: white;
+    -fx-background-radius: 10;
+}
+.button_opacity{
+    -fx-background-color: #3b75ff;
+    -fx-background-radius:  50%;
+    -fx-opacity: 0;
+}
+
+.background_shadow:hover {
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3),  10, -6 , 2, 2);
+}
+.background_shadow:hover .image_shadow{
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3),  10, -6 , 2, 2);
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+}
+.background_shadow:hover .button_opacity{
+    -fx-opacity: 1;
+}
+.label_card{
+    -fx-font-size: 14;
+    -fx-font-weight: 700;
+}

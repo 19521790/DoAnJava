@@ -9,10 +9,12 @@ module com.doan.client {
     requires com.fasterxml.jackson.databind;
     requires com.fasterxml.jackson.core;
     requires com.fasterxml.jackson.annotation;
-
+    requires  de.jensd.fx.glyphs.octicons;
     requires imageio.jxl;
     requires de.jensd.fx.glyphs.fontawesome;
     requires de.jensd.fx.glyphs.materialicons;
+    requires com.jfoenix;
+    requires  javafx.media;
     opens com.doan.client to javafx.fxml;
     exports com.doan.client;
     exports com.doan.client.Controller;

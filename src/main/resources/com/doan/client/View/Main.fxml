@@ -2,11 +2,19 @@
 
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import de.jensd.fx.glyphs.materialicons.MaterialIconView?>
+<?import de.jensd.fx.glyphs.octicons.OctIconView?>
 <?import javafx.geometry.Insets?>
+<?import javafx.geometry.Point3D?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.image.Image?>
@@ -18,8 +26,8 @@
 <?import javafx.scene.paint.Stop?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="parentHomePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.doan.client.Controller.MainController">
-   <AnchorPane layoutX="-1.0" prefHeight="600.0" prefWidth="200.0" style="-fx-background-color: white;">
+<AnchorPane fx:id="parentHomePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.doan.client.Controller.MainController">
+   <AnchorPane layoutX="-1.0" prefHeight="650.0" prefWidth="200.0" style="-fx-background-color: white;">
       <children>
           <Label alignment="CENTER" layoutX="61.0" layoutY="14.0" prefHeight="28.0" prefWidth="74.0" text="Zyan">
               <font>
@@ -52,16 +60,13 @@
                      <Font size="15.0" />
                   </font>
                   <graphic>
-                     <FontAwesomeIconView fill="#161616" glyphName="HOME" selectionFill="RED" />
+                     <FontAwesomeIconView fill="#161616" glyphName="HOME" selectionFill="RED" text="" />
                   </graphic>
                   <padding>
                      <Insets left="30.0" />
                   </padding>
                </ToggleButton>
-               <ToggleButton fx:id="newsBtn" alignment="BASELINE_LEFT" graphicTextGap="12.0" layoutX="25.0" layoutY="197.0" mnemonicParsing="false" onAction="#toggleBtn" prefHeight="33.0" prefWidth="165.0" style="-fx-background-color: white;" text="News" toggleGroup="$Group1">
-                  <graphic>
-                     <FontAwesomeIconView glyphName="MUSIC" />
-                  </graphic>
+               <ToggleButton fx:id="newsBtn" alignment="BASELINE_LEFT" graphicTextGap="9.0" layoutX="25.0" layoutY="197.0" mnemonicParsing="false" onAction="#toggleBtn" prefHeight="33.0" prefWidth="165.0" style="-fx-background-color: white;" text="News" toggleGroup="$Group1">
                   <font>
                      <Font size="15.0" />
                   </font>
@@ -71,6 +76,9 @@
                   <padding>
                      <Insets left="30.0" />
                   </padding>
+                  <graphic>
+                     <MaterialIconView glyphName="HEADSET_MIC" size="15" />
+                  </graphic>
                </ToggleButton>
                <Label prefHeight="17.0" prefWidth="100.0" text="Library">
                   <font>
@@ -140,16 +148,33 @@
          </VBox>
       </children>
    </AnchorPane>
-   <AnchorPane fx:id="mainBoard" layoutX="199.0" prefHeight="600.0" prefWidth="900.0" style="-fx-background-color: #f5f6fc;" />
-   <ImageView fx:id="imageUser" fitHeight="40.0" fitWidth="59.0" layoutX="1040.0" layoutY="20.0" onMouseClicked="#showSettingUser" pickOnBounds="true" preserveRatio="true">
-      <image>
-         <Image url="@../Image/anonymous.png" />
-      </image>
-      <cursor>
-         <Cursor fx:constant="HAND" />
-      </cursor>
-   </ImageView>
-   <AnchorPane fx:id="accountSetting" layoutX="910.0" layoutY="65.0" prefHeight="100.0" prefWidth="161.0" style="-fx-background-color: white; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.75), 5, 0, 0, 0);">
+   <ScrollPane fx:id="mainBoard" layoutX="200.0" layoutY="50.0" prefHeight="500.0" prefWidth="1007.0" style="-fx-background-color: #f5f6fc;">
+      <content>
+         <AnchorPane prefHeight="567.0" prefWidth="1000.0" style="-fx-background-color: #f5f6fc;" />
+      </content>
+   </ScrollPane>
+   <AnchorPane layoutX="200.0" prefHeight="45.0" prefWidth="1000.0">
+      <children>
+         <TextField fx:id="searchBar" layoutX="35.0" layoutY="11.0" prefHeight="33.0" prefWidth="321.0" promptText="Search for songs, artists..." style="-fx-border-width: 0;">
+            <font>
+               <Font size="14.0" />
+            </font>
+            <padding>
+               <Insets left="30.0" />
+            </padding>
+         </TextField>
+         <FontAwesomeIconView fill="#8f8f8f" glyphName="SEARCH" layoutX="48.0" layoutY="32.0" size="12" />
+         <ImageView fx:id="imageUser" fitHeight="40.0" fitWidth="59.0" layoutX="940.0" layoutY="4.0" onMouseClicked="#showSettingUser" pickOnBounds="true" preserveRatio="true">
+            <image>
+               <Image url="@../Image/anonymous.png" />
+            </image>
+            <cursor>
+               <Cursor fx:constant="HAND" />
+            </cursor>
+         </ImageView>
+      </children>
+   </AnchorPane>
+   <AnchorPane fx:id="accountSetting" layoutX="1000.0" layoutY="50.0" prefHeight="100.0" prefWidth="161.0" style="-fx-background-color: white; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.75), 5, 0, 0, 0);" visible="false">
       <children>
          <Label fx:id="openLoginAccount" alignment="CENTER" layoutX="4.0" layoutY="1.0" onMouseClicked="#showAccountForm" prefHeight="40.0" prefWidth="148.0" text="Account">
             <font>
@@ -179,5 +204,73 @@
          </Label>
       </children>
    </AnchorPane>
-   <AnchorPane fx:id="loginPaneFromHome" prefHeight="600.0" prefWidth="1100.0" visible="false" />
+   <AnchorPane fx:id="musicBar" layoutX="200.0" layoutY="560.0" prefHeight="90.0" prefWidth="1000.0" style="-fx-background-color: white;">
+      <children>
+         <Button graphicTextGap="0.0" layoutX="450.0" layoutY="14.0" mnemonicParsing="false" onAction="#playMedia" prefHeight="40.0" prefWidth="40.0" style="-fx-background-color: #3b75ff; -fx-background-radius: 50%;">
+            <graphic>
+               <FontAwesomeIconView fx:id="playGraphicBtn" fill="WHITE" glyphName="PLAY" size="20" wrappingWidth="13.0" />
+            </graphic>
+         </Button>
+         <Button layoutX="408.0" layoutY="16.0" mnemonicParsing="false" onAction="#previousMedia" prefHeight="33.0" prefWidth="0.0" style="-fx-background-color: white;">
+            <graphic>
+               <MaterialIconView fill="#434242" glyphName="SKIP_PREVIOUS" size="25" text="">
+                  <rotationAxis>
+                     <Point3D />
+                  </rotationAxis>
+               </MaterialIconView>
+            </graphic>
+         </Button>
+         <Button layoutX="490.0" layoutY="17.0" mnemonicParsing="false" onAction="#nextMedia" prefHeight="29.0" prefWidth="25.0" style="-fx-background-color: white;">
+            <graphic>
+               <MaterialIconView fill="#434242" glyphName="SKIP_NEXT" size="25" wrappingWidth="25.333312034606934" />
+            </graphic>
+         </Button>
+         <Slider fx:id="volumeSlider" layoutX="902.0" layoutY="26.0" max="200.0" prefHeight="10.0" prefWidth="85.0" value="100.0" visible="false" />
+         <Button layoutX="798.0" layoutY="19.0" mnemonicParsing="false" prefHeight="21.0" prefWidth="14.0" style="-fx-border-color: black; -fx-border-radius: 50%; -fx-background-color: white;">
+            <graphic>
+               <FontAwesomeIconView glyphName="MUSIC" size="10" />
+            </graphic>
+         </Button>
+         <MenuButton layoutX="833.0" layoutY="18.0" mnemonicParsing="false" popupSide="TOP" prefHeight="28.0" prefWidth="27.0" style="-fx-background-color: white;">
+           <items>
+             <MenuItem mnemonicParsing="false" text="Skip back 10 seconds">
+                  <graphic>
+                     <MaterialIconView glyphName="UNDO" size="15" wrappingWidth="27.0" />
+                  </graphic>
+               </MenuItem>
+             <MenuItem mnemonicParsing="false" text="Skip Forward 30 seconds">
+                  <graphic>
+                     <MaterialIconView glyphName="REDO" size="15" wrappingWidth="27.0" />
+                  </graphic>
+               </MenuItem>
+               <MenuItem mnemonicParsing="false" onAction="#resetMedia" text="Reset">
+                  <graphic>
+                     <MaterialIconView glyphName="SETTINGS_BACKUP_RESTORE" size="15" wrappingWidth="27.0" />
+                  </graphic>
+               </MenuItem>
+               <Menu fx:id="currentSpeedMedia" mnemonicParsing="false" text="Speed 1.0 x">
+                 <items>
+                     <MenuItem mnemonicParsing="false" onAction="#changeSpeedMedia" text="0.25 x" />
+                     <MenuItem mnemonicParsing="false" onAction="#changeSpeedMedia" text="0.5 x" />
+                     <MenuItem mnemonicParsing="false" onAction="#changeSpeedMedia" text="1.0 x" />
+                     <MenuItem mnemonicParsing="false" onAction="#changeSpeedMedia" text="1.5 x" />
+                     <MenuItem mnemonicParsing="false" onAction="#changeSpeedMedia" text="2.0 x" />
+                 </items>
+                  <graphic>
+                     <OctIconView glyphName="DASHBOARD" size="15" wrappingWidth="27.0" />
+                  </graphic>
+               </Menu>
+           </items>
+            <graphic>
+               <MaterialIconView glyphName="MORE_HORIZ" size="20" wrappingWidth="27.3333740234375" />
+            </graphic>
+         </MenuButton>
+         <Button layoutX="866.0" layoutY="15.0" mnemonicParsing="false" prefHeight="33.0" prefWidth="0.0" style="-fx-background-color: white;">
+            <graphic>
+               <FontAwesomeIconView fill="#282828" glyphName="VOLUME_UP" size="18" text="" />
+            </graphic>
+         </Button>
+      </children>
+   </AnchorPane>
+   <AnchorPane fx:id="loginPaneFromHome" prefHeight="650.0" prefWidth="1200.0" visible="false" />
 </AnchorPane>

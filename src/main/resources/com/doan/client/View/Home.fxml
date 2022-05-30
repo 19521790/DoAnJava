@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="800.0" prefWidth="1000.0" style="-fx-background-color: #f0f2f9;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.doan.client.Controller.HomeController">
+   <children>
+      <AnchorPane fx:id="clipPane" layoutX="50.0" layoutY="27.0" prefHeight="200.0" prefWidth="900.0">
+         <children>
+            <AnchorPane fx:id="slidePane" prefHeight="200.0" prefWidth="900.0" />
+         </children>
+      </AnchorPane>
+      <Button graphicTextGap="0.0" layoutX="935.0" layoutY="110.0" mnemonicParsing="false" onAction="#goNextSlide" prefHeight="33.0" prefWidth="29.0" style="-fx-background-color: white;">
+         <graphic>
+            <FontAwesomeIconView fill="#040404" glyphName="CHEVRON_RIGHT" selectionEnd="1" selectionStart="1" size="15" stroke="#020202" strokeMiterLimit="5.0" strokeType="INSIDE" strokeWidth="0.0" wrappingWidth="11.0">
+               <font>
+                  <Font size="17.0" />
+               </font>
+            </FontAwesomeIconView>
+         </graphic>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      <Button graphicTextGap="0.0" layoutX="35.0" layoutY="110.0" mnemonicParsing="false" onAction="#goPreviousSlide" prefHeight="33.0" prefWidth="29.0" style="-fx-background-color: white;">
+         <graphic>
+            <FontAwesomeIconView glyphName="CHEVRON_LEFT" selectionEnd="1" selectionStart="1" size="15" stroke="#020202" strokeType="INSIDE" strokeWidth="0.0" text="" wrappingWidth="12.999969244003296">
+               <font>
+                  <Font size="17.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </FontAwesomeIconView>
+         </graphic>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      <Label layoutX="36.0" layoutY="256.0" prefHeight="33.0" prefWidth="181.0" text="Đã phát gần đây">
+         <font>
+            <Font name="Arial Bold" size="20.0" />
+         </font>
+      </Label>
+      <AnchorPane fx:id="clipPaneBackground" layoutX="40.0" layoutY="321.0" prefHeight="210.0" prefWidth="920.0">
+         <children>
+            <HBox fx:id="hBoxMusicItem" prefHeight="210.0" prefWidth="920.0">
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <padding>
+                  <Insets left="-10.0" />
+               </padding>
+            </HBox>
+         </children>
+      </AnchorPane>
+      <Button graphicTextGap="0.0" layoutX="935.0" layoutY="256.0" mnemonicParsing="false" onAction="#goNextCard" prefHeight="33.0" prefWidth="29.0" style="-fx-background-color: #f0f2f9;">
+         <graphic>
+            <FontAwesomeIconView fill="#040404" glyphName="CHEVRON_RIGHT" selectionEnd="1" selectionStart="1" size="15" stroke="#020202" strokeMiterLimit="5.0" strokeType="INSIDE" strokeWidth="0.0" wrappingWidth="11.0">
+               <font>
+                  <Font size="17.0" />
+               </font>
+            </FontAwesomeIconView>
+         </graphic>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      <Button graphicTextGap="0.0" layoutX="897.0" layoutY="256.0" mnemonicParsing="false" onAction="#goPreviousCard" prefHeight="33.0" prefWidth="29.0" style="-fx-background-color: #f0f2f9;">
+         <graphic>
+            <FontAwesomeIconView glyphName="CHEVRON_LEFT" selectionEnd="1" selectionStart="1" size="15" stroke="#020202" strokeType="INSIDE" strokeWidth="0.0" text="" wrappingWidth="12.999969244003296">
+               <font>
+                  <Font size="17.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </FontAwesomeIconView>
+         </graphic>
+      </Button>
+   </children>
+</AnchorPane>
