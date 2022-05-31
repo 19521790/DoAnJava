@@ -1,22 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
-<?import javafx.geometry.Insets?>
+<?import de.jensd.fx.glyphs.materialicons.MaterialIconView?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="800.0" prefWidth="1000.0" style="-fx-background-color: #f0f2f9;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.doan.client.Controller.HomeController">
+<AnchorPane fx:id="outsideParent" prefHeight="973.0" prefWidth="1000.0" style="-fx-background-color: #f0f2f9;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.doan.client.Controller.HomeController">
    <children>
       <AnchorPane fx:id="clipPane" layoutX="50.0" layoutY="27.0" prefHeight="200.0" prefWidth="900.0">
          <children>
             <AnchorPane fx:id="slidePane" prefHeight="200.0" prefWidth="900.0" />
          </children>
       </AnchorPane>
-      <Button graphicTextGap="0.0" layoutX="935.0" layoutY="110.0" mnemonicParsing="false" onAction="#goNextSlide" prefHeight="33.0" prefWidth="29.0" style="-fx-background-color: white;">
+      <Button graphicTextGap="0.0" layoutX="949.0" layoutY="110.0" mnemonicParsing="false" onAction="#goNextSlide" prefHeight="33.0" prefWidth="29.0" style="-fx-background-color: #f0f2f9;">
          <graphic>
             <FontAwesomeIconView fill="#040404" glyphName="CHEVRON_RIGHT" selectionEnd="1" selectionStart="1" size="15" stroke="#020202" strokeMiterLimit="5.0" strokeType="INSIDE" strokeWidth="0.0" wrappingWidth="11.0">
                <font>
@@ -28,7 +29,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Button graphicTextGap="0.0" layoutX="35.0" layoutY="110.0" mnemonicParsing="false" onAction="#goPreviousSlide" prefHeight="33.0" prefWidth="29.0" style="-fx-background-color: white;">
+      <Button graphicTextGap="0.0" layoutX="21.0" layoutY="110.0" mnemonicParsing="false" onAction="#goPreviousSlide" prefHeight="33.0" prefWidth="29.0" style="-fx-background-color: #f0f2f9;" styleClass="test_btn_hover">
          <graphic>
             <FontAwesomeIconView glyphName="CHEVRON_LEFT" selectionEnd="1" selectionStart="1" size="15" stroke="#020202" strokeType="INSIDE" strokeWidth="0.0" text="" wrappingWidth="12.999969244003296">
                <font>
@@ -43,21 +44,14 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Label layoutX="36.0" layoutY="256.0" prefHeight="33.0" prefWidth="181.0" text="Đã phát gần đây">
+      <Label layoutX="36.0" layoutY="256.0" prefHeight="33.0" prefWidth="181.0" text="Last Listening">
          <font>
             <Font name="Arial Bold" size="20.0" />
          </font>
       </Label>
-      <AnchorPane fx:id="clipPaneBackground" layoutX="40.0" layoutY="321.0" prefHeight="210.0" prefWidth="920.0">
+      <AnchorPane fx:id="clipPaneBackground" layoutX="40.0" layoutY="321.0" prefHeight="240.0" prefWidth="900.0">
          <children>
-            <HBox fx:id="hBoxMusicItem" prefHeight="210.0" prefWidth="920.0">
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
-               <padding>
-                  <Insets left="-10.0" />
-               </padding>
-            </HBox>
+            <AnchorPane fx:id="slideCard" prefHeight="240.0" prefWidth="900.0" />
          </children>
       </AnchorPane>
       <Button graphicTextGap="0.0" layoutX="935.0" layoutY="256.0" mnemonicParsing="false" onAction="#goNextCard" prefHeight="33.0" prefWidth="29.0" style="-fx-background-color: #f0f2f9;">
@@ -84,5 +78,125 @@
             </FontAwesomeIconView>
          </graphic>
       </Button>
+      <Label layoutX="36.0" layoutY="580.0" prefHeight="33.0" prefWidth="203.0" text="New &amp; Popular">
+         <font>
+            <Font name="Arial Bold" size="20.0" />
+         </font>
+      </Label>
+      <AnchorPane layoutX="23.0" layoutY="656.0" prefHeight="265.0" prefWidth="955.0" style="-fx-background-color: white; -fx-background-radius: 25;">
+         <children>
+            <ImageView fitHeight="223.0" fitWidth="241.0" layoutX="21.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Image/download.jpg" />
+               </image>
+            </ImageView>
+            <AnchorPane layoutX="271.0" layoutY="21.0" prefHeight="44.0" prefWidth="656.0" styleClass="top_five_card">
+               <children>
+                  <Label layoutX="10.0" layoutY="12.0" text="1">
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                  </Label>
+                  <ImageView fitHeight="35.0" fitWidth="35.0" layoutX="42.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../Image/download.jpg" />
+                     </image>
+                  </ImageView>
+                  <Label layoutX="100.0" layoutY="12.0" prefHeight="20.0" prefWidth="170.0" text="Blue">
+                     <font>
+                        <Font name="Arial Bold" size="14.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="306.0" layoutY="12.0" prefHeight="20.0" prefWidth="189.0" text="Troye Silvan, Alex hope">
+                     <font>
+                        <Font name="Arial" size="12.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="522.0" layoutY="12.0" prefHeight="20.0" prefWidth="51.0" text="3:13">
+                     <font>
+                        <Font name="Arial" size="12.0" />
+                     </font>
+                  </Label>
+                  <Button layoutX="2.0" layoutY="9.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="29.0" styleClass="top_five_button">
+                     <graphic>
+                        <FontAwesomeIconView glyphName="PLAY" size="15" />
+                     </graphic>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
+                  <Button layoutX="573.0" layoutY="11.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="29.0" styleClass="top_five_button">
+                     <graphic>
+                        <MaterialIconView glyphName="FAVORITE_BORDER" size="15" />
+                     </graphic>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
+                  <Button layoutX="604.0" layoutY="11.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="29.0" styleClass="top_five_button">
+                     <graphic>
+                        <MaterialIconView glyphName="MORE_HORIZ" size="15" />
+                     </graphic>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
+               </children>
+            </AnchorPane>
+            <AnchorPane layoutX="271.0" layoutY="65.0" prefHeight="44.0" prefWidth="656.0" styleClass="top_five_card">
+               <children>
+                  <Label layoutX="10.0" layoutY="12.0" text="1">
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                  </Label>
+                  <ImageView fitHeight="35.0" fitWidth="35.0" layoutX="42.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../Image/download.jpg" />
+                     </image>
+                  </ImageView>
+                  <Label layoutX="100.0" layoutY="12.0" prefHeight="20.0" prefWidth="170.0" text="Blue">
+                     <font>
+                        <Font name="Arial Bold" size="14.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="306.0" layoutY="12.0" prefHeight="20.0" prefWidth="189.0" text="Troye Silvan, Alex hope">
+                     <font>
+                        <Font name="Arial" size="12.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="522.0" layoutY="12.0" prefHeight="20.0" prefWidth="51.0" text="3:13">
+                     <font>
+                        <Font name="Arial" size="12.0" />
+                     </font>
+                  </Label>
+                  <Button layoutX="2.0" layoutY="9.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="29.0" styleClass="top_five_button">
+                     <graphic>
+                        <FontAwesomeIconView glyphName="PLAY" size="15" />
+                     </graphic>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
+                  <Button layoutX="573.0" layoutY="11.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="29.0" styleClass="top_five_button">
+                     <graphic>
+                        <MaterialIconView glyphName="FAVORITE_BORDER" size="15" />
+                     </graphic>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
+                  <Button layoutX="604.0" layoutY="11.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="29.0" styleClass="top_five_button">
+                     <graphic>
+                        <MaterialIconView glyphName="MORE_HORIZ" size="15" />
+                     </graphic>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
+               </children>
+            </AnchorPane>
+         </children>
+      </AnchorPane>
    </children>
 </AnchorPane>

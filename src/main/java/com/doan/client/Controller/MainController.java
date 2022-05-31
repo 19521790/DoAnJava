@@ -85,6 +85,7 @@ public class MainController implements Initializable {
     public JFXSlider jfxProgressBar;
 
     public ScrollPane mainBoard;
+    public Button nextMediaBtn;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -163,6 +164,7 @@ public class MainController implements Initializable {
             @Override
             public void handle(MouseEvent mouseEvent) {
                 mediaPlayer.seek(Duration.seconds(jfxProgressBar.getValue()*0.01* media.getDuration().toSeconds()));
+                System.out.println(jfxProgressBar.getValue());
             }
         });
 
@@ -370,9 +372,11 @@ public class MainController implements Initializable {
                     double current = mediaPlayer.getCurrentTime().toSeconds();
 
                     double end = media.getDuration().toSeconds();
+
                     jfxProgressBar.setValue(current / end *100);
                     if (current / end == 1) {
                         cancelTimer();
+                        nextMediaBtn.fire();
                     }
                 } catch (Exception e){
                     cancelTimer();

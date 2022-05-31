@@ -1,6 +1,10 @@
 package com.doan.client.Controller;
 
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+import de.jensd.fx.glyphs.materialicons.MaterialIconView;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.SnapshotParameters;
@@ -10,18 +14,24 @@ import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 
+import java.io.IOException;
+
 public class PublicController {
-    public AnchorPane musicItem(String imgUrl, String title, String description, String type){
-        AnchorPane anchorPane= new AnchorPane();
+    public static int currentScrollIndex = 0;
+
+    public AnchorPane musicItem(String imgUrl, String title, String description, String type, AnchorPane parentAnchorPane, int position) {
+        AnchorPane anchorPane = new AnchorPane();
         anchorPane.setPrefWidth(160);
         anchorPane.setPrefHeight(220);
         anchorPane.getStyleClass().add("background_shadow");
-        anchorPane.setPadding(new Insets(0,6,0,0));
+
         ImageView imageView = new ImageView(new Image(imgUrl));
         imageView.setFitWidth(130);
         imageView.setFitHeight(135);
@@ -59,11 +69,10 @@ public class PublicController {
 
         Button button = new Button();
         FontAwesomeIconView fontAwesomeIconView = new FontAwesomeIconView();
-        if (type.equals("PLAY")){
+        if (type.equals("PLAY")) {
             fontAwesomeIconView.setGlyphName("PLAY");
             fontAwesomeIconView.setWrappingWidth(13);
-        }
-        else{
+        } else {
             fontAwesomeIconView.setGlyphName("SHARE");
             fontAwesomeIconView.setWrappingWidth(19.6);
         }
@@ -76,12 +85,60 @@ public class PublicController {
         button.setLayoutX(117);
         button.setGraphic(fontAwesomeIconView);
         button.getStyleClass().add("button_opacity");
+        button.setCursor(Cursor.HAND);
 
+        Button more = new Button();
+        MaterialIconView materialIconView = new MaterialIconView();
+        materialIconView.setGlyphName("MORE_HORIZ");
+        materialIconView.setSize("18");
+        more.setGraphic(materialIconView);
+        more.setText("");
+        more.setLayoutY(170);
+        more.setLayoutX(120);
+        more.getStyleClass().add("more_opacity");
+        more.setCursor(Cursor.HAND);
+        more.setBackground(Background.fill(Paint.valueOf("white")));
+
+        more.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                more.getStyleClass().remove("more_opacity");
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/MoreOption.fxml"));
+
+                try {
+
+                    AnchorPane card = fxmlLoader.load();
+                    card.setLayoutY(520);
+                    card.setLayoutX(180*(position- currentScrollIndex) );
+
+                    AnchorPane layer= new AnchorPane();
+                    layer.setPrefWidth(parentAnchorPane.getPrefWidth());
+                    layer.setPrefHeight(parentAnchorPane.getPrefHeight());
+                    layer.getChildren().add(card);
+
+                    parentAnchorPane.getChildren().add(layer);
+                    layer.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                        @Override
+                        public void handle(MouseEvent mouseEvent) {
+                            parentAnchorPane.getChildren().remove(layer);
+                            more.getStyleClass().add("more_opacity");
+                        }
+                    });
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+
+
+            }
+        });
         anchorPane.getChildren().add(titleLabel);
         anchorPane.getChildren().add(descriptionLabel);
         anchorPane.getChildren().add(imageView);
         anchorPane.getChildren().add(button);
-        anchorPane.setCursor(Cursor.HAND);
+
+        anchorPane.getChildren().add(more);
+
+
         return anchorPane;
     }
 }

@@ -16,15 +16,19 @@ import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class HomeController implements Initializable {
     public TextField searchBar;
     public AnchorPane clipPane;
     public AnchorPane slidePane;
-    public HBox hBoxMusicItem;
-    public AnchorPane clipPaneBackground;
 
+    public AnchorPane clipPaneBackground;
+    public AnchorPane slideCard;
+    public AnchorPane outsideParent;
+    PublicController publicController;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -45,18 +49,20 @@ public class HomeController implements Initializable {
             clip.setArcHeight(50);
             imageView.setClip(clip);
             imageView.setCursor(Cursor.HAND);
-            clipPane.getChildren().add(imageView);
+            slidePane.getChildren().add(imageView);
 
         }
 
-        PublicController publicController = new PublicController();
-        Rectangle rectangle1 = new Rectangle(clipPaneBackground.getPrefWidth() -20, clipPaneBackground.getPrefHeight()+ 10);
+        publicController = new PublicController();
+        Rectangle rectangle1 = new Rectangle(clipPaneBackground.getPrefWidth() , clipPaneBackground.getPrefHeight());
         clipPaneBackground.setClip(rectangle1);
-        for (int i =0 ; i < 9; i++ ){
-            AnchorPane anchorPane = publicController.musicItem("http://localhost:8080/image/small-business.jpg","Born to Die", "Lana Del Rey", "PLAY");
-            HBox.setMargin(anchorPane, new Insets(0,0,0,20));
 
-            hBoxMusicItem.getChildren().add(anchorPane);
+        for (int i =0 ; i < 9; i++ ){
+
+
+            AnchorPane anchorPane = publicController.musicItem("http://localhost:8080/image/small-business.jpg","Born to Die", "Lana Del Rey", "PLAY", outsideParent, i);
+            anchorPane.setLayoutX(10+ 180*i);
+            slideCard.getChildren().add(anchorPane);
         }
 
 
@@ -82,6 +88,7 @@ public class HomeController implements Initializable {
     }
 
     public void goNextSlide(ActionEvent mouseEvent) {
+
        if (index<6){
 
            index= index+1;
@@ -95,16 +102,16 @@ public class HomeController implements Initializable {
 
        }
     }
-    public int indexCard= 0;
-    public void goNextCard(ActionEvent actionEvent) {
-        if (indexCard<6){
 
-            indexCard= indexCard+1;
+    public void goNextCard(ActionEvent actionEvent) {
+        if (PublicController.currentScrollIndex <6){
+
+            PublicController.currentScrollIndex = PublicController.currentScrollIndex +1;
             Timeline timeline= new Timeline();
 
 
-            timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(0), new KeyValue(hBoxMusicItem.translateXProperty(), -180*(indexCard-1))));
-            timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(0.25), new KeyValue(hBoxMusicItem.translateXProperty(), -180*(indexCard))));
+            timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(0), new KeyValue(slideCard.translateXProperty(), -180*(PublicController.currentScrollIndex -1))));
+            timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(0.25), new KeyValue(slideCard.translateXProperty(), -180*(PublicController.currentScrollIndex))));
 
             timeline.play();
 
@@ -112,11 +119,11 @@ public class HomeController implements Initializable {
     }
 
     public void goPreviousCard(ActionEvent actionEvent) {
-        if (indexCard> 0){
-            indexCard= indexCard-1;
+        if (PublicController.currentScrollIndex > 0){
+            PublicController.currentScrollIndex = PublicController.currentScrollIndex -1;
             Timeline timeline= new Timeline();
-            timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(0), new KeyValue(hBoxMusicItem.translateXProperty(), -180*(indexCard+1))));
-            timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(0.25), new KeyValue(hBoxMusicItem.translateXProperty(), -180*(indexCard))));
+            timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(0), new KeyValue(slideCard.translateXProperty(), -180*(PublicController.currentScrollIndex +1))));
+            timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(0.25), new KeyValue(slideCard.translateXProperty(), -180*(PublicController.currentScrollIndex))));
             timeline.play();
 
         }

@@ -220,7 +220,7 @@
                </MaterialIconView>
             </graphic>
          </Button>
-         <Button layoutX="490.0" layoutY="17.0" mnemonicParsing="false" onAction="#nextMedia" prefHeight="29.0" prefWidth="25.0" style="-fx-background-color: white;">
+         <Button fx:id="nextMediaBtn" layoutX="490.0" layoutY="17.0" mnemonicParsing="false" onAction="#nextMedia" prefHeight="29.0" prefWidth="25.0" style="-fx-background-color: white;">
             <graphic>
                <MaterialIconView fill="#434242" glyphName="SKIP_NEXT" size="25" wrappingWidth="25.333312034606934" />
             </graphic>
