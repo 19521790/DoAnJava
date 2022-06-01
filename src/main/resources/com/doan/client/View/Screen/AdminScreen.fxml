@@ -13,7 +13,7 @@
 <?import javafx.scene.text.Font?>
 
 
-<AnchorPane prefHeight="600.0" prefWidth="1100.0" style="-fx-background-color: #f5f6fc;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.doan.client.Controller.AdminController">
+<AnchorPane prefHeight="600.0" prefWidth="1100.0" style="-fx-background-color: #f5f6fc;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.doan.client.Controller.Screen.AdminScreenController">
    <children>
       <AnchorPane prefHeight="600.0" prefWidth="200.0" style="-fx-background-color: white;">
          <children>

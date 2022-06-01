@@ -26,7 +26,7 @@
 <?import javafx.scene.paint.Stop?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="parentHomePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.doan.client.Controller.MainController">
+<AnchorPane fx:id="parentHomePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.doan.client.Controller.Screen.MainScreenController">
    <AnchorPane layoutX="-1.0" prefHeight="650.0" prefWidth="200.0" style="-fx-background-color: white;">
       <children>
           <Label alignment="CENTER" layoutX="61.0" layoutY="14.0" prefHeight="28.0" prefWidth="74.0" text="Zyan">
@@ -50,7 +50,7 @@
                   </LinearGradient>
               </textFill>
           </Label>
-         <VBox layoutY="83.0" prefHeight="372.0" prefWidth="196.0">
+         <VBox fx:id="mainVbox" layoutY="83.0" prefHeight="562.0" prefWidth="196.0">
             <children>
                <ToggleButton fx:id="homeBtn" alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" onAction="#toggleBtn" prefHeight="33.0" prefWidth="165.0" selected="true" style="-fx-background-color: white;" text="Home">
                   <toggleGroup>
@@ -66,7 +66,7 @@
                      <Insets left="30.0" />
                   </padding>
                </ToggleButton>
-               <ToggleButton fx:id="newsBtn" alignment="BASELINE_LEFT" graphicTextGap="9.0" layoutX="25.0" layoutY="197.0" mnemonicParsing="false" onAction="#toggleBtn" prefHeight="33.0" prefWidth="165.0" style="-fx-background-color: white;" text="News" toggleGroup="$Group1">
+               <ToggleButton fx:id="discoverBtn" alignment="BASELINE_LEFT" graphicTextGap="9.0" layoutX="25.0" layoutY="197.0" mnemonicParsing="false" onAction="#toggleBtn" prefHeight="33.0" prefWidth="165.0" style="-fx-background-color: white;" text="Discover" toggleGroup="$Group1">
                   <font>
                      <Font size="15.0" />
                   </font>
@@ -133,7 +133,7 @@
                      <Font size="15.0" />
                   </font>
                </Label>
-               <Button mnemonicParsing="false" onAction="#setActiveComponent" style="-fx-background-color: #3b75ff;" text="Add" textFill="WHITE">
+               <Button mnemonicParsing="false" onAction="#addNewPlaylist" style="-fx-background-color: #3b75ff;" text="Add" textFill="WHITE">
                   <graphic>
                      <FontAwesomeIconView fill="WHITE" glyphName="PLUS" />
                   </graphic>
@@ -141,6 +141,24 @@
                      <Font size="14.0" />
                   </font>
                </Button>
+               <Separator prefWidth="200.0">
+                  <VBox.margin>
+                     <Insets bottom="10.0" top="20.0" />
+                  </VBox.margin>
+               </Separator>
+               <Label prefHeight="28.0" prefWidth="173.0" text="Label" textAlignment="CENTER">
+                  <font>
+                     <Font size="17.0" />
+                  </font>
+               </Label>
+               <Label layoutX="25.0" layoutY="337.0" prefHeight="28.0" prefWidth="173.0" text="Label" textAlignment="CENTER">
+                  <font>
+                     <Font size="17.0" />
+                  </font>
+                  <VBox.margin>
+                     <Insets top="5.0" />
+                  </VBox.margin>
+               </Label>
             </children>
             <padding>
                <Insets left="15.0" right="15.0" />
@@ -166,12 +184,34 @@
          <FontAwesomeIconView fill="#8f8f8f" glyphName="SEARCH" layoutX="48.0" layoutY="32.0" size="12" />
          <ImageView fx:id="imageUser" fitHeight="40.0" fitWidth="59.0" layoutX="940.0" layoutY="4.0" onMouseClicked="#showSettingUser" pickOnBounds="true" preserveRatio="true">
             <image>
-               <Image url="@../Image/anonymous.png" />
+               <Image url="@../../Image/anonymous.png" />
             </image>
             <cursor>
                <Cursor fx:constant="HAND" />
             </cursor>
          </ImageView>
+         <AnchorPane fx:id="discoverButtonTab" layoutX="419.0" layoutY="10.0" prefHeight="36.0" prefWidth="259.0">
+            <children>
+               <ToggleButton fx:id="offerBtn" layoutX="14.0" layoutY="3.0" mnemonicParsing="false" onAction="#fireTab" styleClass="button_toggle_discover" text="For You">
+                  <font>
+                     <Font size="14.0" />
+                  </font>
+                  <toggleGroup>
+                     <ToggleGroup fx:id="Group2" />
+                  </toggleGroup>
+               </ToggleButton>
+               <ToggleButton fx:id="categoryBtn" layoutX="87.0" layoutY="3.0" mnemonicParsing="false" onAction="#fireTab" styleClass="button_toggle_discover" text="Category" toggleGroup="$Group2">
+                  <font>
+                     <Font size="14.0" />
+                  </font>
+               </ToggleButton>
+               <ToggleButton fx:id="billBoardBtn" layoutX="170.0" layoutY="3.0" mnemonicParsing="false" onAction="#fireTab" styleClass="button_toggle_discover" text="Billboard" toggleGroup="$Group2">
+                  <font>
+                     <Font size="14.0" />
+                  </font>
+               </ToggleButton>
+            </children>
+         </AnchorPane>
       </children>
    </AnchorPane>
    <AnchorPane fx:id="accountSetting" layoutX="1000.0" layoutY="50.0" prefHeight="100.0" prefWidth="161.0" style="-fx-background-color: white; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.75), 5, 0, 0, 0);" visible="false">
@@ -206,12 +246,12 @@
    </AnchorPane>
    <AnchorPane fx:id="musicBar" layoutX="200.0" layoutY="560.0" prefHeight="90.0" prefWidth="1000.0" style="-fx-background-color: white;">
       <children>
-         <Button graphicTextGap="0.0" layoutX="450.0" layoutY="14.0" mnemonicParsing="false" onAction="#playMedia" prefHeight="40.0" prefWidth="40.0" style="-fx-background-color: #3b75ff; -fx-background-radius: 50%;">
+         <Button graphicTextGap="0.0" layoutX="479.0" layoutY="14.0" mnemonicParsing="false" onAction="#playMedia" prefHeight="40.0" prefWidth="40.0" style="-fx-background-color: #3b75ff; -fx-background-radius: 50%;">
             <graphic>
                <FontAwesomeIconView fx:id="playGraphicBtn" fill="WHITE" glyphName="PLAY" size="20" wrappingWidth="13.0" />
             </graphic>
          </Button>
-         <Button layoutX="408.0" layoutY="16.0" mnemonicParsing="false" onAction="#previousMedia" prefHeight="33.0" prefWidth="0.0" style="-fx-background-color: white;">
+         <Button layoutX="437.0" layoutY="16.0" mnemonicParsing="false" onAction="#previousMedia" prefHeight="33.0" prefWidth="0.0" style="-fx-background-color: white;">
             <graphic>
                <MaterialIconView fill="#434242" glyphName="SKIP_PREVIOUS" size="25" text="">
                   <rotationAxis>
@@ -220,7 +260,7 @@
                </MaterialIconView>
             </graphic>
          </Button>
-         <Button fx:id="nextMediaBtn" layoutX="490.0" layoutY="17.0" mnemonicParsing="false" onAction="#nextMedia" prefHeight="29.0" prefWidth="25.0" style="-fx-background-color: white;">
+         <Button fx:id="nextMediaBtn" layoutX="519.0" layoutY="17.0" mnemonicParsing="false" onAction="#nextMedia" prefHeight="29.0" prefWidth="25.0" style="-fx-background-color: white;">
             <graphic>
                <MaterialIconView fill="#434242" glyphName="SKIP_NEXT" size="25" wrappingWidth="25.333312034606934" />
             </graphic>
@@ -270,6 +310,37 @@
                <FontAwesomeIconView fill="#282828" glyphName="VOLUME_UP" size="18" text="" />
             </graphic>
          </Button>
+         <Button layoutX="403.0" layoutY="15.0" mnemonicParsing="false" prefHeight="33.0" prefWidth="0.0" style="-fx-background-color: none;">
+            <graphic>
+               <FontAwesomeIconView glyphName="RANDOM" size="18" />
+            </graphic>
+         </Button>
+         <Button layoutX="567.0" layoutY="17.0" mnemonicParsing="false" prefHeight="33.0" prefWidth="0.0" style="-fx-background-color: none;">
+            <graphic>
+               <FontAwesomeIconView glyphName="UNDO" size="18" />
+            </graphic>
+         </Button>
+         <Label fx:id="timePlay" layoutX="229.0" layoutY="61.0" text="00:00">
+            <font>
+               <Font size="13.0" />
+            </font>
+         </Label>
+         <Label fx:id="timeRemaining" layoutX="730.0" layoutY="60.0" text="03:00">
+            <font>
+               <Font size="14.0" />
+            </font>
+         </Label>
+         <ImageView fitHeight="40.0" fitWidth="40.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+               <Image url="@../../Image/download.jpg" />
+            </image>
+         </ImageView>
+         <Label layoutX="73.0" layoutY="18.0" text="Queen of the Japanese">
+            <font>
+               <Font name="System Bold" size="12.0" />
+            </font>
+         </Label>
+         <Label layoutX="73.0" layoutY="40.0" text="Queen" />
       </children>
    </AnchorPane>
    <AnchorPane fx:id="loginPaneFromHome" prefHeight="650.0" prefWidth="1200.0" visible="false" />

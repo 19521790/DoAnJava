@@ -1,26 +1,23 @@
-package com.doan.client.Controller;
+package com.doan.client.Controller.Screen;
 
+import com.doan.client.Controller.PublicController;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
 
-public class HomeController implements Initializable {
+public class HomeScreenController implements Initializable {
     public TextField searchBar;
     public AnchorPane clipPane;
     public AnchorPane slidePane;

@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="outsideParent" prefHeight="973.0" prefWidth="1000.0" style="-fx-background-color: #f0f2f9;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.doan.client.Controller.HomeController">
+<AnchorPane fx:id="outsideParent" prefHeight="973.0" prefWidth="1000.0" style="-fx-background-color: #f0f2f9;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.doan.client.Controller.Screen.HomeScreenController">
    <children>
       <AnchorPane fx:id="clipPane" layoutX="50.0" layoutY="27.0" prefHeight="200.0" prefWidth="900.0">
          <children>
@@ -18,31 +18,20 @@
          </children>
       </AnchorPane>
       <Button graphicTextGap="0.0" layoutX="949.0" layoutY="110.0" mnemonicParsing="false" onAction="#goNextSlide" prefHeight="33.0" prefWidth="29.0" style="-fx-background-color: #f0f2f9;">
-         <graphic>
-            <FontAwesomeIconView fill="#040404" glyphName="CHEVRON_RIGHT" selectionEnd="1" selectionStart="1" size="15" stroke="#020202" strokeMiterLimit="5.0" strokeType="INSIDE" strokeWidth="0.0" wrappingWidth="11.0">
-               <font>
-                  <Font size="17.0" />
-               </font>
-            </FontAwesomeIconView>
-         </graphic>
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
+         <graphic>
+            <MaterialIconView glyphName="CHEVRON_RIGHT" size="25" />
+         </graphic>
       </Button>
       <Button graphicTextGap="0.0" layoutX="21.0" layoutY="110.0" mnemonicParsing="false" onAction="#goPreviousSlide" prefHeight="33.0" prefWidth="29.0" style="-fx-background-color: #f0f2f9;" styleClass="test_btn_hover">
-         <graphic>
-            <FontAwesomeIconView glyphName="CHEVRON_LEFT" selectionEnd="1" selectionStart="1" size="15" stroke="#020202" strokeType="INSIDE" strokeWidth="0.0" text="" wrappingWidth="12.999969244003296">
-               <font>
-                  <Font size="17.0" />
-               </font>
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-            </FontAwesomeIconView>
-         </graphic>
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
+         <graphic>
+            <MaterialIconView glyphName="CHEVRON_LEFT" size="25" />
+         </graphic>
       </Button>
       <Label layoutX="36.0" layoutY="256.0" prefHeight="33.0" prefWidth="181.0" text="Last Listening">
          <font>
@@ -55,28 +44,20 @@
          </children>
       </AnchorPane>
       <Button graphicTextGap="0.0" layoutX="935.0" layoutY="256.0" mnemonicParsing="false" onAction="#goNextCard" prefHeight="33.0" prefWidth="29.0" style="-fx-background-color: #f0f2f9;">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
          <graphic>
-            <FontAwesomeIconView fill="#040404" glyphName="CHEVRON_RIGHT" selectionEnd="1" selectionStart="1" size="15" stroke="#020202" strokeMiterLimit="5.0" strokeType="INSIDE" strokeWidth="0.0" wrappingWidth="11.0">
-               <font>
-                  <Font size="17.0" />
-               </font>
-            </FontAwesomeIconView>
+            <MaterialIconView glyphName="CHEVRON_RIGHT" size="25" />
+         </graphic>
+      </Button>
+      <Button graphicTextGap="0.0" layoutX="897.0" layoutY="256.0" mnemonicParsing="false" onAction="#goPreviousCard" prefHeight="33.0" prefWidth="29.0" style="-fx-background-color: #f0f2f9;">
+         <graphic>
+            <MaterialIconView glyphName="CHEVRON_LEFT" size="25" />
          </graphic>
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
-      </Button>
-      <Button graphicTextGap="0.0" layoutX="897.0" layoutY="256.0" mnemonicParsing="false" onAction="#goPreviousCard" prefHeight="33.0" prefWidth="29.0" style="-fx-background-color: #f0f2f9;">
-         <graphic>
-            <FontAwesomeIconView glyphName="CHEVRON_LEFT" selectionEnd="1" selectionStart="1" size="15" stroke="#020202" strokeType="INSIDE" strokeWidth="0.0" text="" wrappingWidth="12.999969244003296">
-               <font>
-                  <Font size="17.0" />
-               </font>
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-            </FontAwesomeIconView>
-         </graphic>
       </Button>
       <Label layoutX="36.0" layoutY="580.0" prefHeight="33.0" prefWidth="203.0" text="New &amp; Popular">
          <font>
@@ -87,7 +68,7 @@
          <children>
             <ImageView fitHeight="223.0" fitWidth="241.0" layoutX="21.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../Image/download.jpg" />
+                  <Image url="@../../Image/download.jpg" />
                </image>
             </ImageView>
             <AnchorPane layoutX="271.0" layoutY="21.0" prefHeight="44.0" prefWidth="656.0" styleClass="top_five_card">
@@ -99,7 +80,7 @@
                   </Label>
                   <ImageView fitHeight="35.0" fitWidth="35.0" layoutX="42.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../Image/download.jpg" />
+                        <Image url="@../../Image/download.jpg" />
                      </image>
                   </ImageView>
                   <Label layoutX="100.0" layoutY="12.0" prefHeight="20.0" prefWidth="170.0" text="Blue">
@@ -152,7 +133,7 @@
                   </Label>
                   <ImageView fitHeight="35.0" fitWidth="35.0" layoutX="42.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../Image/download.jpg" />
+                        <Image url="@../../Image/download.jpg" />
                      </image>
                   </ImageView>
                   <Label layoutX="100.0" layoutY="12.0" prefHeight="20.0" prefWidth="170.0" text="Blue">

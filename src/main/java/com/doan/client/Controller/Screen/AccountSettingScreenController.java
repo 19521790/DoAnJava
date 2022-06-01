@@ -1,4 +1,4 @@
-package com.doan.client.Controller;
+package com.doan.client.Controller.Screen;
 
 import com.doan.client.Model.User;
 import com.mashape.unirest.http.HttpResponse;
@@ -19,7 +19,7 @@ import javafx.scene.layout.AnchorPane;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class AccountSettingController implements Initializable {
+public class AccountSettingScreenController implements Initializable {
 
     public TextField nameInf;
     public TextField emailInf;

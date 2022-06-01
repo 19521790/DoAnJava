@@ -14,7 +14,7 @@
 <?import javafx.scene.paint.Stop?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.doan.client.Controller.LoginFormController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.doan.client.Controller.Component.LoginFormController">
     <AnchorPane fx:id="overlay" prefHeight="600.0" prefWidth="1200.0" style="-fx-background-color: rgba(0, 0, 0, 0.3);" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
     <AnchorPane fx:id="loginForm" layoutX="414.0" layoutY="117.0" prefHeight="365.0" prefWidth="372.0" style="-fx-background-color: white; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.75), 5, 0, 0, 0);">
         <opaqueInsets>
@@ -29,7 +29,7 @@
                 </Label>
                 <ImageView fitHeight="36.0" fitWidth="46.0" layoutX="131.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true">
                     <image>
-                        <Image url="@../Image/loader-loading.gif" />
+                        <Image url="@../../Image/loader-loading.gif" />
                     </image>
                 </ImageView>
             </children>
@@ -159,7 +159,7 @@
                     </Label>
                     <ImageView disable="true" fitHeight="29.0" fitWidth="29.0" layoutX="98.0" layoutY="17.0" pickOnBounds="true" preserveRatio="true">
                         <image>
-                            <Image url="@../Image/loader-loading.gif" />
+                            <Image url="@../../Image/loader-loading.gif" />
                         </image>
                     </ImageView>
                 </children>
@@ -206,7 +206,7 @@
                             </Label>
                             <ImageView disable="true" fitHeight="29.0" fitWidth="29.0" layoutX="98.0" layoutY="17.0" pickOnBounds="true" preserveRatio="true">
                                 <image>
-                                    <Image url="@../Image/loader-loading.gif" />
+                                    <Image url="@../../Image/loader-loading.gif" />
                                 </image>
                             </ImageView>
                         </children>
@@ -285,7 +285,7 @@
                     </Label>
                     <ImageView fitHeight="36.0" fitWidth="46.0" layoutX="131.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true">
                         <image>
-                            <Image url="@../Image/loader-loading.gif" />
+                            <Image url="@../../Image/loader-loading.gif" />
                         </image>
                     </ImageView>
                 </children>

@@ -2,9 +2,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXMLController.java to edit this template
  */
-package com.doan.client.Controller;
+package com.doan.client.Controller.Component;
 
 
+import com.doan.client.Controller.Screen.MainScreenController;
 import com.doan.client.Model.User;
 import com.google.gson.Gson;
 import com.mashape.unirest.http.HttpResponse;
@@ -51,7 +52,7 @@ public class LoginFormController implements Initializable {
     public PasswordField secondPassword;
     public AnchorPane changePasswordForm;
     public Button changePasswordBtn;
-    public MainController mainController;
+    public MainScreenController mainController;
 
     @FXML
     public AnchorPane loginPanel;
@@ -158,7 +159,7 @@ public class LoginFormController implements Initializable {
                                     stage.close();
 
                                     Stage primaryStage= new Stage();
-                                    FXMLLoader adminFxmlLoader= new FXMLLoader(getClass().getResource("/com/doan/client/View/AdminPage.fxml"));
+                                    FXMLLoader adminFxmlLoader= new FXMLLoader(getClass().getResource("/com/doan/client/View/Screen/AdminScreen.fxml"));
                                     Parent root = null;
                                     try {
                                         root = adminFxmlLoader.load();

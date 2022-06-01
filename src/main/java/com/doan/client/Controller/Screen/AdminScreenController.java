@@ -1,7 +1,6 @@
-package com.doan.client.Controller;
+package com.doan.client.Controller.Screen;
 
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
-import de.jensd.fx.glyphs.materialicons.MaterialIconView;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Toggle;
@@ -14,7 +13,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class AdminController implements Initializable {
+public class AdminScreenController implements Initializable {
 
 
     public ToggleButton addMusicTabBtn;

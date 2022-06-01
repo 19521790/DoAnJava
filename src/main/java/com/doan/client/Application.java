@@ -25,7 +25,7 @@ public class Application extends javafx.application.Application {
     @Override
     public void start(Stage primaryStage) throws IOException, UnirestException {
 
-        FXMLLoader fxmlLoader= new FXMLLoader(getClass().getResource("/com/doan/client/View/Main.fxml"));
+        FXMLLoader fxmlLoader= new FXMLLoader(getClass().getResource("/com/doan/client/View/Screen/MainScreen.fxml"));
         Parent root = fxmlLoader.load();
         Scene scene = new Scene(root);
         scene.getStylesheets().add(getClass().getResource("/com/doan/client/application.css").toExternalForm());

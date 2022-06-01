@@ -18,7 +18,7 @@
 
 .timelineProgress .track {
     -fx-pref-height: 5;
-    -fx-pref-width: 452;
+    -fx-pref-width: 400;
 }
 
 .timelineProgress .animated-thumb {
@@ -78,3 +78,45 @@
 }
 
 
+.button_toggle_discover{
+    -fx-background-color:  #f5f6fc;
+    -fx-font-size: 14;
+
+}
+.button_toggle_discover:focused{
+    -fx-background-color:  #3b75ff;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 14;
+}
+
+.button_toggle{
+    -fx-background-color:  #3b75ff;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 14;
+}
+#navigateBtn{
+    -fx-opacity: 0;
+}
+#clipBanner:hover #navigateBtn{
+
+    -fx-opacity: 1;
+}
+#banner1{
+    -fx-opacity: 0;
+}
+#banner21{
+    -fx-opacity: 0;
+}
+#clipBanner:hover #banner21{
+    -fx-opacity: 0.5;
+}
+#clipBanner:hover #banner1{
+    -fx-opacity: 0.5;
+}
+.playlistBtn{
+    -fx-font-size: 17;
+    -fx-background-color: none;
+
+}

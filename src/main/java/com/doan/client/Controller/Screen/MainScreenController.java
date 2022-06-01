@@ -2,27 +2,31 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXMLController.java to edit this template
  */
-package com.doan.client.Controller;
+package com.doan.client.Controller.Screen;
 
 
+import com.doan.client.Controller.Component.LoginFormController;
 import com.doan.client.Model.User;
 
 import com.jfoenix.controls.JFXSlider;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import de.jensd.fx.glyphs.materialicons.MaterialIconView;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.Cursor;
-import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.Group;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Paint;
@@ -40,9 +44,10 @@ import java.util.*;
  *
  * @author Admin
  */
-public class MainController implements Initializable {
+public class MainScreenController implements Initializable {
 
     public AnchorPane parentHomePane;
+
 
     public AnchorPane loginPaneFromHome;
     public User user = null;
@@ -57,7 +62,7 @@ public class MainController implements Initializable {
     public Label logoutBtn;
     public Label openLoginAccount;
     public AnchorPane accountAnchorPane;
-    public Button testBtn;
+
     public ToggleButton newsBtn;
     public ToggleButton likeBtn;
     public ToggleButton albumBtn;
@@ -65,9 +70,10 @@ public class MainController implements Initializable {
     public ToggleButton followsBtn;
     public ToggleButton homeBtn;
     public AnchorPane homePane;
+
     public ProgressBar songProgressBar;
     public Slider volumeSlider;
-    public Label testLabel;
+
     public AnchorPane musicBar;
     public File directory;
     public File[] files;
@@ -86,12 +92,33 @@ public class MainController implements Initializable {
 
     public ScrollPane mainBoard;
     public Button nextMediaBtn;
+    public TextField searchBar;
+    public ToggleButton discoverBtn;
+
+    public ToggleGroup Group2;
+    public ToggleButton categoryBtn;
+    public ToggleButton billBoardBtn;
+
+    public AnchorPane discoverButtonTab;
+    public ToggleButton offerBtn;
+
+    public Label timePlay;
+    public Label timeRemaining;
+
+    public AnchorPane discoverPane;
+    public DiscoverScreenController discoverController;
+
+
+    public VBox mainVbox;
+
+    public Group group3;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         loginPaneFromHome.setVisible(true);
-        FXMLLoader loginFxmlLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/LoginForm.fxml"));
-        FXMLLoader homeFxmlLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/Home.fxml"));
+        FXMLLoader loginFxmlLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/Component/LoginForm.fxml"));
+        FXMLLoader homeFxmlLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/Screen/HomeScreen.fxml"));
+        FXMLLoader discoverFxmlLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/Screen/DiscoverScreen.fxml"));
 
         try {
             //login
@@ -101,6 +128,10 @@ public class MainController implements Initializable {
             loginFormController.mainController = this;
             // home
             homePane = homeFxmlLoader.load();
+            //discover
+            discoverPane = discoverFxmlLoader.load();
+            discoverController = discoverFxmlLoader.getController();
+
 
 
         } catch (IOException e) {
@@ -108,6 +139,8 @@ public class MainController implements Initializable {
         }
         //avatar
         homeBtn.fire();
+        offerBtn.fire();
+
         setAvatarUser();
         setSliderVolume();
 
@@ -150,9 +183,9 @@ public class MainController implements Initializable {
         jfxProgressBar = new JFXSlider();
 
 
-        jfxProgressBar.setPrefWidth(452);
+        jfxProgressBar.setPrefWidth(450);
         jfxProgressBar.setLayoutY(64);
-        jfxProgressBar.setLayoutX(240);
+        jfxProgressBar.setLayoutX(270);
         jfxProgressBar.setBlockIncrement(10);
 
         jfxProgressBar.getStyleClass().add("timelineProgress");
@@ -163,8 +196,12 @@ public class MainController implements Initializable {
         jfxProgressBar.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
-                mediaPlayer.seek(Duration.seconds(jfxProgressBar.getValue()*0.01* media.getDuration().toSeconds()));
-                System.out.println(jfxProgressBar.getValue());
+                double currentTime =jfxProgressBar.getValue() /100 * media.getDuration().toSeconds();
+                mediaPlayer.seek(Duration.seconds(currentTime));
+                timePlay.setText(setTimePlay(currentTime));
+
+                String timeRemainString =setTimePlay(media.getDuration().toSeconds() - currentTime);
+                timeRemaining.setText(timeRemainString);
             }
         });
 
@@ -179,6 +216,7 @@ public class MainController implements Initializable {
         clip.setArcWidth(40);
         imageUser.setClip(clip);
         accountSetting.setVisible(false);
+
     }
 
     public void setLoginPaneVisible() {
@@ -187,21 +225,24 @@ public class MainController implements Initializable {
 
     public void setUser(User user) {
         this.user = user;
-        System.out.println(user.getImage());
+
         Image image = new Image(user.getImage());
         imageUser.setImage(image);
-        System.out.println(image);
+
         login = true;
         logoutBtn.setDisable(false);
-        FXMLLoader accountFxmlLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/AccountSetting.fxml"));
+        FXMLLoader accountFxmlLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/Screen/AccountScreen.fxml"));
         try {
             accountAnchorPane = accountFxmlLoader.load();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        AccountSettingController accountSettingController = accountFxmlLoader.getController();
+        AccountSettingScreenController accountSettingController = accountFxmlLoader.getController();
         accountSettingController.setUser(user);
 
+        PlayListScreenController.image= user.getImage();
+        PlayListScreenController.name= user.getName();
+        PlayListScreenController.isSetUser= true;
 
     }
 
@@ -236,14 +277,16 @@ public class MainController implements Initializable {
             ToggleButton indexToggleButton = (ToggleButton) toggle;
             if (indexToggleButton.isSelected()) {
                 indexToggleButton.setStyle("-fx-background-color: #3b75ff; -fx-text-fill: white");
-                try {
-                    FontAwesomeIconView fontAwesomeIconView = (FontAwesomeIconView) indexToggleButton.getGraphic();
-                    fontAwesomeIconView.setFill(Paint.valueOf("white"));
-                } catch (Exception e) {
 
-                    MaterialIconView fontAwesomeIconView = (MaterialIconView) indexToggleButton.getGraphic();
-                    fontAwesomeIconView.setFill(Paint.valueOf("white"));
-                }
+                    try {
+                        FontAwesomeIconView fontAwesomeIconView = (FontAwesomeIconView) indexToggleButton.getGraphic();
+                        fontAwesomeIconView.setFill(Paint.valueOf("white"));
+                    } catch (Exception e) {
+
+                        MaterialIconView fontAwesomeIconView = (MaterialIconView) indexToggleButton.getGraphic();
+                        fontAwesomeIconView.setFill(Paint.valueOf("white"));
+                    }
+
                 pushScreen(indexToggleButton);
             } else {
                 indexToggleButton.setStyle("-fx-background-color: white; -fx-text-fill: black");
@@ -260,8 +303,25 @@ public class MainController implements Initializable {
     }
 
     public void pushScreen(ToggleButton toggleButton) {
+        discoverButtonTab.setVisible(false);
+
         if (toggleButton.getId().equals("homeBtn")) {
             mainBoard.setContent(homePane);
+        } else if (toggleButton.getId().equals("discoverBtn")) {
+            mainBoard.setContent(discoverPane);
+            discoverButtonTab.setVisible(true);
+
+        }else{
+            FXMLLoader playlistFxmlLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/Screen/PlaylistScreen.fxml"));
+            try {
+                AnchorPane anchorPane= playlistFxmlLoader.load();
+                PlayListScreenController playListScreenController= playlistFxmlLoader.getController();
+                playListScreenController.setPlaylistName("Playlist # " + (count-1));
+                mainBoard.setContent(anchorPane);
+
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -289,6 +349,7 @@ public class MainController implements Initializable {
             logoutPopup.setHeaderText("Logout Success");
             logoutPopup.show();
             homeBtn.fire();
+            PlayListScreenController.isSetUser= false;
 
         }
 
@@ -340,6 +401,12 @@ public class MainController implements Initializable {
     }
 
     public void changMedia() {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                timePlay.setText("00:00");
+            }
+        });
         mediaPlayer.pause();
         jfxProgressBar.setValue(0);
         media = new Media(songs.get(songNumber).toURI().toString());
@@ -372,13 +439,27 @@ public class MainController implements Initializable {
                     double current = mediaPlayer.getCurrentTime().toSeconds();
 
                     double end = media.getDuration().toSeconds();
+                    double timeRemain = end - current;
 
-                    jfxProgressBar.setValue(current / end *100);
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+
+                           String time= setTimePlay(current);
+                           timePlay.setText(time);
+                           String timeRemainString =setTimePlay(timeRemain);
+                           timeRemaining.setText(timeRemainString);
+                        }
+                    });
+
+
+
+                    jfxProgressBar.setValue(current / end * 100);
                     if (current / end == 1) {
-                        cancelTimer();
+
                         nextMediaBtn.fire();
                     }
-                } catch (Exception e){
+                } catch (Exception e) {
                     cancelTimer();
                 }
             }
@@ -390,4 +471,55 @@ public class MainController implements Initializable {
         running = false;
         timer.cancel();
     }
+
+    public void fireTab(ActionEvent actionEvent) {
+        List<Toggle> toggles = Group2.getToggles();
+        for (Toggle value : toggles) {
+            ToggleButton toggle = (ToggleButton) value;
+            if (toggle.isSelected()) {
+                toggle.getStyleClass().add("button_toggle");
+                discoverController.setTab(toggle.getId());
+            } else {
+                toggle.getStyleClass().remove("button_toggle");
+            }
+        }
+    }
+    public String setTimePlay(double current){
+        int minutePlay = (int) Math.floor(current / 60);
+
+        int secondPlay = (int) (Math.round(current) - Math.floor(current / 60) * 60);
+
+        if (secondPlay==60){
+            secondPlay= 0;
+            minutePlay+= 1;
+        }
+        String labelMinutePlay = String.valueOf(minutePlay);
+        String labelSecondPlay = String.valueOf(secondPlay);
+        if (secondPlay < 10) {
+            labelSecondPlay = "0" + labelSecondPlay;
+        }
+        if (minutePlay < 10) {
+            labelMinutePlay = "0" + labelMinutePlay;
+        }
+        return labelMinutePlay + ":" + labelSecondPlay;
+    }
+    int count=1;
+    public void addNewPlaylist(ActionEvent actionEvent) {
+
+        ToggleButton button= new ToggleButton();
+        button.setText("Playlist # " + count);
+        FontAwesomeIconView fontAwesomeIconView = new FontAwesomeIconView();
+        fontAwesomeIconView.setGlyphName("CHECK");
+        button.setGraphic(fontAwesomeIconView);
+        button.getStyleClass().add("playlistBtn");
+        VBox.setMargin(button, new Insets(10,0,0,0));
+        mainVbox.getChildren().add(button);
+        button.setToggleGroup(Group1);
+        count+=1;
+        button.setOnAction(this::toggleBtn);
+        button.setId("Playlist"+count);
+        button.fire();
+
+    }
+
 }
