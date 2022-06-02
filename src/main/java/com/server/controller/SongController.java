@@ -1,12 +1,14 @@
 package com.server.controller;
 
 import com.server.entity.Song;
+import com.server.exception.SongException;
 import com.server.service.SongService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.ConstraintViolationException;
 import java.util.List;
 
 @RestController
@@ -20,8 +22,12 @@ public class SongController {
     public ResponseEntity addSong(@RequestBody Song song) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(songService.addSong(song));
-        }catch(Exception e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        } catch (ConstraintViolationException e) {
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(e.getMessage());
+        } catch (SongException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         }
     }
 
@@ -29,29 +35,24 @@ public class SongController {
     public ResponseEntity addSongs(@RequestBody List<Song> songs) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(songService.addSongs(songs));
-        }catch(Exception e){
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 
     @GetMapping("/findSongById/{id}")
     public ResponseEntity findSongById(@PathVariable String id) {
-        Song song = songService.findSongById(id);
-        if(song != null){
-            return ResponseEntity.status(HttpStatus.OK).body(song);
-        }else{
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Song not exist");
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(songService.findSongById(id));
+        } catch (SongException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
     @GetMapping("/findAllSongs")
     public ResponseEntity findAllSongs() {
         List<Song> songs = songService.findAllSongs();
-        if (songs.size() > 0) {
-            return ResponseEntity.status(HttpStatus.OK).body(songs);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No songs available");
-        }
+        return ResponseEntity.status(songs.size() > 0 ? HttpStatus.OK : HttpStatus.NOT_FOUND).body(songs);
     }
 
     @PutMapping("/updateSong")

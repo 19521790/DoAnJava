@@ -2,6 +2,7 @@ package com.server.controller;
 
 import com.server.entity.User;
 import com.server.service.UserService;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,8 +19,9 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/addUser")
-    public User addUser(@RequestBody User user) {
-        return userService.addUser(user);
+    public ResponseEntity addUser(@RequestBody User user) {
+        
+        return ResponseEntity.status(HttpStatus.OK).body(userService.addUser(user));
     }
 
     @GetMapping("/findAllUsers")
