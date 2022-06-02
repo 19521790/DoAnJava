@@ -21,7 +21,7 @@ public class SongService {
     @Autowired
     private GoogleDriveService driveService;
 
-    public Song addSong(Song song, File file) throws ConstraintViolationException, SongException, Exception {
+    public Song addSong(Song song) throws ConstraintViolationException, SongException, Exception {
         Song songOptional = songRepository.findByName(song.getName());
         String fileName = "first_image";
         String filePath = "D:\\Downloads\\Beatbox - NCT Dream.m4a";
