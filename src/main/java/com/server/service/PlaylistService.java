@@ -2,11 +2,14 @@ package com.server.service;
 
 import com.server.entity.Playlist;
 import com.server.entity.Song;
+import com.server.exception.PlaylistException;
 import com.server.repository.PlaylistRepository;
 import com.server.repository.SongRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -21,12 +24,22 @@ public class PlaylistService {
         return playlistRepository.save(playlist);
     }
 
-    public Playlist findPlaylistById(String id) {
-        return playlistRepository.findById(id).orElse(null);
+    public Playlist findPlaylistById(String id) throws PlaylistException{
+        Playlist playlist = playlistRepository.findById(id).orElse(null);
+        if(playlist==null){
+            throw new PlaylistException(PlaylistException.NotFoundException(id));
+        }else{
+            return playlist;
+        }
     }
 
-    public List<Playlist> findAllPlaylists() {
-        return playlistRepository.findAll();
+    public List<Playlist> findAllPlaylists(){
+        List<Playlist> playlists = playlistRepository.findAll();
+        if(playlists.size()>0){
+            return playlists;
+        }else{
+            return new ArrayList<Playlist>();
+        }
     }
 
     public String deletePlaylist(String id) {
@@ -40,9 +53,14 @@ public class PlaylistService {
 
     public Playlist addSongToPlaylist(String idPlaylist, String idSong) {
         Playlist playlist = playlistRepository.findById(idPlaylist).get();
-        System.out.println(playlist);
         Song song = songRepository.findById(idSong).get();
-        System.out.println(song);
-        return playlistRepository.save(playlist);
+
+        Song songToUpload = new Song();
+        songToUpload.setName(song.getName());
+        songToUpload.setArtists(song.getArtists());
+        songToUpload.setDuration(song.getDuration());
+        songToUpload.setAlbum(song.getAlbum());
+
+        return playlistRepository.addSongToPlaylist(playlist,songToUpload);
     }
 }
