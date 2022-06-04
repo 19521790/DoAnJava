@@ -163,6 +163,7 @@ public class LoginFormController implements Initializable {
                                     Parent root = null;
                                     try {
                                         root = adminFxmlLoader.load();
+                                        root = adminFxmlLoader.load();
                                     } catch (IOException e) {
                                         throw new RuntimeException(e);
                                     }
@@ -377,7 +378,7 @@ public class LoginFormController implements Initializable {
                 try {
                     String displayName = lastName.getText() + " " + firstName.getText();
                     String json = "{\"name\":\"" + newUsername.getText() + "\",\"displayName\":\"" + displayName + "\", \"email\":\"" + newEmail.getText() + "\", \"password\":\"" + newPassword.getText() + "\"}";
-                    System.out.println(json);
+
 
                     HttpResponse<String> a = Unirest.post("http://localhost:8080/user/createUser").field("file", file).field("json", json).asString();
                     if (a.getBody().equals("true")) {

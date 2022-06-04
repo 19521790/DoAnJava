@@ -11,13 +11,13 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="800.0" prefWidth="1000.0" style="-fx-background-color: #f5f6fc;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.doan.client.Controller.Screen.PlayListScreenController">
+<AnchorPane fx:id="playlistCover" prefHeight="800.0" prefWidth="1000.0" style="-fx-background-color: #f5f6fc;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.doan.client.Controller.Screen.PlayListScreenController">
    <children>
       <AnchorPane prefHeight="280.0" prefWidth="1000.0" style="-fx-background-color: linear-gradient(to bottom, #767274 50%, #433f41 100%);">
          <children>
             <AnchorPane layoutX="38.0" layoutY="30.0" prefHeight="220.0" prefWidth="220.0" style="-fx-background-color: #989798; -fx-background-radius: 20;">
                <children>
-                  <Button layoutX="52.0" layoutY="56.0" mnemonicParsing="false" style="-fx-background-color: NONE;">
+                  <Button layoutX="52.0" layoutY="56.0" mnemonicParsing="false" onAction="#setEditPaneVisible" style="-fx-background-color: NONE;">
                      <graphic>
                         <MaterialIconView fill="WHITE" glyphName="QUEUE_MUSIC" size="100" />
                      </graphic>
@@ -29,11 +29,15 @@
                   <Font size="18.0" />
                </font>
             </Label>
-            <Label fx:id="playlistName" layoutX="292.0" layoutY="149.0" text="PLAYLIST NAME #" textFill="WHITE">
-               <font>
-                  <Font name="System Bold" size="18.0" />
-               </font>
-            </Label>
+            <Button layoutX="284.0" layoutY="150.0" mnemonicParsing="false" onAction="#setEditPaneVisible" style="-fx-background-color: none;">
+               <graphic>
+                  <Label fx:id="playlistName" text="PLAYLIST NAME #" textFill="WHITE">
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                  </Label>
+               </graphic>
+            </Button>
             <ImageView fx:id="avatarUser" fitHeight="30.0" fitWidth="30.0" layoutX="292.0" layoutY="192.0" pickOnBounds="true" preserveRatio="true" />
             <Label fx:id="username" layoutX="337.0" layoutY="198.0" text="Label" textFill="WHITE" />
          </children>

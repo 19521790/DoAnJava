@@ -15,6 +15,7 @@ module com.doan.client {
     requires de.jensd.fx.glyphs.materialicons;
     requires com.jfoenix;
     requires  javafx.media;
+
     opens com.doan.client to javafx.fxml;
     exports com.doan.client;
     exports com.doan.client.Controller;

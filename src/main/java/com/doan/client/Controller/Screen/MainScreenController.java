@@ -120,6 +120,8 @@ public class MainScreenController implements Initializable {
         FXMLLoader homeFxmlLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/Screen/HomeScreen.fxml"));
         FXMLLoader discoverFxmlLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/Screen/DiscoverScreen.fxml"));
 
+
+
         try {
             //login
             AnchorPane newLoginPane = loginFxmlLoader.load();
@@ -313,9 +315,18 @@ public class MainScreenController implements Initializable {
 
         }else{
             FXMLLoader playlistFxmlLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/Screen/PlaylistScreen.fxml"));
+            FXMLLoader editFxmlLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/Component/EditPlaylistForm.fxml"));
+
             try {
                 AnchorPane anchorPane= playlistFxmlLoader.load();
+
+                AnchorPane editPlaylistPane = editFxmlLoader.load();
+                parentHomePane.getChildren().add(editPlaylistPane);
+                editPlaylistPane.setVisible(false);
+
                 PlayListScreenController playListScreenController= playlistFxmlLoader.getController();
+                playListScreenController.editPlaylistFormController = editFxmlLoader.getController();
+                playListScreenController.editPlaylistPane= editPlaylistPane;
                 playListScreenController.setPlaylistName("Playlist # " + (count-1));
                 mainBoard.setContent(anchorPane);
 

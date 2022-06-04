@@ -95,6 +95,11 @@
             <artifactId>javafx-media</artifactId>
             <version>18.0.1</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.github.jai-imageio/jai-imageio-core -->
+
+        <!-- Thanks for using https://jar-download.com -->
+
+
 
     </dependencies>
 

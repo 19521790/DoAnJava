@@ -120,3 +120,16 @@
     -fx-background-color: none;
 
 }
+.edit_background_btn{
+    -fx-opacity: 0;
+}
+.edit_background:hover .edit_background_btn{
+    -fx-opacity: 1;
+}
+.itemSearch{
+    -fx-font-size: 15;
+    -fx-background-color: none;
+}
+.itemSearch:hover{
+    -fx-background-color: #3b75ff;
+}

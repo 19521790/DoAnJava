@@ -1,8 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
 
-<AnchorPane prefHeight="382.0" prefWidth="455.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.doan.client.Controller.Component.EditPlaylistFormController">
-
+<AnchorPane fx:id="editContainer" prefHeight="650.0" prefWidth="1200.0" style="-fx-background-color: rgba(0, 0, 0, 0.5);" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.doan.client.Controller.Component.EditPlaylistFormController">
+   <children>
+      <AnchorPane layoutX="402.0" layoutY="171.0" prefHeight="308.0" prefWidth="395.0" style="-fx-background-color: white; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.75), 5, 0, 0, 0);">
+         <children>
+            <Button layoutX="316.0" layoutY="14.0" mnemonicParsing="false" onAction="#closeForm" style="-fx-background-color: none;">
+               <graphic>
+                  <FontAwesomeIconView fill="#555353" glyphName="CLOSE" size="18" />
+               </graphic>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Button layoutX="261.0" layoutY="258.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="86.0" style="-fx-background-color: #0574ff;" text="Save" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <AnchorPane layoutX="24.0" layoutY="78.0" prefHeight="145.0" prefWidth="155.0" style="-fx-background-color: #878383;" styleClass="edit_background">
+               <children>
+                  <FontAwesomeIconView fill="#b34949" glyphName="MUSIC" layoutX="29.0" layoutY="106.0" size="100" wrappingWidth="94.66677856445312" />
+                  <ImageView fx:id="imageProfile" fitHeight="145.0" fitWidth="159.0" pickOnBounds="true" />
+                  <Button contentDisplay="TOP" layoutX="-1.0" mnemonicParsing="false" onAction="#editProfile" prefHeight="145.0" prefWidth="159.0" style="-fx-background-color: #878383;" styleClass="edit_background_btn" text="Edit">
+                     <graphic>
+                        <FontAwesomeIconView glyphName="PENCIL" size="50" />
+                     </graphic>
+                     <font>
+                        <Font size="22.0" />
+                     </font>
+                  </Button>
+               </children>
+            </AnchorPane>
+            <Label layoutX="24.0" layoutY="12.0" text="Edit Details">
+               <font>
+                  <Font name="System Bold" size="20.0" />
+               </font>
+            </Label>
+            <TextField fx:id="editPlaylistName" layoutX="205.0" layoutY="138.0" prefHeight="36.0" prefWidth="151.0" text="Playlist # 1">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </TextField>
+         </children>
+      </AnchorPane>
+   </children>
 </AnchorPane>
