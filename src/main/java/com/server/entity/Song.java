@@ -21,7 +21,7 @@ public class Song {
     private String file;
 
     @NotNull(message = "Song duration cannot be null")
-    private Integer duration;
+    private double duration;
 
     private List<String> idGenres = new ArrayList<String>();
     private List<Artist> artists = new ArrayList<Artist>();
