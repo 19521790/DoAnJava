@@ -89,7 +89,7 @@ public class SongService {
         if (songToUpdate != null) {
             songToUpdate.setName(song.getName() != null ? song.getName() : songToUpdate.getName());
             songToUpdate.setImage(song.getImage() != null ? song.getImage() : songToUpdate.getImage());
-            songToUpdate.setDuration(song.getDuration() != null ? song.getDuration() : songToUpdate.getDuration());
+            songToUpdate.setDuration(song.getDuration());
             songToUpdate.setArtists(song.getArtists()!=null?song.getArtists():songToUpdate.getArtists());
             songToUpdate.setIdGenres(song.getIdGenres()!=null?song.getIdGenres():songToUpdate.getIdGenres());
             songToUpdate.setAlbum(song.getAlbum()!=null?song.getAlbum():songToUpdate.getAlbum());
