@@ -61,12 +61,24 @@ public class SongController {
     }
 
     @PutMapping("/updateSong")
-    public Song updateSong(@RequestBody Song song) {
-        return songService.updateSong(song);
+    public ResponseEntity updateSong(@RequestBody Song song) {
+        try{
+            return ResponseEntity.status(HttpStatus.OK).body(songService.updateSong(song));
+        }catch (ConstraintViolationException e){
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(e.getMessage());
+        }catch (SongException e){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        }
+
     }
 
     @DeleteMapping("/deleteSong/{id}")
-    public String deleteSong(@RequestParam String id) {
-        return songService.deleteSong(id);
+    public ResponseEntity deleteSong(@PathVariable String id) {
+        try{
+            songService.deleteSong(id);
+            return ResponseEntity.status(HttpStatus.OK).body("Successfully delete song with id: "+id);
+        }catch (SongException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 }

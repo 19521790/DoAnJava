@@ -17,15 +17,13 @@ public class Song {
     @NotNull(message = "Song name cannot be null")
     private String name;
 
-    @NotNull(message = "Song image cannot be null")
     private String image;
-
-    @NotNull(message = "Song file cannot be null")
     private String file;
 
     @NotNull(message = "Song duration cannot be null")
     private Integer duration;
-    private List<String> idGenre = new ArrayList<String>();
+
+    private List<String> idGenres = new ArrayList<String>();
     private List<Artist> artists = new ArrayList<Artist>();
     private Album album;
     private Integer weekView;

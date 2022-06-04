@@ -107,10 +107,9 @@ public class GoogleDriveService {
         return file;
     }
 
-    public File downloadFile(){
+    public File downloadFile(String fileId){
         com.google.api.services.drive.model.File file = new com.google.api.services.drive.model.File();
         try {
-            String fileId = "11Ae7M4hXNrWFXUmy8ctHnvuDTYOVXI1O";
             java.io.OutputStream outputStream = new java.io.ByteArrayOutputStream();
             getDriveService().files().get(fileId)
                     .executeMediaAndDownloadTo(outputStream);

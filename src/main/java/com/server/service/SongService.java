@@ -53,8 +53,12 @@ public class SongService {
 
     public Song findSongById(String id) throws SongException {
         Song song = songRepository.findById(id).orElse(null);
+        String fileId = song.getFile();
+        String imageId = song.getImage();
+
         if (song != null) {
-            driveService.printFile();
+            com.google.api.services.drive.model.File file = driveService.downloadFile(fileId);
+            com.google.api.services.drive.model.File image = driveService.downloadFile(imageId);
             return song;
         } else {
             throw new SongException(SongException.NotFoundException(id));
@@ -70,26 +74,31 @@ public class SongService {
         }
     }
 
-    public String deleteSong(String id) {
-        try {
+    public void deleteSong(String id) throws SongException{
+        Song song = songRepository.findById(id).orElse(null);
+        if(song==null){
+            throw new SongException(SongException.NotFoundException(id));
+        }else{
             songRepository.deleteById(id);
-            return "Song has been removed: " + id;
-        } catch (Exception e) {
-            return e.getMessage();
         }
     }
 
-    public Song updateSong(Song song) {
+    public Song updateSong(Song song) throws ConstraintViolationException, SongException{
         Song songToUpdate = songRepository.findById(song.getId()).get();
+
         if (songToUpdate != null) {
             songToUpdate.setName(song.getName() != null ? song.getName() : songToUpdate.getName());
             songToUpdate.setImage(song.getImage() != null ? song.getImage() : songToUpdate.getImage());
             songToUpdate.setDuration(song.getDuration() != null ? song.getDuration() : songToUpdate.getDuration());
+            songToUpdate.setArtists(song.getArtists()!=null?song.getArtists():songToUpdate.getArtists());
+            songToUpdate.setIdGenres(song.getIdGenres()!=null?song.getIdGenres():songToUpdate.getIdGenres());
+            songToUpdate.setAlbum(song.getAlbum()!=null?song.getAlbum():songToUpdate.getAlbum());
+            songToUpdate.setFile(song.getFile()!=null?song.getFile():songToUpdate.getFile());
             songToUpdate.setWeekView(song.getWeekView() != null ? song.getWeekView() : songToUpdate.getWeekView());
             songToUpdate.setTotalView(song.getTotalView() != null ? song.getTotalView() : songToUpdate.getTotalView());
             return songRepository.save(songToUpdate);
         } else {
-            return songToUpdate;
+            throw new SongException(SongException.NotFoundException(song.getId()));
         }
     }
 }
