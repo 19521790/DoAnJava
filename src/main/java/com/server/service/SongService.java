@@ -1,5 +1,7 @@
 package com.server.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.api.client.http.FileContent;
 import com.server.entity.Song;
 import com.server.exception.SongException;
@@ -7,9 +9,11 @@ import com.server.repository.SongRepository;
 import com.server.service.drive.GoogleDriveService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.ConstraintViolationException;
-import java.io.File;
+import javax.validation.Path;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,27 +25,26 @@ public class SongService {
     @Autowired
     private GoogleDriveService driveService;
 
-    public Song addSong(Song song) throws ConstraintViolationException, SongException, Exception {
+    public Song addSong(String songString, MultipartFile file, MultipartFile image) throws ConstraintViolationException, SongException, JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        Song song = objectMapper.readValue(songString, Song.class);
+
+        String songFolderId = "1LdzTFIFV9AALrvPHC9llu2OTI2LVeKm2";
+        String songImgFolderId = "1sVp02QIus2FVUMMoXqxMiq6rmVFO51Cl";
+
         Song songOptional = songRepository.findByName(song.getName());
-        String fileName = "first_image";
-        String filePath = "D:\\Downloads\\Beatbox - NCT Dream.m4a";
-        String mimeType = "audio/mpeg";
+
         if (songOptional == null) {
-            System.out.println(System.getProperty("user.dir"));
-            System.out.println("####################");
-            try {
-                driveService.uploadFile(fileName, filePath, mimeType);
-                return songRepository.save(song);
-            }catch (Exception e){
-                throw new Exception(e.getMessage());
-            }
-        }
-        else if (songOptional.getImage().equals(song.getImage()) && songOptional.getName().equals(song.getName())) {
+            song.setFile(driveService.uploadFile(file, "audio/mpeg", songFolderId).getId());
+            song.setImage(driveService.uploadFile(image, "image/jpeg", songImgFolderId).getId());
+            return songRepository.save(song);
+        } else if (songOptional.getImage().equals(song.getImage())
+                && songOptional.getName().equals(song.getName())
+                && songOptional.getFile().equals(song.getFile())) {
             throw new SongException(SongException.SongAlreadyExist());
         } else {
             return songRepository.save(song);
         }
-
     }
 
     public List<Song> addSongs(List<Song> songs) {

@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AlbumRepository extends MongoRepository<Album,String> {
+    Album findByName(String name);
 }

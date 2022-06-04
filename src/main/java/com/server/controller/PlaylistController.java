@@ -1,5 +1,6 @@
 package com.server.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.server.entity.Playlist;
 import com.server.exception.PlaylistException;
 import com.server.exception.SongException;
@@ -8,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.ConstraintViolationException;
 import java.util.List;
 
 @RestController
@@ -18,8 +21,14 @@ public class PlaylistController {
     private PlaylistService playlistService;
 
     @PostMapping("/addPlaylist")
-    public Playlist addPlaylist(@RequestBody Playlist playlist) {
-        return playlistService.addPlaylist(playlist);
+    public ResponseEntity addPlaylist(@RequestPart("playlist") String playlistString, @RequestPart("image")MultipartFile image) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(playlistService.addPlaylist(playlistString, image));
+        }catch(JsonProcessingException e){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        }catch(ConstraintViolationException e){
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(e.getMessage());
+        }
     }
 
     @GetMapping("/findPlaylistById/{id}")

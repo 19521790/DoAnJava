@@ -1,14 +1,19 @@
 package com.server.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.server.entity.Playlist;
 import com.server.entity.Song;
 import com.server.exception.PlaylistException;
 import com.server.repository.PlaylistRepository;
 import com.server.repository.SongRepository;
+import com.server.service.drive.GoogleDriveService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.ConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +25,16 @@ public class PlaylistService {
     @Autowired
     private SongRepository songRepository;
 
-    public Playlist addPlaylist(Playlist playlist) {
+    @Autowired
+    private GoogleDriveService driveService;
+
+    public Playlist addPlaylist(String playlistString, MultipartFile image) throws ConstraintViolationException,JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        Playlist playlist = objectMapper.readValue(playlistString,Playlist.class);
+
+        String playlistImgFolderId = "1V_RzyQ-L04PNkmLMrOsGVEABprMh6IqK";
+
+        playlist.setImage(driveService.uploadFile(image,"image/jpeg",playlistImgFolderId).getId());
         return playlistRepository.save(playlist);
     }
 
@@ -48,6 +62,7 @@ public class PlaylistService {
     }
 
     public Playlist updatePlaylist(Playlist playlist) {
+
         return playlistRepository.save(playlist);
     }
 
@@ -60,6 +75,8 @@ public class PlaylistService {
         songToUpload.setArtists(song.getArtists());
         songToUpload.setDuration(song.getDuration());
         songToUpload.setAlbum(song.getAlbum());
+        songToUpload.setFile(song.getFile());
+        songToUpload.setImage(song.getImage());
 
         return playlistRepository.addSongToPlaylist(playlist,songToUpload);
     }

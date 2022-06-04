@@ -5,6 +5,7 @@ import com.server.entity.User;
 import com.server.repository.PlaylistRepository;
 import com.server.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.server.service.drive.GoogleDriveService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,6 +24,9 @@ public class UserService {
 
     @Autowired
     private PlaylistRepository playlistRepository;
+
+    @Autowired
+    private GoogleDriveService driveService;
 
     public User addUser(User user) {
         user.setCreatedAt(new Date(System.currentTimeMillis()));
@@ -48,8 +52,6 @@ public class UserService {
 
     }
 
-
-
     public void updateUserPassword(User user) {
         userRepository.save(user);
 
@@ -62,9 +64,8 @@ public class UserService {
             return false;
         }
 
-        Path filepath = Paths.get(System.getProperty("user.dir") + "\\src\\main\\java\\com\\server\\assets", user.getName() + ".png");
-        file.transferTo(filepath);
-        user.setImage("http://localhost:8080/image/" + user.getName() + ".png");
+        String userImgFolderId = "1ZtqcTpapCismmefalDItN5rxb9UDB5-R";
+        user.setImage(driveService.uploadFile(file, "audio/mpeg", userImgFolderId).getId());
         userRepository.save(user);
         return true;
     }

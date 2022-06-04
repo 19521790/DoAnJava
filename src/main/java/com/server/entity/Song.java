@@ -23,14 +23,11 @@ public class Song {
     @NotNull(message = "Song file cannot be null")
     private String file;
 
-    private Album album;
-
     @NotNull(message = "Song duration cannot be null")
     private Integer duration;
-
     private List<String> idGenre = new ArrayList<String>();
-
-    private List<String> artists = new ArrayList<String>();
+    private List<Artist> artists = new ArrayList<Artist>();
+    private Album album;
     private Integer weekView;
     private Integer totalView;
 }

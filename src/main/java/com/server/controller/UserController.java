@@ -55,7 +55,7 @@ public class UserController {
     }
 
     @PostMapping("/createUser")
-    public boolean createUser(@RequestParam("file") MultipartFile file, @RequestParam("json") String json) throws IOException {
+    public boolean createUser(@RequestPart("file") MultipartFile file, @RequestPart("json") String json) throws IOException {
         return userService.createUser(file, json);
     }
 

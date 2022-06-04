@@ -1,5 +1,6 @@
 package com.server.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.server.entity.Song;
 import com.server.exception.SongException;
 import com.server.service.SongService;
@@ -7,8 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.ConstraintViolationException;
+import java.io.File;
 import java.util.List;
 
 @RestController
@@ -19,14 +22,16 @@ public class SongController {
     private SongService songService;
 
     @PostMapping("/addSong")
-    public ResponseEntity addSong(@RequestBody Song song) {
+    public ResponseEntity addSong(
+            @RequestPart("song") String songString, @RequestPart("image") MultipartFile image, @RequestPart("file") MultipartFile file
+    ) {
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(songService.addSong(song));
+            return ResponseEntity.status(HttpStatus.OK).body(songService.addSong(songString, file, image));
         } catch (ConstraintViolationException e) {
             return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(e.getMessage());
         } catch (SongException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-        } catch (Exception e){
+        } catch(JsonProcessingException e){
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         }
     }

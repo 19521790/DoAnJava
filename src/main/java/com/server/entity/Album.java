@@ -18,5 +18,7 @@ public class Album {
 
     @NotNull(message = "Album name cannot be null")
     private String name;
+
+    @NotNull(message = "Album image cannot be null")
     private String image;
 }

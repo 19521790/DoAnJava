@@ -16,11 +16,10 @@ import com.google.api.services.drive.DriveScopes;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.FileList;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import javax.validation.Path;
+import java.io.*;
 import java.util.Collections;
 import java.util.List;
 
@@ -80,16 +79,24 @@ public class GoogleDriveService {
         return service;
     }
 
-    public File uploadFile(String fileName, String filePath, String mimeType){
+    private static java.io.File convertMultipartFile(MultipartFile multipartFile) throws IOException{
+        java.io.File convertFile = new java.io.File(multipartFile.getOriginalFilename());
+        convertFile.createNewFile();
+        FileOutputStream fos = new FileOutputStream(convertFile);
+        fos.write(multipartFile.getBytes());
+        fos.close();
+        return convertFile;
+    }
+
+    public File uploadFile(MultipartFile multipartFile, String mimeType, String folderId){
         File file = new File();
-        System.out.println("#######################");
-        System.out.println(SCOPES);
         try {
-            java.io.File fileUpload = new java.io.File(filePath);
+            java.io.File fileUpload = convertMultipartFile(multipartFile);
             com.google.api.services.drive.model.File fileMetadata = new com.google.api.services.drive.model.File();
-            fileMetadata.setName(fileName);
-            fileMetadata.setParents(Collections.singletonList("1sVp02QIus2FVUMMoXqxMiq6rmVFO51Cl"));
+            fileMetadata.setName(multipartFile.getOriginalFilename());
+            fileMetadata.setParents(Collections.singletonList(folderId));
             FileContent mediaContent = new FileContent(mimeType, fileUpload);
+
             file = getDriveService().files().create(fileMetadata, mediaContent)
                     .setFields("id")
                     .execute();
