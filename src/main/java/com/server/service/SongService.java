@@ -57,10 +57,6 @@ public class SongService {
         }
     }
 
-    public List<Song> addSongs(List<Song> songs) {
-        return songRepository.saveAll(songs);
-    }
-
     public File findSongById(String id) throws SongException, IOException {
         Song song = songRepository.findById(id).orElse(null);
         String imageId = song.getAlbum().getImage();

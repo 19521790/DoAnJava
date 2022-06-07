@@ -40,15 +40,6 @@ public class SongController {
         }
     }
 
-    @PostMapping("/addSongs")
-    public ResponseEntity addSongs(@RequestBody List<Song> songs) {
-        try {
-            return ResponseEntity.status(HttpStatus.OK).body(songService.addSongs(songs));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
-    }
-
     @GetMapping("/findSongById/{id}")
     public Response findSongById(@PathVariable String id) throws SongException,IOException {
         try {
