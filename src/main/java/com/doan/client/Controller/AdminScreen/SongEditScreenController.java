@@ -311,7 +311,6 @@ public class SongEditScreenController implements Initializable {
                 String json = null;
                 try {
                     json = ow.writeValueAsString(song);
-                    System.out.println(json);
                     HttpResponse<JsonNode> apiResponse=  Unirest.post("http://localhost:8080/song/addSong").field("file", fileMusic).field("song", json).asJson();
 
                     if (apiResponse.getStatus() == 200) {
