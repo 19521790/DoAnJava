@@ -51,33 +51,8 @@ public class SongService {
             song.setFile(fileUpload.getId());
             song.setAlbum(album);
             song.setCreatedAt(new Date(System.currentTimeMillis()));
-            driveService.deleteLocalFile(file.getName());
-            return songRepository.save(song);
-        }
-    }
-
-    public Song addSongWithoutAlbum(String songString, MultipartFile file, MultipartFile image) throws ConstraintViolationException, SongException, JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        Song song = objectMapper.readValue(songString, Song.class);
-
-        String songFolderId = "1LdzTFIFV9AALrvPHC9llu2OTI2LVeKm2";
-        String albumFolderId = "1RPmGzNV-xQ1n3F53tYAlq1P4_40hBxZ7";
-
-        Song songOptional = songRepository.findByName(song.getName());
-
-        if (songOptional != null
-                && songOptional.getName().equals(song.getName())){
-            throw new SongException(SongException.SongAlreadyExist(song.getName()));
-        }else{
-            Album album = new Album();
-            album.setImage(driveService.uploadFile(song.getName(),image,"image/jpeg",albumFolderId).getId());
-            album.setName(song.getName());
-            album.setCreatedAt(new Date(System.currentTimeMillis()));
-            albumRepository.save(album);
-
-            song.setAlbum(album);
-            song.setFile(driveService.uploadFile(song.getName(), file, "audio/mpeg", songFolderId).getId());
-            song.setCreatedAt(new Date(System.currentTimeMillis()));
+            System.out.println(file.getOriginalFilename());
+            driveService.deleteLocalFile(file.getOriginalFilename() );
             return songRepository.save(song);
         }
     }

@@ -31,6 +31,8 @@ public class Song {
 
     private List<String> genres = new ArrayList<String>();
     private List<ArtistInSong> artists = new ArrayList<ArtistInSong>();
+
+    @NotNull(message = "Song album cannot be null")
     private Album album;
     private Integer weekView;
     private Integer totalView;

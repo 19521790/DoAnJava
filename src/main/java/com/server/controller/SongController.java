@@ -25,7 +25,7 @@ public class SongController {
     @Autowired
     private SongService songService;
 
-    @PostMapping("/addSongWithAlbum")
+    @PostMapping("/addSong")
     public ResponseEntity addSong   (
             @RequestPart("song") String songString,@RequestPart("file") MultipartFile file
     ) {

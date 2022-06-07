@@ -137,13 +137,12 @@ public class GoogleDriveService {
 
     public void deleteLocalFile(String path) {
         String pathLocal = new java.io.File("pom.xml").getAbsolutePath();
-        java.io.File fileToDelete = new java.io.File(pathLocal.s);
-        System.out.println(path);
-//        if (fileToDelete.delete()) {
-//            System.out.println("successfully deleted");
-//        } else {
-//            System.out.println("cant delete a file");
-//        }
+        java.io.File fileToDelete = new java.io.File(pathLocal.substring(0, pathLocal.length() - "pom.xml".length())+path);
+        if (fileToDelete.delete()) {
+            System.out.println("successfully deleted");
+        } else {
+            System.out.println("cant delete a file");
+        }
     }
 
     public void printFile() {
