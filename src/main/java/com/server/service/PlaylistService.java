@@ -34,7 +34,7 @@ public class PlaylistService {
 
         String playlistImgFolderId = "1V_RzyQ-L04PNkmLMrOsGVEABprMh6IqK";
 
-        playlist.setImage(driveService.uploadFile(image,"image/jpeg",playlistImgFolderId).getId());
+        playlist.setImage(driveService.uploadFile(playlist.getName(),image,"image/jpeg",playlistImgFolderId).getId());
         return playlistRepository.save(playlist);
     }
 
@@ -62,7 +62,6 @@ public class PlaylistService {
     }
 
     public Playlist updatePlaylist(Playlist playlist) {
-
         return playlistRepository.save(playlist);
     }
 
@@ -76,7 +75,6 @@ public class PlaylistService {
         songToUpload.setDuration(song.getDuration());
         songToUpload.setAlbum(song.getAlbum());
         songToUpload.setFile(song.getFile());
-        songToUpload.setImage(song.getImage());
 
         return playlistRepository.addSongToPlaylist(playlist,songToUpload);
     }

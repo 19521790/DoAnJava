@@ -2,6 +2,7 @@ package com.server.service;
 
 import com.server.entity.Playlist;
 import com.server.entity.User;
+import com.server.exception.UserException;
 import com.server.repository.PlaylistRepository;
 import com.server.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,10 +29,18 @@ public class UserService {
     @Autowired
     private GoogleDriveService driveService;
 
-    public User addUser(User user) {
+    public boolean addUser(MultipartFile file, String json) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        User user = mapper.readValue(json, User.class);
+        if (userRepository.existsByNameOrEmail(user.getName(), user.getEmail())) {
+            return false;
+        }
+
+        String userImgFolderId = "1ZtqcTpapCismmefalDItN5rxb9UDB5-R";
+        user.setImage(driveService.uploadFile(user.getName(), file, "audio/mpeg", userImgFolderId).getId());
         user.setCreatedAt(new Date(System.currentTimeMillis()));
-        user.setUpdatedAt(new Date(System.currentTimeMillis()));
-        return userRepository.save(user);
+        userRepository.save(user);
+        return true;
     }
 
     public User findUserById(String id) {
@@ -57,29 +66,27 @@ public class UserService {
 
     }
 
-    public boolean createUser(MultipartFile file, String json) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        User user = mapper.readValue(json, User.class);
-        if (userRepository.existsByNameOrEmail(user.getName(), user.getEmail())) {
-            return false;
-        }
-
-        String userImgFolderId = "1ZtqcTpapCismmefalDItN5rxb9UDB5-R";
-        user.setImage(driveService.uploadFile(file, "audio/mpeg", userImgFolderId).getId());
-        userRepository.save(user);
-        return true;
-    }
-
     public String addPlaylistToUser(String idUser, String idPlaylist) {
         User user = userRepository.findById(idUser).get();
         Playlist playlist = playlistRepository.findById(idPlaylist).get();
         System.out.println(user);
         System.out.println(playlist);
         if (playlist != null) {
-            user.addPlaylistToUser(idPlaylist);
+//            user.addPlaylistToUser(idPlaylist);
             return "Succeeded in adding playlist " + idPlaylist + " to user " + idUser;
         } else {
             return "Failed to add playlist to user";
+        }
+    }
+
+    public void deleteUser(String id) throws UserException {
+        User user = userRepository.findById(id).orElse(null);
+
+        if (user != null) {
+            driveService.deleteFile(id);
+            userRepository.deleteById(id);
+        } else {
+            throw new UserException(UserException.NotFoundException(id));
         }
     }
 }

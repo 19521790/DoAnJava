@@ -17,6 +17,7 @@ import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.FileList;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import javax.validation.Path;
 import java.io.*;
@@ -88,7 +89,7 @@ public class GoogleDriveService {
         return convertFile;
     }
 
-    public File uploadFile(MultipartFile multipartFile, String mimeType, String folderId){
+    public File uploadFile(String fileName,MultipartFile multipartFile, String mimeType, String folderId){
         File file = new File();
         try {
             java.io.File fileUpload = convertMultipartFile(multipartFile);
@@ -107,16 +108,24 @@ public class GoogleDriveService {
         return file;
     }
 
-    public File downloadFile(String fileId){
-        com.google.api.services.drive.model.File file = new com.google.api.services.drive.model.File();
+    public ByteArrayOutputStream downloadFile(String fileId) {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         try {
-            java.io.OutputStream outputStream = new java.io.ByteArrayOutputStream();
             getDriveService().files().get(fileId)
                     .executeMediaAndDownloadTo(outputStream);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return outputStream;
+    }
+
+    public void deleteFile(String fileId){
+        try{
+            getDriveService().files().delete(fileId).execute();
+            System.out.println("Successfully delete file with id: "+fileId);
         }catch (Exception e){
             System.out.println(e.getMessage());
         }
-        return file;
     }
 
     public void printFile(){

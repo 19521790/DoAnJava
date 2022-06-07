@@ -1,6 +1,7 @@
 package com.server.controller;
 
 import com.server.entity.User;
+import com.server.exception.UserException;
 import com.server.service.UserService;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +20,8 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/addUser")
-    public ResponseEntity addUser(@RequestBody User user) {
-        
-        return ResponseEntity.status(HttpStatus.OK).body(userService.addUser(user));
+    public boolean addUser(@RequestPart("image") MultipartFile image, @RequestPart("user") String userString) throws IOException {
+        return userService.addUser(image, userString);
     }
 
     @GetMapping("/findAllUsers")
@@ -35,7 +35,7 @@ public class UserController {
     }
 
     @GetMapping("/findUserById/{id}")
-    public ResponseEntity<User> findUserById(@PathVariable String id){
+    public ResponseEntity<User> findUserById(@PathVariable String id) {
         return ResponseEntity.status(HttpStatus.OK).body(userService.findUserById(id));
     }
 
@@ -54,13 +54,18 @@ public class UserController {
         userService.updateUserPassword(user);
     }
 
-    @PostMapping("/createUser")
-    public boolean createUser(@RequestPart("file") MultipartFile file, @RequestPart("json") String json) throws IOException {
-        return userService.createUser(file, json);
+    @PutMapping("/addPlaylistToUser")
+    public ResponseEntity addPlaylistToUser(@RequestParam String idUser, @RequestParam String idPlaylist) {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.addPlaylistToUser(idUser, idPlaylist));
     }
 
-    @PutMapping("/addPlaylistToUser")
-    public ResponseEntity addPlaylistToUser(@RequestParam String idUser, @RequestParam String idPlaylist){
-        return ResponseEntity.status(HttpStatus.OK).body(userService.addPlaylistToUser(idUser,idPlaylist));
+    @DeleteMapping("/deleteUser/{id}")
+    public ResponseEntity deleteUser(@RequestParam String idUser) {
+        try {
+            userService.deleteUser(idUser);
+            return ResponseEntity.status(HttpStatus.OK).body("Successfully delete user with id " + idUser);
+        } catch (UserException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 }

@@ -1,7 +1,7 @@
 package com.server.exception;
 
 public class AlbumException extends Exception{
-    private static final long serialVersionUID = 3L;
+    private static final long serialVersionUID = 4L;
 
     public AlbumException(String message){super(message);}
 

@@ -8,6 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
+import java.util.Date;
 
 @Data
 @AllArgsConstructor
@@ -20,5 +21,6 @@ public class Chart {
     @NotNull(message = "Chart name cannot be null")
     private String name;
     private String image;
-    private Timestamp createTime;
+    private Date createdAt;
+    private Date updatedAt;
 }

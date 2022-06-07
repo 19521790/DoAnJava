@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.ConstraintViolationException;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -21,38 +22,37 @@ public class AlbumService {
     @Autowired
     private GoogleDriveService driveService;
 
-    public Album addAlbum(String albumString, MultipartFile image) throws ConstraintViolationException,AlbumException,JsonProcessingException {
+    public Album addAlbum(String albumString, MultipartFile image) throws ConstraintViolationException, AlbumException, JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
-        Album album = objectMapper.readValue(albumString,Album.class);
+        Album album = objectMapper.readValue(albumString, Album.class);
 
         String albumImgFolderId = "1RPmGzNV-xQ1n3F53tYAlq1P4_40hBxZ7";
 
         Album albumOptional = albumRepository.findByName(album.getName());
 
-        if(albumOptional==null){
-            album.setImage(driveService.uploadFile(image,"image/jpeg",albumImgFolderId).getId());
-            return albumRepository.save(album);
-        }else if(albumOptional.getName().equals(album.getName())&&albumOptional.getImage().equals(album.getImage())){
+        if(albumOptional.getName().equals(album.getName())){
             throw new AlbumException(AlbumException.AlbumAlreadyExist());
         }else{
+            album.setImage(driveService.uploadFile(album.getName(),image,"image/jpeg",albumImgFolderId).getId());
+            album.setCreatedAt(new Date(System.currentTimeMillis()));
             return albumRepository.save(album);
         }
     }
 
-    public Album findAlbumById(String id){
+    public Album findAlbumById(String id) {
         return albumRepository.findById(id).orElse(null);
     }
 
-    public List<Album> findAllAlbums(){
-        return  albumRepository.findAll();
+    public List<Album> findAllAlbums() {
+        return albumRepository.findAll();
     }
 
-    public Album updateAlbum(Album album){
+    public Album updateAlbum(Album album) {
         return albumRepository.save(album);
     }
 
-    public String deleteAlbum(String id){
+    public String deleteAlbum(String id) {
         albumRepository.deleteById(id);
-        return ("Album has been deleted: "+id);
+        return ("Album has been deleted: " + id);
     }
 }

@@ -11,7 +11,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.ConstraintViolationException;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -46,11 +50,16 @@ public class SongController {
     }
 
     @GetMapping("/findSongById/{id}")
-    public ResponseEntity findSongById(@PathVariable String id) {
+    public Response findSongById(@PathVariable String id) throws SongException,IOException {
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(songService.findSongById(id));
+            File file = songService.findSongById(id);
+            return Response.ok(file, MediaType.APPLICATION_OCTET_STREAM)
+                    .header("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"" ) //optional
+                    .build();
         } catch (SongException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            throw new SongException(e.getMessage());
+        } catch (IOException e){
+            throw new IOException(e.getMessage());
         }
     }
 

@@ -11,6 +11,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 
 @Data
 @AllArgsConstructor
@@ -22,5 +23,11 @@ public class Artist {
 
     @NotNull(message = "Artist name cannot be null")
     private String name;
+
+    @NotNull(message = "Artist image cannot be null")
     private String image;
+
+    private String description;
+    private Date createdAt;
+    private Date updatedAt;
 }
