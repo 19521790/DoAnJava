@@ -132,11 +132,12 @@ public class SongService {
             songToUpdate.setName(song.getName() != null ? song.getName() : songToUpdate.getName());
             songToUpdate.setDuration(song.getDuration());
             songToUpdate.setArtists(song.getArtists() != null ? song.getArtists() : songToUpdate.getArtists());
-            songToUpdate.setIdGenres(song.getIdGenres() != null ? song.getIdGenres() : songToUpdate.getIdGenres());
+            songToUpdate.setGenres(song.getGenres() != null ? song.getGenres() : songToUpdate.getGenres());
             songToUpdate.setAlbum(song.getAlbum() != null ? song.getAlbum() : songToUpdate.getAlbum());
             songToUpdate.setFile(song.getFile() != null ? song.getFile() : songToUpdate.getFile());
             songToUpdate.setWeekView(song.getWeekView() != null ? song.getWeekView() : songToUpdate.getWeekView());
             songToUpdate.setTotalView(song.getTotalView() != null ? song.getTotalView() : songToUpdate.getTotalView());
+            songToUpdate.setUpdatedAt(new Date(System.currentTimeMillis()));
             return songRepository.save(songToUpdate);
         } else {
             throw new SongException(SongException.NotFoundException(song.getId()));

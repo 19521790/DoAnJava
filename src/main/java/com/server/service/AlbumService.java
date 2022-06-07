@@ -31,7 +31,7 @@ public class AlbumService {
         Album albumOptional = albumRepository.findByName(album.getName());
 
         if (albumOptional != null && albumOptional.getName().equals(album.getName())) {
-            throw new AlbumException(AlbumException.AlbumAlreadyExist());
+            throw new AlbumException(AlbumException.AlbumAlreadyExist(album.getName()));
         } else {
             album.setImage(driveService.uploadFile(album.getName(), image, "image/jpeg", albumImgFolderId).getId());
             album.setCreatedAt(new Date(System.currentTimeMillis()));
@@ -48,6 +48,7 @@ public class AlbumService {
     }
 
     public Album updateAlbum(Album album) {
+
         return albumRepository.save(album);
     }
 

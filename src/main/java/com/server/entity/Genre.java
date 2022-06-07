@@ -15,10 +15,11 @@ import java.util.Date;
 @Document(collection = "genres")
 public class Genre {
     @Id
-    private int id;
+    private String id;
 
     @NotNull(message = "Genre name cannot be null")
     private String name;
+    @NotNull(message = "Genre image cannot be null")
     private String image;
     private Date createdAt;
     private Date updatedAt;

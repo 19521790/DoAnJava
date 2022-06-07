@@ -29,7 +29,7 @@ public class Song {
     @NotNull(message = "Song duration cannot be null")
     private double duration;
 
-    private List<String> idGenres = new ArrayList<String>();
+    private List<String> genres = new ArrayList<String>();
     private List<ArtistInSong> artists = new ArrayList<ArtistInSong>();
     private Album album;
     private Integer weekView;
