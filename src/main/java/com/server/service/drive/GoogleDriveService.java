@@ -27,11 +27,17 @@ import java.util.List;
 /* class to demonstarte use of Drive files list API */
 @Component
 public class GoogleDriveService {
-    /** Application name. */
+    /**
+     * Application name.
+     */
     private static final String APPLICATION_NAME = "Music Streaming App";
-    /** Global instance of the JSON factory. */
+    /**
+     * Global instance of the JSON factory.
+     */
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
-    /** Directory to store authorization tokens for this application. */
+    /**
+     * Directory to store authorization tokens for this application.
+     */
     private static final String TOKENS_DIRECTORY_PATH = "tokens";
 
     /**
@@ -43,6 +49,7 @@ public class GoogleDriveService {
 
     /**
      * Creates an authorized Credential object.
+     *
      * @param HTTP_TRANSPORT The network HTTP Transport.
      * @return An authorized Credential object.
      * @throws IOException If the credentials.json file cannot be found.
@@ -67,20 +74,20 @@ public class GoogleDriveService {
         return credential;
     }
 
-    public Drive getDriveService(){
+    public Drive getDriveService() {
         Drive service = null;
-        try{
+        try {
             final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
             service = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
                     .setApplicationName(APPLICATION_NAME)
                     .build();
-        }catch(Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
         return service;
     }
 
-    private static java.io.File convertMultipartFile(MultipartFile multipartFile) throws IOException{
+    private static java.io.File convertMultipartFile(MultipartFile multipartFile) throws IOException {
         java.io.File convertFile = new java.io.File(multipartFile.getOriginalFilename());
         convertFile.createNewFile();
         FileOutputStream fos = new FileOutputStream(convertFile);
@@ -89,7 +96,7 @@ public class GoogleDriveService {
         return convertFile;
     }
 
-    public File uploadFile(String fileName,MultipartFile multipartFile, String mimeType, String folderId){
+    public File uploadFile(String fileName, MultipartFile multipartFile, String mimeType, String folderId) {
         File file = new File();
         try {
             java.io.File fileUpload = convertMultipartFile(multipartFile);
@@ -102,7 +109,7 @@ public class GoogleDriveService {
                     .setFields("id")
                     .execute();
             System.out.println("File ID: " + file.getId());
-        }catch(Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
         return file;
@@ -119,16 +126,27 @@ public class GoogleDriveService {
         return outputStream;
     }
 
-    public void deleteFile(String fileId){
-        try{
+    public void deleteFile(String fileId) {
+        try {
             getDriveService().files().delete(fileId).execute();
-            System.out.println("Successfully delete file with id: "+fileId);
-        }catch (Exception e){
+            System.out.println("Successfully delete file with id: " + fileId);
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
 
-    public void printFile(){
+    public void deleteLocalFile(String path) {
+        String pathLocal = new java.io.File("pom.xml").getAbsolutePath();
+        java.io.File fileToDelete = new java.io.File(pathLocal.s);
+        System.out.println(path);
+//        if (fileToDelete.delete()) {
+//            System.out.println("successfully deleted");
+//        } else {
+//            System.out.println("cant delete a file");
+//        }
+    }
+
+    public void printFile() {
         try {
             FileList result = getDriveService().files().list()
                     .setPageSize(10)
@@ -143,7 +161,7 @@ public class GoogleDriveService {
                     System.out.printf("%s (%s)\n", file.getName(), file.getId());
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }

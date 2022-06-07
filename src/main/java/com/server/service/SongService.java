@@ -33,7 +33,7 @@ public class SongService {
     @Autowired
     private GoogleDriveService driveService;
 
-    public Song addSongWithAlbum(String songString, MultipartFile file) throws ConstraintViolationException, SongException, JsonProcessingException {
+    public Song addSong(String songString, MultipartFile file) throws ConstraintViolationException, SongException, JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         Song song = objectMapper.readValue(songString, Song.class);
 
@@ -46,8 +46,12 @@ public class SongService {
                 && songOptional.getName().equals(song.getName())) {
             throw new SongException(SongException.SongAlreadyExist(song.getName()));
         } else {
-            song.setFile(driveService.uploadFile(song.getName(), file, "audio/mpeg", songFolderId).getId());
+            Album album = albumRepository.findById(song.getAlbum().getId()).get();
+            com.google.api.services.drive.model.File fileUpload = driveService.uploadFile(song.getName(), file, "audio/mpeg", songFolderId);
+            song.setFile(fileUpload.getId());
+            song.setAlbum(album);
             song.setCreatedAt(new Date(System.currentTimeMillis()));
+            driveService.deleteLocalFile(file.getName());
             return songRepository.save(song);
         }
     }
