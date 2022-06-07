@@ -30,10 +30,10 @@ public class AlbumService {
 
         Album albumOptional = albumRepository.findByName(album.getName());
 
-        if(albumOptional.getName().equals(album.getName())){
+        if (albumOptional != null && albumOptional.getName().equals(album.getName())) {
             throw new AlbumException(AlbumException.AlbumAlreadyExist());
-        }else{
-            album.setImage(driveService.uploadFile(album.getName(),image,"image/jpeg",albumImgFolderId).getId());
+        } else {
+            album.setImage(driveService.uploadFile(album.getName(), image, "image/jpeg", albumImgFolderId).getId());
             album.setCreatedAt(new Date(System.currentTimeMillis()));
             return albumRepository.save(album);
         }

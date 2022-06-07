@@ -19,7 +19,7 @@ import java.util.Date;
 @Document(collection = "artists")
 public class Artist {
     @Id
-    private int id;
+    private String id;
 
     @NotNull(message = "Artist name cannot be null")
     private String name;

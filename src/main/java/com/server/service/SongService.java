@@ -3,9 +3,11 @@ package com.server.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.api.client.http.FileContent;
+import com.server.entity.Album;
 import com.server.entity.Song;
 import com.server.entity.result.SongResult;
 import com.server.exception.SongException;
+import com.server.repository.AlbumRepository;
 import com.server.repository.SongRepository;
 import com.server.service.drive.GoogleDriveService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,9 +28,12 @@ public class SongService {
     private SongRepository songRepository;
 
     @Autowired
+    private AlbumRepository albumRepository;
+
+    @Autowired
     private GoogleDriveService driveService;
 
-    public Song addSong(String songString, MultipartFile file, MultipartFile image) throws ConstraintViolationException, SongException, JsonProcessingException {
+    public Song addSongWithAlbum(String songString, MultipartFile file) throws ConstraintViolationException, SongException, JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         Song song = objectMapper.readValue(songString, Song.class);
 
@@ -36,11 +41,38 @@ public class SongService {
 
         Song songOptional = songRepository.findByName(song.getName());
 
-        if(songOptional.getAlbum().getId().equals(song.getAlbum().getId())
-        &&songOptional.getName().equals(song.getName())){
+        if (songOptional != null
+                && songOptional.getAlbum().getId().equals(song.getAlbum().getId())
+                && songOptional.getName().equals(song.getName())) {
+            throw new SongException(SongException.SongAlreadyExist(song.getName()));
+        } else {
+            song.setFile(driveService.uploadFile(song.getName(), file, "audio/mpeg", songFolderId).getId());
+            song.setCreatedAt(new Date(System.currentTimeMillis()));
+            return songRepository.save(song);
+        }
+    }
+
+    public Song addSongWithoutAlbum(String songString, MultipartFile file, MultipartFile image) throws ConstraintViolationException, SongException, JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        Song song = objectMapper.readValue(songString, Song.class);
+
+        String songFolderId = "1LdzTFIFV9AALrvPHC9llu2OTI2LVeKm2";
+        String albumFolderId = "1RPmGzNV-xQ1n3F53tYAlq1P4_40hBxZ7";
+
+        Song songOptional = songRepository.findByName(song.getName());
+
+        if (songOptional != null
+                && songOptional.getName().equals(song.getName())){
             throw new SongException(SongException.SongAlreadyExist(song.getName()));
         }else{
-            song.setFile(driveService.uploadFile(song.getName(),file, "audio/mpeg", songFolderId).getId());
+            Album album = new Album();
+            album.setImage(driveService.uploadFile(song.getName(),image,"image/jpeg",albumFolderId).getId());
+            album.setName(song.getName());
+            album.setCreatedAt(new Date(System.currentTimeMillis()));
+            albumRepository.save(album);
+
+            song.setAlbum(album);
+            song.setFile(driveService.uploadFile(song.getName(), file, "audio/mpeg", songFolderId).getId());
             song.setCreatedAt(new Date(System.currentTimeMillis()));
             return songRepository.save(song);
         }

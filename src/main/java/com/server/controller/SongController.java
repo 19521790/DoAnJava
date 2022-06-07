@@ -25,12 +25,27 @@ public class SongController {
     @Autowired
     private SongService songService;
 
-    @PostMapping("/addSong")
-    public ResponseEntity addSong(
+    @PostMapping("/addSongWithAlbum")
+    public ResponseEntity addSongWithAlbum(
+            @RequestPart("song") String songString,@RequestPart("file") MultipartFile file
+    ) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(songService.addSongWithAlbum(songString, file));
+        } catch (ConstraintViolationException e) {
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(e.getMessage());
+        } catch (SongException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        } catch(JsonProcessingException e){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/addSongWithoutAlbum")
+    public ResponseEntity addSongWithoutAlbum(
             @RequestPart("song") String songString, @RequestPart("image") MultipartFile image, @RequestPart("file") MultipartFile file
     ) {
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(songService.addSong(songString, file, image));
+            return ResponseEntity.status(HttpStatus.OK).body(songService.addSongWithoutAlbum(songString, file, image));
         } catch (ConstraintViolationException e) {
             return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(e.getMessage());
         } catch (SongException e) {

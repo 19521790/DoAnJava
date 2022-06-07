@@ -94,7 +94,7 @@ public class GoogleDriveService {
         try {
             java.io.File fileUpload = convertMultipartFile(multipartFile);
             com.google.api.services.drive.model.File fileMetadata = new com.google.api.services.drive.model.File();
-            fileMetadata.setName(multipartFile.getOriginalFilename());
+            fileMetadata.setName(fileName);
             fileMetadata.setParents(Collections.singletonList(folderId));
             FileContent mediaContent = new FileContent(mimeType, fileUpload);
 
