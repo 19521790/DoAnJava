@@ -1,22 +1,14 @@
-package com.doan.client.Model;
+package com.doan.client.Model.Object;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-
-public class Artist {
-
-
+public class PlaylistInUser {
     private String id;
     private String name;
     private String image;
-    private String description;
-    private Date createdAt;
-    private Date updatedAt;
 }

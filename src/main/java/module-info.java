@@ -22,8 +22,13 @@ module com.doan.client {
     opens com.doan.client.Controller to javafx.fxml;
     exports com.doan.client.Model;
     opens com.doan.client.Model to gson;
-    exports com.doan.client.Controller.Screen;
-    opens com.doan.client.Controller.Screen to javafx.fxml;
+    exports com.doan.client.Controller.UserScreen;
+    opens com.doan.client.Controller.UserScreen to javafx.fxml;
     exports com.doan.client.Controller.Component;
     opens com.doan.client.Controller.Component to javafx.fxml;
+    exports com.doan.client.Controller.AdminScreen;
+    opens com.doan.client.Controller.AdminScreen to javafx.fxml;
+    exports com.doan.client.Model.Object;
+    opens com.doan.client.Model.Object to javafx.fxml;
+
 }

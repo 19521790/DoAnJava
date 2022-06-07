@@ -1,4 +1,4 @@
-package com.doan.client.Controller.Screen;
+package com.doan.client.Controller.UserScreen;
 
 import com.doan.client.Controller.PublicController;
 import javafx.animation.KeyFrame;

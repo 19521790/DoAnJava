@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="playlistCover" prefHeight="800.0" prefWidth="1000.0" style="-fx-background-color: #f5f6fc;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.doan.client.Controller.Screen.PlayListScreenController">
+<AnchorPane fx:id="playlistCover" prefHeight="800.0" prefWidth="1000.0" style="-fx-background-color: #f5f6fc;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.doan.client.Controller.UserScreen.PlayListScreenController">
    <children>
       <AnchorPane prefHeight="280.0" prefWidth="1000.0" style="-fx-background-color: linear-gradient(to bottom, #767274 50%, #433f41 100%);">
          <children>

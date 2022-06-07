@@ -12,12 +12,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 
-import java.io.File;
 import java.io.IOException;
 
 /**
@@ -30,7 +26,7 @@ public class Application extends javafx.application.Application {
     public void start(Stage primaryStage) throws IOException, UnirestException {
 
 //        FXMLLoader fxmlLoader= new FXMLLoader(getClass().getResource("/com/doan/client/View/Screen/MainScreen.fxml"));
-        FXMLLoader fxmlLoader= new FXMLLoader(getClass().getResource("/com/doan/client/View/Screen/AdminScreen.fxml"));
+        FXMLLoader fxmlLoader= new FXMLLoader(getClass().getResource("/com/doan/client/View/AdminScreen/AdminScreen.fxml"));
         Parent root = fxmlLoader.load();
         Scene scene = new Scene(root);
         scene.getStylesheets().add(getClass().getResource("/com/doan/client/application.css").toExternalForm());

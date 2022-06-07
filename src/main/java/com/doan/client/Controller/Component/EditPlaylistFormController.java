@@ -40,7 +40,7 @@ public class EditPlaylistFormController implements Initializable {
         if (file != null){
             imageProfile.setImage(new Image(file.toURI().toString()));
             Media media = new Media(file.toURI().toString());
-            System.out.println(media.getDuration().toSeconds());
+
         }
     }
 

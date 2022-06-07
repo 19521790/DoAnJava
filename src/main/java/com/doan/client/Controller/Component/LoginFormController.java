@@ -5,7 +5,7 @@
 package com.doan.client.Controller.Component;
 
 
-import com.doan.client.Controller.Screen.MainScreenController;
+import com.doan.client.Controller.UserScreen.MainScreenController;
 import com.doan.client.Model.User;
 import com.google.gson.Gson;
 import com.mashape.unirest.http.HttpResponse;
@@ -159,7 +159,7 @@ public class LoginFormController implements Initializable {
                                     stage.close();
 
                                     Stage primaryStage= new Stage();
-                                    FXMLLoader adminFxmlLoader= new FXMLLoader(getClass().getResource("/com/doan/client/View/Screen/AdminScreen.fxml"));
+                                    FXMLLoader adminFxmlLoader= new FXMLLoader(getClass().getResource("/com/doan/client/View/AdminScreen/AdminScreen.fxml"));
                                     Parent root = null;
                                     try {
                                         root = adminFxmlLoader.load();

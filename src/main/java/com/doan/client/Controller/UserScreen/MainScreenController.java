@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXMLController.java to edit this template
  */
-package com.doan.client.Controller.Screen;
+package com.doan.client.Controller.UserScreen;
 
 
 import com.doan.client.Controller.Component.LoginFormController;
@@ -117,8 +117,8 @@ public class MainScreenController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         loginPaneFromHome.setVisible(true);
         FXMLLoader loginFxmlLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/Component/LoginForm.fxml"));
-        FXMLLoader homeFxmlLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/Screen/HomeScreen.fxml"));
-        FXMLLoader discoverFxmlLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/Screen/DiscoverScreen.fxml"));
+        FXMLLoader homeFxmlLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/UserScreen/HomeScreen.fxml"));
+        FXMLLoader discoverFxmlLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/UserScreen/DiscoverScreen.fxml"));
 
 
 
@@ -233,7 +233,7 @@ public class MainScreenController implements Initializable {
 
         login = true;
         logoutBtn.setDisable(false);
-        FXMLLoader accountFxmlLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/Screen/AccountScreen.fxml"));
+        FXMLLoader accountFxmlLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/UserScreen/AccountScreen.fxml"));
         try {
             accountAnchorPane = accountFxmlLoader.load();
         } catch (IOException e) {
@@ -314,7 +314,7 @@ public class MainScreenController implements Initializable {
             discoverButtonTab.setVisible(true);
 
         }else{
-            FXMLLoader playlistFxmlLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/Screen/PlaylistScreen.fxml"));
+            FXMLLoader playlistFxmlLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/UserScreen/PlaylistScreen.fxml"));
             FXMLLoader editFxmlLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/Component/EditPlaylistForm.fxml"));
 
             try {

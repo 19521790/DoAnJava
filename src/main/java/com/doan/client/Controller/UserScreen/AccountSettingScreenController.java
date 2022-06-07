@@ -1,4 +1,4 @@
-package com.doan.client.Controller.Screen;
+package com.doan.client.Controller.UserScreen;
 
 import com.doan.client.Model.User;
 import com.mashape.unirest.http.HttpResponse;

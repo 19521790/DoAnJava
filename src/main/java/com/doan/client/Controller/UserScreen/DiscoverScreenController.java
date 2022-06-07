@@ -1,4 +1,4 @@
-package com.doan.client.Controller.Screen;
+package com.doan.client.Controller.UserScreen;
 
 import de.jensd.fx.glyphs.materialicons.MaterialIconView;
 import javafx.fxml.FXMLLoader;

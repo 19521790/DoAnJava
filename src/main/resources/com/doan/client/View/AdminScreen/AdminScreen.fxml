@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.materialicons.MaterialIconView?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="600.0" prefWidth="1200.0" style="-fx-background-color: #f5f6fc;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.doan.client.Controller.AdminScreen.AdminScreenController">
+   <children>
+      <AnchorPane prefHeight="600.0" prefWidth="200.0" style="-fx-background-color: white;">
+         <children>
+            <Label alignment="CENTER" layoutX="61.0" layoutY="14.0" prefHeight="28.0" prefWidth="74.0" text="Zyan">
+               <font>
+                  <Font name="System Bold" size="30.0" />
+               </font>
+               <textFill>
+                  <LinearGradient startX="0.4962121221152219">
+                     <stops>
+                        <Stop>
+                           <color>
+                              <Color red="0.019999999552965164" green="0.4545328915119171" blue="1.0" />
+                           </color>
+                        </Stop>
+                        <Stop offset="1.0">
+                           <color>
+                              <Color red="1.1102230246251565E-16" green="0.699999988079071" blue="1.0" />
+                           </color>
+                        </Stop>
+                     </stops>
+                  </LinearGradient>
+               </textFill>
+            </Label>
+            <VBox layoutY="83.0" prefHeight="372.0" prefWidth="196.0">
+               <children>
+                  <ToggleButton fx:id="songTabBtn" alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" onAction="#addMusicTab" prefHeight="33.0" prefWidth="181.0" selected="true" style="-fx-background-color: white;" text="Song">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="Group1" />
+                     </toggleGroup>
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                     <padding>
+                        <Insets left="30.0" />
+                     </padding>
+                     <graphic>
+                        <MaterialIconView glyphName="MUSIC_NOTE" />
+                     </graphic>
+                  </ToggleButton>
+                  <ToggleButton fx:id="artistTabBtn" alignment="BASELINE_LEFT" graphicTextGap="5.0" layoutX="25.0" layoutY="10.0" mnemonicParsing="false" onAction="#addMusicTab" prefHeight="33.0" prefWidth="181.0" selected="true" style="-fx-background-color: white;" text="Artist" toggleGroup="$Group1">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                     <padding>
+                        <Insets left="30.0" />
+                     </padding>
+                     <graphic>
+                        <MaterialIconView glyphName="PLAYLIST_ADD" size="18" />
+                     </graphic>
+                  </ToggleButton>
+                  <ToggleButton fx:id="albumTabBtn" alignment="BASELINE_LEFT" graphicTextGap="8.0" layoutX="25.0" layoutY="43.0" mnemonicParsing="false" onAction="#addMusicTab" prefHeight="33.0" prefWidth="181.0" selected="true" style="-fx-background-color: white;" text="Album" toggleGroup="$Group1">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                     <padding>
+                        <Insets left="30.0" />
+                     </padding>
+                     <graphic>
+                        <MaterialIconView glyphName="ALBUM" />
+                     </graphic>
+                  </ToggleButton>
+               </children>
+               <padding>
+                  <Insets left="15.0" right="15.0" />
+               </padding>
+            </VBox>
+         </children>
+      </AnchorPane>
+      <AnchorPane fx:id="adminMainBoard" layoutX="200.0" prefHeight="600.0" prefWidth="1000.0" />
+   </children>
+</AnchorPane>

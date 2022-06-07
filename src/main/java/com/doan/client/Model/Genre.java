@@ -10,13 +10,13 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class Artist {
-
+public class Genre {
 
     private String id;
+
     private String name;
+
     private String image;
-    private String description;
     private Date createdAt;
     private Date updatedAt;
 }
