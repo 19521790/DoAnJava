@@ -23,15 +23,6 @@
             <Font size="14.0" />
          </font>
       </Label>
-      <ScrollPane fx:id="scrollPaneSearch" hbarPolicy="NEVER" layoutX="129.0" layoutY="335.0" prefHeight="205.0" prefWidth="293.0">
-         <content>
-            <AnchorPane minHeight="0.0" minWidth="0.0">
-               <children>
-                  <VBox fx:id="listNotAddedSong" layoutY="-3.0" />
-               </children>
-            </AnchorPane>
-         </content>
-      </ScrollPane>
       <ScrollPane layoutX="444.0" layoutY="295.0" prefHeight="45.0" prefWidth="542.0">
          <content>
             <AnchorPane minHeight="0.0" minWidth="0.0">
@@ -65,7 +56,7 @@
             </Button>
          </children>
       </AnchorPane>
-      <TextField focusTraversable="false" layoutX="129.0" layoutY="59.0" onKeyTyped="#filterSong" onMouseClicked="#showSearchForm" prefHeight="36.0" prefWidth="294.0">
+      <TextField fx:id="nameArtistField" focusTraversable="false" layoutX="129.0" layoutY="59.0" prefHeight="36.0" prefWidth="294.0">
          <font>
             <Font size="15.0" />
          </font>
@@ -75,5 +66,24 @@
             <Font name="System Bold" size="24.0" />
          </font>
       </Label>
+      <Button fx:id="addNewArtistBtn" layoutX="215.0" layoutY="375.0" mnemonicParsing="false" onAction="#addNewArtist" style="-fx-background-color: #3b75ff;" text="Save" textFill="WHITE">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Button>
+      <Button layoutX="294.0" layoutY="375.0" mnemonicParsing="false" onAction="#resetArtist" style="-fx-background-color: #3b75ff;" text="Reset" textFill="WHITE">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Button>
+      <ScrollPane fx:id="scrollPaneSearch" hbarPolicy="NEVER" layoutX="129.0" layoutY="335.0" prefHeight="205.0" prefWidth="293.0" visible="false">
+         <content>
+            <AnchorPane minHeight="0.0" minWidth="0.0">
+               <children>
+                  <VBox fx:id="listNotAddedSong" layoutY="-3.0" />
+               </children>
+            </AnchorPane>
+         </content>
+      </ScrollPane>
    </children>
 </AnchorPane>

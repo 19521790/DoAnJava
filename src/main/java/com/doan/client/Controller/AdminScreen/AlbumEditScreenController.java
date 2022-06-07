@@ -34,8 +34,6 @@ public class AlbumEditScreenController {
     public TextField addSongField;
     public ImageView imageAlbum;
 
-
-
     public void filterSong(KeyEvent keyEvent) {
     }
 

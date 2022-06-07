@@ -12,7 +12,6 @@ import java.util.Date;
 
 public class Artist {
 
-
     private String id;
     private String name;
     private String image;

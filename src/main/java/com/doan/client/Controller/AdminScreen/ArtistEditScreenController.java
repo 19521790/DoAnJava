@@ -1,22 +1,22 @@
 package com.doan.client.Controller.AdminScreen;
 
+import com.doan.client.Model.Artist;
 import com.doan.client.Model.Song;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
-import javafx.scene.control.Button;
-import javafx.scene.control.ContentDisplay;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
@@ -39,6 +39,8 @@ public class ArtistEditScreenController implements Initializable {
     public ImageView imageArtist;
     public List<Song> songs;
     public TextField addSongField;
+    public TextField nameArtistField;
+    public Button addNewArtistBtn;
     File fileImage;
 
     @Override
@@ -128,4 +130,73 @@ public class ArtistEditScreenController implements Initializable {
     }
 
 
+    public void addNewArtist(ActionEvent actionEvent) {
+        if (nameArtistField.getText().equals("")) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setHeaderText("Artist's name can't be empty");
+            alert.show();
+        } else if (fileImage == null) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setHeaderText("Please choose image file");
+            alert.show();
+        }
+        else {
+            addNewArtistBtn.setText("Uploading...");
+            ImageView imageView = new ImageView(new Image("http://localhost:8080/image/loading.gif"));
+            imageView.setFitWidth(20);
+            imageView.setFitHeight(20);
+            addNewArtistBtn.setGraphic(imageView);
+            new Thread(() -> {
+
+                Artist artist= new Artist();
+                artist.setName(nameArtistField.getText());
+                ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+                String json = null;
+                try {
+                    json = ow.writeValueAsString(artist);
+                    HttpResponse<JsonNode> apiResponse=  Unirest.post("http://localhost:8080/artist/addArtist").field("file", fileImage).field("artist", json).asJson();
+
+                    if (apiResponse.getStatus() == 200) {
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                                alert.setHeaderText("Successful upload");
+                                alert.show();
+                                addNewArtistBtn.setText("Save");
+                                addNewArtistBtn.setGraphic(null);
+                            }
+                        });
+
+                    } else {
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                                alert.setHeaderText("Song's name has been exists!");
+                                alert.show();
+                                addNewArtistBtn.setText("Save");
+                                addNewArtistBtn.setGraphic(null);
+                            }
+                        });
+                    }
+                    resetField();
+
+                } catch (JsonProcessingException | UnirestException e) {
+                    throw new RuntimeException(e);
+                }
+            }).start();
+
+
+        }
+    }
+
+    public void resetArtist(ActionEvent actionEvent) {
+        resetField();
+    }
+    public void resetField(){
+        nameArtistField.setText("");
+        imageArtist.setImage(null);
+        listAddedSong.getChildren().clear();
+    }
 }
