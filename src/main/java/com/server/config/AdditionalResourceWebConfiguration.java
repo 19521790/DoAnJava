@@ -1,4 +1,4 @@
-package com.server;
+package com.server.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -10,5 +10,7 @@ public class AdditionalResourceWebConfiguration implements WebMvcConfigurer {
     public void addResourceHandlers(final ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/image/**")
                 .addResourceLocations("file:src\\main\\java\\com\\server\\assets\\");
+        registry.addResourceHandler("/dump/**")
+                .addResourceLocations("file:dump\\");
     }
 }

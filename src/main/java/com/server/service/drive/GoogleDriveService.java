@@ -129,7 +129,7 @@ public class GoogleDriveService {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-        return file.getAbsolutePath();
+        return "http://localhost:8080/dump/"+file.getName();
     }
 
     public void deleteFile(String fileId) {
