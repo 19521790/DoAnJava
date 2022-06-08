@@ -16,6 +16,7 @@ import com.google.api.services.drive.DriveScopes;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.FileList;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -25,7 +26,7 @@ import java.util.Collections;
 import java.util.List;
 
 /* class to demonstarte use of Drive files list API */
-@Component
+@Service
 public class GoogleDriveService {
     /**
      * Application name.
@@ -57,6 +58,7 @@ public class GoogleDriveService {
     private static Credential getCredentials(final NetHttpTransport HTTP_TRANSPORT) throws IOException {
         // Load client secrets.
         InputStream in = GoogleDriveService.class.getResourceAsStream(CREDENTIALS_FILE_PATH);
+        System.out.println(in);
         if (in == null) {
             throw new FileNotFoundException("Resource not found: " + CREDENTIALS_FILE_PATH);
         }
@@ -115,15 +117,19 @@ public class GoogleDriveService {
         return file;
     }
 
-    public ByteArrayOutputStream downloadFile(String fileId) {
+    public String downloadFile(String fileId, String type) throws FileNotFoundException {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        java.io.File file = new java.io.File("dump/" + fileId + type);
+        OutputStream os = new FileOutputStream(file);
         try {
             getDriveService().files().get(fileId)
                     .executeMediaAndDownloadTo(outputStream);
+            outputStream.writeTo(os);
+            os.close();
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-        return outputStream;
+        return file.getAbsolutePath();
     }
 
     public void deleteFile(String fileId) {
@@ -137,7 +143,7 @@ public class GoogleDriveService {
 
     public void deleteLocalFile(String path) {
         String pathLocal = new java.io.File("pom.xml").getAbsolutePath();
-        java.io.File fileToDelete = new java.io.File(pathLocal.substring(0, pathLocal.length() - "pom.xml".length())+path);
+        java.io.File fileToDelete = new java.io.File(pathLocal.substring(0, pathLocal.length() - "pom.xml".length()) + path);
         if (fileToDelete.delete()) {
             System.out.println("successfully deleted");
         } else {

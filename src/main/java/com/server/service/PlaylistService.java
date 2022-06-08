@@ -5,11 +5,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.server.entity.Playlist;
 import com.server.entity.Song;
 import com.server.exception.PlaylistException;
-import com.server.repository.PlaylistRepository;
+import com.server.repository.PlaylistTemplate;
 import com.server.repository.SongRepository;
 import com.server.service.drive.GoogleDriveService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,7 +19,7 @@ import java.util.List;
 @Service
 public class PlaylistService {
     @Autowired
-    private PlaylistRepository playlistRepository;
+    private PlaylistTemplate playlistRepository;
 
     @Autowired
     private SongRepository songRepository;

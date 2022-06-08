@@ -56,4 +56,16 @@ public class AlbumService {
         albumRepository.deleteById(id);
         return ("Album has been deleted: " + id);
     }
+
+//    public Album addSongToAlbum(List<String> idSongs, String idAlbum) throws AlbumException {
+//        Album album = albumRepository.findById(idAlbum).get();
+//        if (album == null) {
+//            throw new AlbumException(AlbumException.NotFoundException(idAlbum));
+//        } else {
+//            for (String idSong : idSongs) {
+//                album.addSongToAlbum(idSong);
+//            }
+//            return albumRepository.save(album);
+//        }
+//    }
 }

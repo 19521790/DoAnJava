@@ -57,8 +57,8 @@ public class ArtistController {
         return artistService.updateArtist(artist);
     }
 
-    @PutMapping("/addSongToArtist")
-    public Artist addSongToArtist(@RequestParam String idArtist, @RequestParam String idSong) {
-        return artistService.addSongToArtist(idArtist, idSong);
-    }
+ @GetMapping("/findAllSongs/{id}")
+    public ResponseEntity findAllSongs(@PathVariable String id){
+        return ResponseEntity.status(HttpStatus.OK).body(artistService.findAllSongs(id));
+ }
 }

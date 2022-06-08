@@ -2,14 +2,14 @@ package com.server.repository.custom.impl;
 
 import com.server.entity.Playlist;
 import com.server.entity.Song;
-import com.server.repository.custom.CustomPlaylistRepository;
+import com.server.repository.custom.PlaylistTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 
-public class CustomPlaylistRepositoryImpl implements CustomPlaylistRepository {
+public class PlaylistTemplateImpl implements PlaylistTemplate {
     @Autowired
     private MongoTemplate mongoTemplate;
 

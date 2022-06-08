@@ -20,6 +20,7 @@ import javax.validation.Path;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -29,6 +30,9 @@ public class SongService {
 
     @Autowired
     private AlbumRepository albumRepository;
+
+    @Autowired
+    private ArtistService artistService;
 
     @Autowired
     private GoogleDriveService driveService;
@@ -57,25 +61,17 @@ public class SongService {
         }
     }
 
-    public File findSongById(String id) throws SongException, IOException {
+    public SongResult findSongById(String id) throws SongException, IOException {
         Song song = songRepository.findById(id).orElse(null);
-        String imageId = song.getAlbum().getImage();
-        System.out.println(imageId);
-        java.io.File image = new java.io.File("temp.jpg");
+        SongResult songResult = new SongResult();
         if (song != null) {
-            OutputStream os = new FileOutputStream(image);
-            driveService.downloadFile(imageId).writeTo(os);
-            System.out.println(image);
-            os.close();
-//            System.out.println("os close");
-//            FileInputStream input = new FileInputStream(image);
-//            System.out.println("file inputStream");
-//            MultipartFile multipartFile = new MockMultipartFile("file",
-//                    image.getName(), "image/jpeg", org.apache.commons.io.IOUtils.toByteArray(input));
-//            System.out.println("multipart file");
-//            image.delete();
-//            System.out.println("file delete");
-            return image;
+            String imageId = song.getAlbum().getImage();
+            String fileId = song.getFile();
+
+            songResult.setSong(song);
+            songResult.setImagePath(driveService.downloadFile(imageId,".jpg"));
+            songResult.setFilePath(driveService.downloadFile(fileId,".m4a"));
+            return songResult;
         } else {
             throw new SongException(SongException.NotFoundException(id));
         }

@@ -3,7 +3,7 @@ package com.server.service;
 import com.server.entity.Playlist;
 import com.server.entity.User;
 import com.server.exception.UserException;
-import com.server.repository.PlaylistRepository;
+import com.server.repository.PlaylistTemplate;
 import com.server.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.server.service.drive.GoogleDriveService;
@@ -12,8 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Date;
 import java.util.List;
 
@@ -24,7 +22,7 @@ public class UserService {
     private UserRepository userRepository;
 
     @Autowired
-    private PlaylistRepository playlistRepository;
+    private PlaylistTemplate playlistRepository;
 
     @Autowired
     private GoogleDriveService driveService;

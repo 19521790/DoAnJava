@@ -41,12 +41,9 @@ public class SongController {
     }
 
     @GetMapping("/findSongById/{id}")
-    public Response findSongById(@PathVariable String id) throws SongException,IOException {
+    public ResponseEntity findSongById(@PathVariable String id) throws SongException,IOException {
         try {
-            File file = songService.findSongById(id);
-            return Response.ok(file, MediaType.APPLICATION_OCTET_STREAM)
-                    .header("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"" ) //optional
-                    .build();
+            return ResponseEntity.status(HttpStatus.OK).body(songService.findSongById(id));
         } catch (SongException e) {
             throw new SongException(e.getMessage());
         } catch (IOException e){
