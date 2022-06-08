@@ -1,6 +1,7 @@
 package com.doan.client.Controller.UserScreen;
 
 import com.doan.client.Controller.PublicController;
+import com.doan.client.Service.GoogleDriveService;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -11,13 +12,18 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class HomeScreenController implements Initializable {
+
     public TextField searchBar;
     public AnchorPane clipPane;
     public AnchorPane slidePane;
@@ -25,7 +31,12 @@ public class HomeScreenController implements Initializable {
     public AnchorPane clipPaneBackground;
     public AnchorPane slideCard;
     public AnchorPane outsideParent;
+    public ImageView testImage;
     PublicController publicController;
+
+
+    private GoogleDriveService driveService;
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -63,9 +74,12 @@ public class HomeScreenController implements Initializable {
         }
 
 
+        File image = GoogleDriveService.downloadFile("13MhmyLLy03_u-4T02sMOvehYR3Y2xIjN");
+
 
 
     }
+
     public int index= 0;
     public void goPreviousSlide(ActionEvent mouseEvent) {
         if (index> 0){

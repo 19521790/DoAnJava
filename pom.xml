@@ -124,6 +124,12 @@
             <artifactId>spring-web</artifactId>
             <version>5.3.20</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.springframework/spring-beans -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-beans</artifactId>
+            <version>5.3.20</version>
+        </dependency>
 
         <!-- https://mvnrepository.com/artifact/com.github.jai-imageio/jai-imageio-core -->
 

@@ -179,5 +179,6 @@
             </AnchorPane>
          </children>
       </AnchorPane>
+      <ImageView fx:id="testImage" fitHeight="150.0" fitWidth="200.0" layoutX="14.0" layoutY="171.0" pickOnBounds="true" preserveRatio="true" />
    </children>
 </AnchorPane>

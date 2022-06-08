@@ -40,7 +40,7 @@ public class GoogleDriveService {
      * If modifying these scopes, delete your previously saved tokens/ folder.
      */
     private static final List<String> SCOPES = Collections.singletonList("https://www.googleapis.com/auth/drive");
-    private static final String CREDENTIALS_FILE_PATH = "/credentials.json";
+    private static final String CREDENTIALS_FILE_PATH = "credentials.json";
 
     /**
      * Creates an authorized Credential object.
@@ -49,9 +49,11 @@ public class GoogleDriveService {
      * @return An authorized Credential object.
      * @throws IOException If the credentials.json file cannot be found.
      */
-    private static Credential getCredentials(final NetHttpTransport HTTP_TRANSPORT) throws IOException {
+    public static Credential getCredentials(final NetHttpTransport HTTP_TRANSPORT) throws IOException {
         // Load client secrets.
         InputStream in = GoogleDriveService.class.getResourceAsStream(CREDENTIALS_FILE_PATH);
+        System.getProperty("java.class.path");
+        System.out.println(in+"input stream");
         if (in == null) {
             throw new FileNotFoundException("Resource not found: " + CREDENTIALS_FILE_PATH);
         }
@@ -69,7 +71,7 @@ public class GoogleDriveService {
         return credential;
     }
 
-    public Drive getDriveService() {
+    public static Drive getDriveService() {
         Drive service = null;
         try {
             final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
@@ -82,7 +84,7 @@ public class GoogleDriveService {
         return service;
     }
 
-    public java.io.File downloadFile(String fileId) {
+    public static java.io.File downloadFile(String fileId) {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         java.io.File file = new java.io.File("file");
         try {
@@ -96,7 +98,7 @@ public class GoogleDriveService {
         return file;
     }
 
-    public void deleteLocalFile(String path) {
+    public   void deleteLocalFile(String path) {
         String pathLocal = new java.io.File("pom.xml").getAbsolutePath();
         java.io.File fileToDelete = new java.io.File(pathLocal.substring(0, pathLocal.length() - "pom.xml".length())+path);
         if (fileToDelete.delete()) {

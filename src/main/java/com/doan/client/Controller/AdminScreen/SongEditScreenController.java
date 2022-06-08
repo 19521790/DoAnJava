@@ -420,8 +420,6 @@ public class SongEditScreenController implements Initializable {
         listAddedArtist.getChildren().clear();
     }
 
-
-
     public void convertSongMode(ActionEvent actionEvent) {
         ToggleButton toggleButton = (ToggleButton) actionEvent.getSource();
         if (toggleButton.getId().equals("addSongMode")){

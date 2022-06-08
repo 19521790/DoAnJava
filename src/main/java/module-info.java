@@ -22,6 +22,7 @@ module com.doan.client {
     requires com.google.api.client;
     requires com.google.api.client.json.gson;
     requires google.api.services.drive.v3.rev197;
+    requires spring.beans;
 
     opens com.doan.client to javafx.fxml;
     exports com.doan.client;
