@@ -59,6 +59,9 @@ public class SongEditScreenController implements Initializable {
     public VBox listNotAddedAlbum;
     public HBox listAddedAlbum;
     public ImageView testImage;
+    public ToggleButton addSongMode;
+    public ToggleButton editSongMode;
+    public ToggleGroup Group1;
 
     File fileMusic;
     public List<Artist> artists;
@@ -71,7 +74,7 @@ public class SongEditScreenController implements Initializable {
         initGenre();
         initAlbum();
 
-        testImage.setImage(new Image("https://drive.google.com/file/d/13MhmyLLy03_u-4T02sMOvehYR3Y2xIjN/view"));
+
     }
     public void initGenre(){
         HttpResponse<JsonNode> apiResponse = null;
@@ -419,6 +422,15 @@ public class SongEditScreenController implements Initializable {
 
 
 
+    public void convertSongMode(ActionEvent actionEvent) {
+        ToggleButton toggleButton = (ToggleButton) actionEvent.getSource();
+        if (toggleButton.getId().equals("addSongMode")){
+            addSongMode.setStyle("-fx-background-color:  #3b75ff; -fx-text-fill: white");
+            editSongMode.setStyle("-fx-background-color: #d3dadb; -fx-text-fill: black");
 
-
+        }else{
+            editSongMode.setStyle("-fx-background-color:  #3b75ff; -fx-text-fill: white");
+            addSongMode.setStyle("-fx-background-color: #d3dadb; -fx-text-fill: black");
+        }
+    }
 }
