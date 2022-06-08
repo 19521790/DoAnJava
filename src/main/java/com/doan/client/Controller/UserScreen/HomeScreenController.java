@@ -1,7 +1,7 @@
 package com.doan.client.Controller.UserScreen;
 
 import com.doan.client.Controller.PublicController;
-import com.doan.client.Service.GoogleDriveService;
+
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -16,7 +16,6 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
 import java.net.URL;
@@ -35,7 +34,6 @@ public class HomeScreenController implements Initializable {
     PublicController publicController;
 
 
-    private GoogleDriveService driveService;
 
 
     @Override
@@ -72,9 +70,6 @@ public class HomeScreenController implements Initializable {
             anchorPane.setLayoutX(10+ 180*i);
             slideCard.getChildren().add(anchorPane);
         }
-
-
-        File image = GoogleDriveService.downloadFile("13MhmyLLy03_u-4T02sMOvehYR3Y2xIjN");
 
 
 

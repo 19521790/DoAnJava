@@ -62,7 +62,12 @@ public class SongEditScreenController implements Initializable {
     public ToggleButton addSongMode;
     public ToggleButton editSongMode;
     public ToggleGroup Group1;
-
+    public Label chooseFileLabel;
+    public Button chooseFile;
+    public Button editSongBtn;
+    public ScrollPane scrollPaneSongName;
+    public VBox listNotAddedSong;
+    private String  currentSaveSongId;
     File fileMusic;
     public List<Artist> artists;
     public List<Genre> genres;
@@ -159,6 +164,19 @@ public class SongEditScreenController implements Initializable {
             listNotAddedGenre.getChildren().add(button);
         }
     }
+    public void addSongToSearchFilter(List<Song> songs) {
+        for (Song song: songs) {
+            Button button = new Button();
+            button.setText(song.getName());
+            button.setId(song.getId());
+            button.getStyleClass().add("itemSearch");
+            button.setPrefWidth(280);
+            button.setAlignment(Pos.BASELINE_LEFT);
+            button.setCursor(Cursor.HAND);
+            button.setOnAction(this::clickItemSearchSong);
+              listNotAddedSong.getChildren().add(button);
+        }
+    }
 
     public void clickItemSearchArtist(ActionEvent actionEvent) {
         Button button = (Button) actionEvent.getSource();
@@ -182,6 +200,13 @@ public class SongEditScreenController implements Initializable {
         listAddedGenre.getChildren().add(button);
         listNotAddedGenre.getChildren().remove(button);
         button.setOnAction(this::returnSongToListGenre);
+
+    }
+    public void clickItemSearchSong(ActionEvent actionEvent) {
+        Button button = (Button) actionEvent.getSource();
+        songName.setText(button.getText());
+        currentSaveSongId= button.getId();
+        scrollPaneSongName.setVisible(false);
 
     }
     public void clickItemSearchAlbum(ActionEvent actionEvent) {
@@ -242,6 +267,11 @@ public class SongEditScreenController implements Initializable {
         List<Album> listFilter = albums.stream().filter(p -> p.getName().startsWith(addAlbumField.getText())).toList();
         listNotAddedAlbum.getChildren().clear();
         addAlbumToSelectForm(listFilter);
+    }
+    public void filterSong(KeyEvent keyEvent) {
+        List<Song> listFilter = AdminScreenController.listSong.stream().filter(p -> p.getName().startsWith(songName.getText())).toList();
+        listNotAddedSong.getChildren().clear();
+        addSongToSearchFilter(listFilter);
     }
 
     public void getFileMusic(ActionEvent actionEvent) {
@@ -373,6 +403,7 @@ public class SongEditScreenController implements Initializable {
         });
         return genreArrayList;
     }
+
     public Album getAddedAlbum(){
         Album album = new Album();
         listAddedAlbum.getChildren().forEach(e->{
@@ -392,6 +423,7 @@ public class SongEditScreenController implements Initializable {
         scrollPaneSearchArtist.setVisible(false);
         scrollPaneSearchGenre.setVisible(false);
         scrollPaneSearchAlbum.setVisible(false);
+        scrollPaneSongName.setVisible(false);
         
     }
 
@@ -399,16 +431,25 @@ public class SongEditScreenController implements Initializable {
         scrollPaneSearchArtist.setVisible(true);
         scrollPaneSearchGenre.setVisible(false);
         scrollPaneSearchAlbum.setVisible(false);
+        scrollPaneSongName.setVisible(false);
     }
     public void showSearchFormGenre(MouseEvent mouseEvent) {
         scrollPaneSearchArtist.setVisible(false);
         scrollPaneSearchGenre.setVisible(true);
         scrollPaneSearchAlbum.setVisible(false);
+        scrollPaneSongName.setVisible(false);
     }
     public void showSearchFormAlbum(MouseEvent mouseEvent) {
         scrollPaneSearchArtist.setVisible(false);
         scrollPaneSearchGenre.setVisible(false);
         scrollPaneSearchAlbum.setVisible(true);
+        scrollPaneSongName.setVisible(false);
+    }
+    public void showSearchFormSong(MouseEvent mouseEvent) {
+        scrollPaneSearchArtist.setVisible(false);
+        scrollPaneSearchGenre.setVisible(false);
+        scrollPaneSearchAlbum.setVisible(false);
+        scrollPaneSongName.setVisible(true);
     }
     public void resetAllField() {
         fileMusic = null;
@@ -425,10 +466,32 @@ public class SongEditScreenController implements Initializable {
         if (toggleButton.getId().equals("addSongMode")){
             addSongMode.setStyle("-fx-background-color:  #3b75ff; -fx-text-fill: white");
             editSongMode.setStyle("-fx-background-color: #d3dadb; -fx-text-fill: black");
+            songName.setPromptText("");
+            addNewSongBtn.setVisible(true);
+            editSongBtn.setVisible(false);
+            songName.setOnKeyTyped(null);
+            songName.setOnMouseClicked(null);
+            chooseFile.setVisible(true);
+            chooseFileLabel.setVisible(true);
 
         }else{
             editSongMode.setStyle("-fx-background-color:  #3b75ff; -fx-text-fill: white");
             addSongMode.setStyle("-fx-background-color: #d3dadb; -fx-text-fill: black");
+            songName.setPromptText("Search for song name");
+            songName.setOnKeyTyped(this::filterSong);
+            songName.setOnMouseClicked(this::showSearchFormSong);
+            addNewSongBtn.setVisible(false);
+            editSongBtn.setVisible(true);
+
+            chooseFile.setVisible(false);
+            chooseFileLabel.setVisible(false);
+
+
+            addSongToSearchFilter(AdminScreenController.listSong);
         }
     }
+
+
+
+
 }

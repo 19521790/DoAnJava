@@ -49,11 +49,14 @@ public class AdminScreenController implements Initializable {
     public ToggleButton artistTabBtn;
 
 
-
+    public  static List<Song> listSong;
     public AnchorPane adminMainBoard;
     AnchorPane songPane;
     AnchorPane artistPane;
     AnchorPane albumPane ;
+    private SongEditScreenController songEditScreenController;
+    private ArtistEditScreenController artistEditScreenController;
+    private  AlbumEditScreenController albumEditScreenController;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         FXMLLoader fxmlSongLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/AdminScreen/SongEditScreen.fxml"));
@@ -61,12 +64,31 @@ public class AdminScreenController implements Initializable {
         FXMLLoader fxmlAlbumLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/AdminScreen/AlbumEditScreen.fxml"));
         try {
             songPane = fxmlSongLoader.load();
+            songEditScreenController = fxmlSongLoader.getController();
+
             artistPane = fxmlArtistLoader.load();
+            artistEditScreenController= fxmlArtistLoader.getController();
             albumPane = fxmlAlbumLoader.load();
+            albumEditScreenController= fxmlAlbumLoader.getController();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
         songTabBtn.fire();
+        getSongData();
+    }
+
+    public  void getSongData() {
+        HttpResponse<JsonNode> apiResponse = null;
+        try {
+            apiResponse = Unirest.get("http://localhost:8080/song/findAllSongs").asJson();
+            String jsonValue = apiResponse.getBody().toString();
+            ObjectMapper mapper = new ObjectMapper();
+            listSong = mapper.readValue(jsonValue, new TypeReference<>() {
+            });
+
+        } catch (UnirestException | JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 
@@ -105,6 +127,7 @@ public class AdminScreenController implements Initializable {
             adminMainBoard.getChildren().setAll(songPane);
         } else if (toggleButton.getId().equals("artistTabBtn")) {
             adminMainBoard.getChildren().setAll(artistPane);
+            artistEditScreenController.initSongList();
         } else {
             adminMainBoard.getChildren().setAll(albumPane);
         }

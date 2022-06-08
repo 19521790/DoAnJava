@@ -46,23 +46,10 @@ public class ArtistEditScreenController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         scrollPaneSearch.setVisible(false);
-        initSongList();
     }
 
     public void initSongList() {
-        HttpResponse<JsonNode> apiResponse = null;
-        try {
-            apiResponse = Unirest.get("http://localhost:8080/song/findAllSongs").asJson();
-            String jsonValue = apiResponse.getBody().toString();
-
-            ObjectMapper mapper = new ObjectMapper();
-            songs = mapper.readValue(jsonValue, new TypeReference<>() {
-            });
-            addSongToSearchFilter(songs);
-
-        } catch (UnirestException | JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
+        addSongToSearchFilter(AdminScreenController.listSong);
     }
 
     public void addSongToSearchFilter(List<Song> arrList) {
