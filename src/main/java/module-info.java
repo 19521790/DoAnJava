@@ -15,6 +15,13 @@ module com.doan.client {
     requires de.jensd.fx.glyphs.materialicons;
     requires com.jfoenix;
     requires  javafx.media;
+    requires com.google.api.client.auth;
+    requires com.google.api.client.extensions.java6.auth;
+    requires com.google.api.client.extensions.jetty.auth;
+    requires google.api.client;
+    requires com.google.api.client;
+    requires com.google.api.client.json.gson;
+    requires google.api.services.drive.v3.rev197;
 
     opens com.doan.client to javafx.fxml;
     exports com.doan.client;
