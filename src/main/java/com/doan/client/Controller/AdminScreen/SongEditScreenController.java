@@ -58,6 +58,7 @@ public class SongEditScreenController implements Initializable {
     public ScrollPane scrollPaneSearchAlbum;
     public VBox listNotAddedAlbum;
     public HBox listAddedAlbum;
+    public ImageView testImage;
 
     File fileMusic;
     public List<Artist> artists;
@@ -70,6 +71,7 @@ public class SongEditScreenController implements Initializable {
         initGenre();
         initAlbum();
 
+        testImage.setImage(new Image("https://drive.google.com/file/d/13MhmyLLy03_u-4T02sMOvehYR3Y2xIjN/view"));
     }
     public void initGenre(){
         HttpResponse<JsonNode> apiResponse = null;
