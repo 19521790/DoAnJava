@@ -99,7 +99,8 @@ public class GoogleDriveService {
     }
 
     public File uploadFile(String fileName, MultipartFile multipartFile, String mimeType, String folderId) {
-        File file = new File();
+        com.google.api.services.drive.model.File file = new com.google.api.services.drive.model.File();
+
         try {
             java.io.File fileUpload = convertMultipartFile(multipartFile);
             com.google.api.services.drive.model.File fileMetadata = new com.google.api.services.drive.model.File();
@@ -114,6 +115,7 @@ public class GoogleDriveService {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+
         return file;
     }
 

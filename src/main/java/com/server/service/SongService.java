@@ -119,9 +119,11 @@ public class SongService {
             songToUpdate.setUpdatedAt(new Date(System.currentTimeMillis()));
 
             if(file != null){
-                String fileIdToDelete = song.getFile();
-                songToUpdate.setFile(driveService.uploadFile(song.getName(),file,"audio/mpeg",songFolderId).getId());
-                driveService.deleteFile(fileIdToDelete);
+                com.google.api.services.drive.model.File fileToUpdate = driveService.uploadFile(song.getName(),file,"audio/mpeg",songFolderId);
+                songToUpdate.setFile(fileToUpdate.getId());
+
+                driveService.deleteLocalFile(file.getOriginalFilename());
+                driveService.deleteFile(song.getFile());
             }
             return songRepository.save(songToUpdate);
         } else {

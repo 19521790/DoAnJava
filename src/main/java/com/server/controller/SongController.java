@@ -40,7 +40,7 @@ public class SongController {
         }
     }
 
-    @GetMapping("/findSongById/{id}")
+    @GetMapping("/findSongById/{id}/{getFileYes}")
     public ResponseEntity findSongById(@PathVariable String id, @PathVariable boolean getFileYes) throws SongException, IOException {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(songService.findSongById(id, getFileYes));
