@@ -16,7 +16,7 @@ import java.util.Date;
 @Document(collection = "charts")
 public class Chart {
     @Id
-    private int id;
+    private String id;
 
     @NotNull(message = "Chart name cannot be null")
     private String name;

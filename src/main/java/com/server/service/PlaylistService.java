@@ -4,7 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.server.entity.Playlist;
 import com.server.entity.Song;
+import com.server.entity.result.PlaylistResult;
 import com.server.exception.PlaylistException;
+import com.server.exception.SongException;
 import com.server.repository.PlaylistTemplate;
 import com.server.repository.SongRepository;
 import com.server.service.drive.GoogleDriveService;
@@ -14,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.ConstraintViolationException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -29,35 +32,42 @@ public class PlaylistService {
 
     private String playlistImgFolderId = "1V_RzyQ-L04PNkmLMrOsGVEABprMh6IqK";
 
-    public Playlist addPlaylist(String playlistString, MultipartFile image) throws ConstraintViolationException,JsonProcessingException {
+    public Playlist addPlaylist(String playlistString, MultipartFile image) throws ConstraintViolationException, JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
-        Playlist playlist = objectMapper.readValue(playlistString,Playlist.class);
+        Playlist playlist = objectMapper.readValue(playlistString, Playlist.class);
 
-        playlist.setImage(driveService.uploadFile(playlist.getName(),image,"image/jpeg",playlistImgFolderId).getId());
+        playlist.setImage(driveService.uploadFile(playlist.getName(), image, "image/jpeg", playlistImgFolderId).getId());
+        playlist.setCreatedAt(new Date(System.currentTimeMillis()));
         return playlistRepository.save(playlist);
     }
 
-    public Playlist findPlaylistById(String id) throws PlaylistException{
+    public PlaylistResult findPlaylistById(String id) throws PlaylistException {
         Playlist playlist = playlistRepository.findById(id).orElse(null);
-        if(playlist==null){
+
+        if (playlist == null) {
             throw new PlaylistException(PlaylistException.NotFoundException(id));
-        }else{
-            return playlist;
+        } else {
+            return new PlaylistResult().playlistToPlaylistResult(playlist);
         }
     }
 
-    public List<Playlist> findAllPlaylists(){
+    public List<Playlist> findAllPlaylists() {
         List<Playlist> playlists = playlistRepository.findAll();
-        if(playlists.size()>0){
+        if (playlists.size() > 0) {
             return playlists;
-        }else{
+        } else {
             return new ArrayList<Playlist>();
         }
     }
 
-    public String deletePlaylist(String id) {
-        playlistRepository.deleteById(id);
-        return ("Playlist has been deleted: " + id);
+    public void deletePlaylist(String id) throws PlaylistException {
+        Playlist playlist = playlistRepository.findById(id).orElse(null);
+        if (playlist == null) {
+            throw new PlaylistException(PlaylistException.NotFoundException(id));
+        } else {
+            driveService.deleteFile(playlist.getImage());
+            songRepository.deleteById(id);
+        }
     }
 
     public Playlist updatePlaylist(Playlist playlist) {
@@ -75,6 +85,6 @@ public class PlaylistService {
         songToUpload.setAlbum(song.getAlbum());
         songToUpload.setFile(song.getFile());
 
-        return playlistRepository.addSongToPlaylist(playlist,songToUpload);
+        return playlistRepository.addSongToPlaylist(playlist, songToUpload);
     }
 }

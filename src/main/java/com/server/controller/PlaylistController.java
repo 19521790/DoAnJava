@@ -21,12 +21,12 @@ public class PlaylistController {
     private PlaylistService playlistService;
 
     @PostMapping("/addPlaylist")
-    public ResponseEntity addPlaylist(@RequestPart("playlist") String playlistString, @RequestPart("image")MultipartFile image) {
+    public ResponseEntity addPlaylist(@RequestPart("playlist") String playlistString, @RequestPart("image") MultipartFile image) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(playlistService.addPlaylist(playlistString, image));
-        }catch(JsonProcessingException e){
+        } catch (JsonProcessingException e) {
             return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(e.getMessage());
-        }catch(ConstraintViolationException e){
+        } catch (ConstraintViolationException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         }
     }
@@ -47,8 +47,13 @@ public class PlaylistController {
     }
 
     @DeleteMapping("/deletePlaylist/{id}")
-    public String deletePlaylist(@PathVariable String id) {
-        return playlistService.deletePlaylist(id);
+    public ResponseEntity deletePlaylist(@PathVariable String id) {
+        try {
+            playlistService.deletePlaylist(id);
+            return ResponseEntity.status(HttpStatus.OK).body("Successfully delete playlist with id " + id);
+        } catch (PlaylistException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 
     @PutMapping("/updatePlaylist")

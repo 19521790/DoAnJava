@@ -26,7 +26,7 @@ public class Playlist {
     private String image;
 
     @NotNull(message = "Playlist idUser cannot be null")
-    private ObjectId idUser;
+    private Object idUser;
 
     private List<SongOtd>songs = new ArrayList<SongOtd>();
 

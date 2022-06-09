@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SongOtd {
-    private ObjectId id;
+    private String id;
     private String name;
     private String file;
     private Album album;

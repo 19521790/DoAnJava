@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.api.client.http.FileContent;
 import com.server.entity.Album;
 import com.server.entity.Song;
+import com.server.entity.object.AlbumOtd;
 import com.server.entity.result.SongResult;
 import com.server.exception.SongException;
 import com.server.repository.AlbumRepository;
@@ -51,7 +52,8 @@ public class SongService {
                 && songOptional.getName().equals(song.getName())) {
             throw new SongException(SongException.SongAlreadyExist(song.getName()));
         } else {
-            Album album = albumRepository.findById(song.getAlbum().getId()).get();
+            AlbumOtd album = new AlbumOtd().albumToAlbumOtd(albumRepository.findById(song.getAlbum().getId()).get());
+
             com.google.api.services.drive.model.File fileUpload = driveService.uploadFile(song.getName(), file, "audio/mpeg", songFolderId);
             song.setFile(fileUpload.getId());
             song.setAlbum(album);
