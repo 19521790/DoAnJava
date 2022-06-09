@@ -30,19 +30,8 @@ public class Artist {
     @NotNull(message = "Artist image cannot be null")
     private String image;
 
-//    private List<ObjectId> idSongs = new ArrayList<ObjectId>();
-//    private List<ObjectId> idAlbums = new ArrayList<ObjectId>();
-
     private String description;
     private int totalView;
     private Date createdAt;
     private Date updatedAt;
-
-//    public void addSongToArtist(ObjectId id) {
-//        this.idSongs.add(id);
-//    }
-//
-//    public void addAlbumtoArtist(ObjectId id) {
-//        this.idAlbums.add(id);
-//    }
 }

@@ -27,14 +27,8 @@ public class Album {
     @NotNull(message = "Album image cannot be null")
     private String image;
 
-//    private List<ObjectId> idSongs = new ArrayList<ObjectId>();
-
     private ArtistOtd artist;
-    private int TotalView;
+    private int totalView;
     private Date createdAt;
     private Date updatedAt;
-
-//    public void addSongToAlbum(ObjectId id){
-//        this.idSongs.add(id);
-//    }
 }

@@ -4,6 +4,7 @@ import com.server.entity.object.SongOtd;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -25,7 +26,7 @@ public class Playlist {
     private String image;
 
     @NotNull(message = "Playlist idUser cannot be null")
-    private int idUser;
+    private ObjectId idUser;
 
     private List<SongOtd>songs = new ArrayList<SongOtd>();
 

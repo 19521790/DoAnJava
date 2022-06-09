@@ -4,6 +4,7 @@ import com.server.entity.Album;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.bson.types.ObjectId;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SongOtd {
-    private String id;
+    private ObjectId id;
     private String name;
     private String file;
     private Album album;

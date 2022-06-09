@@ -23,11 +23,11 @@ public class GenreService {
     @Autowired
     private GoogleDriveService driveService;
 
+    private String genreFolderId = "1UE5E0PFuzW5v-TRBQf-USGSjq_gOwRsD";
+
     public Genre addGenre(String genreString, MultipartFile image) throws JsonProcessingException, GenreException {
         ObjectMapper objectMapper = new ObjectMapper();
         Genre genre = objectMapper.readValue(genreString, Genre.class);
-
-        String genreFolderId = "1UE5E0PFuzW5v-TRBQf-USGSjq_gOwRsD";
 
         Genre genreOptional = genreRepository.findByName(genre.getName());
 
@@ -36,6 +36,7 @@ public class GenreService {
         } else {
             genre.setImage(driveService.uploadFile(genre.getName(), image, "image/jpeg", genreFolderId).getId());
             genre.setCreatedAt(new Date(System.currentTimeMillis()));
+
             return genreRepository.save(genre);
         }
     }

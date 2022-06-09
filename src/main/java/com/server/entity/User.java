@@ -1,6 +1,5 @@
 package com.server.entity;
 
-import com.server.entity.object.PlaylistOtd;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -33,11 +32,6 @@ public class User {
 
     private String image;
     private String role = "user";
-    private List<PlaylistOtd> playlists = new ArrayList<PlaylistOtd>();
     private Date createdAt;
     private Date updatedAt;
-
-//    public void addPlaylistToUser(String idPlaylist) {
-//        playlists.add(idPlaylist);
-//    }
 }

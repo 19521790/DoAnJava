@@ -27,11 +27,11 @@ public class PlaylistService {
     @Autowired
     private GoogleDriveService driveService;
 
+    private String playlistImgFolderId = "1V_RzyQ-L04PNkmLMrOsGVEABprMh6IqK";
+
     public Playlist addPlaylist(String playlistString, MultipartFile image) throws ConstraintViolationException,JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         Playlist playlist = objectMapper.readValue(playlistString,Playlist.class);
-
-        String playlistImgFolderId = "1V_RzyQ-L04PNkmLMrOsGVEABprMh6IqK";
 
         playlist.setImage(driveService.uploadFile(playlist.getName(),image,"image/jpeg",playlistImgFolderId).getId());
         return playlistRepository.save(playlist);

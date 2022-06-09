@@ -1,5 +1,6 @@
 package com.server.entity;
 
+import com.server.entity.object.AlbumOtd;
 import com.server.entity.object.ArtistOtd;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -33,7 +34,8 @@ public class Song {
     private List<ArtistOtd> artists = new ArrayList<ArtistOtd>();
 
     @NotNull(message = "Song album cannot be null")
-    private Album album;
+    private AlbumOtd album;
+
     private int weekView;
     private int totalView;
     private Date createdAt;
