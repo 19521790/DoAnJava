@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.server.entity.Album;
 import com.server.entity.Artist;
 import com.server.entity.Song;
+import com.server.entity.result.ArtistResult;
 import com.server.exception.AlbumException;
 import com.server.exception.ArtistException;
 import com.server.repository.ArtistRepository;
@@ -71,7 +72,7 @@ public class ArtistService {
         }
     }
 
-    public AggregationResults findAllSongs(String idArtist){
+    public List<ArtistResult> findAllSongs(String idArtist){
         return artistRepository.findAllSongs(idArtist);
     }
 }

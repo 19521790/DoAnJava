@@ -26,8 +26,8 @@ public class SongController {
     private SongService songService;
 
     @PostMapping("/addSong")
-    public ResponseEntity addSong   (
-            @RequestPart("song") String songString,@RequestPart("file") MultipartFile file
+    public ResponseEntity addSong(
+            @RequestPart("song") String songString, @RequestPart("file") MultipartFile file
     ) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(songService.addSong(songString, file));
@@ -35,18 +35,18 @@ public class SongController {
             return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(e.getMessage());
         } catch (SongException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-        } catch(JsonProcessingException e){
+        } catch (JsonProcessingException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         }
     }
 
     @GetMapping("/findSongById/{id}")
-    public ResponseEntity findSongById(@PathVariable String id) throws SongException,IOException {
+    public ResponseEntity findSongById(@PathVariable String id, @PathVariable boolean getFileYes) throws SongException, IOException {
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(songService.findSongById(id));
+            return ResponseEntity.status(HttpStatus.OK).body(songService.findSongById(id, getFileYes));
         } catch (SongException e) {
             throw new SongException(e.getMessage());
-        } catch (IOException e){
+        } catch (IOException e) {
             throw new IOException(e.getMessage());
         }
     }
@@ -58,23 +58,26 @@ public class SongController {
     }
 
     @PutMapping("/updateSong")
-    public ResponseEntity updateSong(@RequestBody Song song) {
-        try{
-            return ResponseEntity.status(HttpStatus.OK).body(songService.updateSong(song));
-        }catch (ConstraintViolationException e){
+    public ResponseEntity updateSong(@RequestPart("song") String songString
+            , @RequestPart(value = "file", required = false) MultipartFile file) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(songService.updateSong(songString, file));
+        } catch (ConstraintViolationException e) {
             return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(e.getMessage());
-        }catch (SongException e){
+        } catch (SongException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        }catch (JsonProcessingException e){
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(e.getMessage());
         }
 
     }
 
     @DeleteMapping("/deleteSong/{id}")
     public ResponseEntity deleteSong(@PathVariable String id) {
-        try{
+        try {
             songService.deleteSong(id);
-            return ResponseEntity.status(HttpStatus.OK).body("Successfully delete song with id: "+id);
-        }catch (SongException e){
+            return ResponseEntity.status(HttpStatus.OK).body("Successfully delete song with id: " + id);
+        } catch (SongException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }

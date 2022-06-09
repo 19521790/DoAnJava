@@ -10,6 +10,7 @@ import com.server.exception.SongException;
 import com.server.repository.AlbumRepository;
 import com.server.repository.SongRepository;
 import com.server.service.drive.GoogleDriveService;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
@@ -37,11 +38,11 @@ public class SongService {
     @Autowired
     private GoogleDriveService driveService;
 
+    String songFolderId = "1LdzTFIFV9AALrvPHC9llu2OTI2LVeKm2";
+
     public Song addSong(String songString, MultipartFile file) throws ConstraintViolationException, SongException, JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         Song song = objectMapper.readValue(songString, Song.class);
-
-        String songFolderId = "1LdzTFIFV9AALrvPHC9llu2OTI2LVeKm2";
 
         Song songOptional = songRepository.findByName(song.getName());
 
@@ -61,7 +62,7 @@ public class SongService {
         }
     }
 
-    public SongResult findSongById(String id) throws SongException, IOException {
+    public SongResult findSongById(String id,boolean getFileYes) throws SongException, IOException {
         Song song = songRepository.findById(id).orElse(null);
         SongResult songResult = new SongResult();
         if (song != null) {
@@ -69,9 +70,13 @@ public class SongService {
             String fileId = song.getFile();
 
             songResult.setSong(song);
-            songResult.setImagePath(driveService.downloadFile(imageId,".jpg"));
-            songResult.setFilePath(driveService.downloadFile(fileId,".m4a"));
+
+            if(getFileYes) {
+                songResult.setImagePath(driveService.downloadFile(imageId, ".jpg"));
+                songResult.setFilePath(driveService.downloadFile(fileId, ".m4a"));
+            }
             return songResult;
+
         } else {
             throw new SongException(SongException.NotFoundException(id));
         }
@@ -96,7 +101,10 @@ public class SongService {
         }
     }
 
-    public Song updateSong(Song song) throws ConstraintViolationException, SongException {
+    public Song updateSong(String songString, MultipartFile file) throws ConstraintViolationException, SongException, JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        Song song = objectMapper.readValue(songString,Song.class);
+
         Song songToUpdate = songRepository.findById(song.getId()).get();
 
         if (songToUpdate != null) {
@@ -109,6 +117,12 @@ public class SongService {
             songToUpdate.setWeekView(song.getWeekView() != null ? song.getWeekView() : songToUpdate.getWeekView());
             songToUpdate.setTotalView(song.getTotalView() != null ? song.getTotalView() : songToUpdate.getTotalView());
             songToUpdate.setUpdatedAt(new Date(System.currentTimeMillis()));
+
+            if(file != null){
+                String fileIdToDelete = song.getFile();
+                songToUpdate.setFile(driveService.uploadFile(song.getName(),file,"audio/mpeg",songFolderId).getId());
+                driveService.deleteFile(fileIdToDelete);
+            }
             return songRepository.save(songToUpdate);
         } else {
             throw new SongException(SongException.NotFoundException(song.getId()));

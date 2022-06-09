@@ -20,35 +20,40 @@ public class AlbumController {
     private AlbumService albumService;
 
     @PostMapping("/addAlbum")
-    public ResponseEntity addAlbum(@RequestPart("album") String albumString, @RequestPart("image")MultipartFile image){
+    public ResponseEntity addAlbum(@RequestPart("album") String albumString, @RequestPart("image") MultipartFile image) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(albumService.addAlbum(albumString, image));
-        }catch (AlbumException e){
+        } catch (AlbumException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-        }catch(ConstraintViolationException e){
+        } catch (ConstraintViolationException e) {
             return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(e.getMessage());
-        }catch (JsonProcessingException e){
+        } catch (JsonProcessingException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         }
     }
 
     @GetMapping("/findAlbumById/{id}")
-    public Album findAlbumById(@PathVariable String id){
+    public Album findAlbumById(@PathVariable String id) {
         return albumService.findAlbumById(id);
     }
 
     @GetMapping("/findAllAlbums")
-    public List<Album> findAllAlbums(){
+    public List<Album> findAllAlbums() {
         return albumService.findAllAlbums();
     }
 
     @PutMapping("/updateAlbum")
-    public Album updateAlbum(@RequestBody Album album){
-        return albumService.updateAlbum(album);
+    public ResponseEntity updateAlbum(@RequestPart("album") String albumString,
+                                      @RequestPart(value = "image", required = false) MultipartFile image) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(albumService.updateAlbum(albumString, image));
+        } catch (JsonProcessingException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        }
     }
 
     @DeleteMapping("/deleteAlbum/{id}")
-    public String deleteAlbum(@PathVariable String id){
+    public String deleteAlbum(@PathVariable String id) {
         return albumService.deleteAlbum(id);
     }
 }

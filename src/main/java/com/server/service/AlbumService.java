@@ -3,7 +3,9 @@ package com.server.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.server.entity.Album;
+import com.server.entity.Song;
 import com.server.exception.AlbumException;
+import com.server.exception.SongException;
 import com.server.repository.AlbumRepository;
 import com.server.service.drive.GoogleDriveService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,8 +49,26 @@ public class AlbumService {
         return albumRepository.findAll();
     }
 
-    public Album updateAlbum(Album album) {
+    public Album updateAlbum(String albumString, MultipartFile image) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        Album album = objectMapper.readValue(albumString, Album.class);
 
+//        Song songToUpdate = alb.findById(song.getId()).get();
+//
+//        if (songToUpdate != null) {
+//            songToUpdate.setName(song.getName() != null ? song.getName() : songToUpdate.getName());
+//            songToUpdate.setDuration(song.getDuration());
+//            songToUpdate.setArtists(song.getArtists() != null ? song.getArtists() : songToUpdate.getArtists());
+//            songToUpdate.setGenres(song.getGenres() != null ? song.getGenres() : songToUpdate.getGenres());
+//            songToUpdate.setAlbum(song.getAlbum() != null ? song.getAlbum() : songToUpdate.getAlbum());
+//            songToUpdate.setFile(song.getFile() != null ? song.getFile() : songToUpdate.getFile());
+//            songToUpdate.setWeekView(song.getWeekView() != null ? song.getWeekView() : songToUpdate.getWeekView());
+//            songToUpdate.setTotalView(song.getTotalView() != null ? song.getTotalView() : songToUpdate.getTotalView());
+//            songToUpdate.setUpdatedAt(new Date(System.currentTimeMillis()));
+//            return songRepository.save(songToUpdate);
+//        } else {
+//            throw new SongException(SongException.NotFoundException(song.getId()));
+//        }
         return albumRepository.save(album);
     }
 
