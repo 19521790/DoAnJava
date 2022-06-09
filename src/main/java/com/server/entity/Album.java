@@ -4,6 +4,7 @@ import com.server.entity.object.ArtistOtd;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -26,13 +27,14 @@ public class Album {
     @NotNull(message = "Album image cannot be null")
     private String image;
 
-    private List<String> idSongs = new ArrayList<String>();
+//    private List<ObjectId> idSongs = new ArrayList<ObjectId>();
+
     private ArtistOtd artist;
     private int TotalView;
     private Date createdAt;
     private Date updatedAt;
 
-    public void addSongToAlbum(String id){
-        this.idSongs.add(id);
-    }
+//    public void addSongToAlbum(ObjectId id){
+//        this.idSongs.add(id);
+//    }
 }

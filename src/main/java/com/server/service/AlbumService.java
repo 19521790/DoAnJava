@@ -62,7 +62,7 @@ public class AlbumService {
             albumToUpdate.setName(album.getName() != null ? album.getName() : albumToUpdate.getName());
             albumToUpdate.setArtist(album.getArtist() != null ? album.getArtist() : albumToUpdate.getArtist());
             albumToUpdate.setImage(album.getImage() != null ? album.getImage() : albumToUpdate.getImage());
-            albumToUpdate.setIdSongs(album.getIdSongs() != null ? album.getIdSongs() : albumToUpdate.getIdSongs());
+//            albumToUpdate.setIdSongs(album.getIdSongs() != null ? album.getIdSongs() : albumToUpdate.getIdSongs());
             albumToUpdate.setUpdatedAt(new Date(System.currentTimeMillis()));
 
             if (image != null) {

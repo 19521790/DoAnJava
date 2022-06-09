@@ -69,8 +69,8 @@ public class ArtistService {
 
         if (artistToUpdate != null) {
             artistToUpdate.setName(artist.getName() != null ? artist.getName() : artistToUpdate.getName());
-            artistToUpdate.setIdAlbums(artist.getIdAlbums() != null ? artist.getIdAlbums() : artistToUpdate.getIdAlbums());
-            artistToUpdate.setIdSongs(artist.getIdSongs() != null ? artist.getIdSongs() : artistToUpdate.getIdSongs());
+//            artistToUpdate.setIdAlbums(artist.getIdAlbums() != null ? artist.getIdAlbums() : artistToUpdate.getIdAlbums());
+//            artistToUpdate.setIdSongs(artist.getIdSongs() != null ? artist.getIdSongs() : artistToUpdate.getIdSongs());
             artistToUpdate.setImage(artist.getImage() != null ? artist.getImage() : artistToUpdate.getImage());
             artistToUpdate.setUpdatedAt(new Date(System.currentTimeMillis()));
 

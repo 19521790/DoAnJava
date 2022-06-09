@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -29,15 +30,19 @@ public class Artist {
     @NotNull(message = "Artist image cannot be null")
     private String image;
 
-    private List<String>idSongs = new ArrayList<String>();
-    private List<String>idAlbums = new ArrayList<String>();
+//    private List<ObjectId> idSongs = new ArrayList<ObjectId>();
+//    private List<ObjectId> idAlbums = new ArrayList<ObjectId>();
 
     private String description;
     private int totalView;
     private Date createdAt;
     private Date updatedAt;
 
-    public void addSongToArtist(String id){
-        this.idSongs.add(id);
-    }
+//    public void addSongToArtist(ObjectId id) {
+//        this.idSongs.add(id);
+//    }
+//
+//    public void addAlbumtoArtist(ObjectId id) {
+//        this.idAlbums.add(id);
+//    }
 }
