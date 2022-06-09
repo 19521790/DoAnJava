@@ -12,6 +12,7 @@ import com.server.exception.ArtistException;
 import com.server.repository.ArtistRepository;
 import com.server.repository.SongRepository;
 import com.server.service.drive.GoogleDriveService;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.stereotype.Service;
@@ -32,19 +33,22 @@ public class ArtistService {
     @Autowired
     private GoogleDriveService driveService;
 
+    private String artistImgFolderId = "1AZozXXRklkIhhNf9I6C0GVb4czPl8X_C";
+
     public Artist addArtist(String artistString, MultipartFile image) throws ConstraintViolationException, JsonProcessingException, ArtistException {
         ObjectMapper objectMapper = new ObjectMapper();
         Artist artist = objectMapper.readValue(artistString, Artist.class);
 
         Artist artistOptional = artistRepository.findByName(artist.getName());
 
-        String artistImgFolderId = "1AZozXXRklkIhhNf9I6C0GVb4czPl8X_C";
-
-        if (artistOptional != null && artistOptional.getName().equals(artist.getName())) {
+        if (artistOptional != null) {
             throw new ArtistException(ArtistException.ArtistAlreadyExist(artist.getName()));
         } else {
             artist.setImage(driveService.uploadFile(artist.getName(), image, "image/jpeg", artistImgFolderId).getId());
+            artist.setTotalView(0);
             artist.setCreatedAt(new Date(System.currentTimeMillis()));
+
+            driveService.deleteLocalFile(image.getOriginalFilename() );
             return artistRepository.save(artist);
         }
     }
@@ -57,8 +61,32 @@ public class ArtistService {
         return artistRepository.findAll();
     }
 
-    public Artist updateArtist(Artist artist) {
-        return artistRepository.save(artist);
+    public Artist updateArtist(String artistString, MultipartFile image) throws ArtistException, JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        Artist artist = objectMapper.readValue(artistString, Artist.class);
+
+        Artist artistToUpdate = artistRepository.findById(artist.getId()).get();
+
+        if (artistToUpdate != null) {
+            artistToUpdate.setName(artist.getName() != null ? artist.getName() : artistToUpdate.getName());
+            artistToUpdate.setIdAlbums(artist.getIdAlbums() != null ? artist.getIdAlbums() : artistToUpdate.getIdAlbums());
+            artistToUpdate.setIdSongs(artist.getIdSongs() != null ? artist.getIdSongs() : artistToUpdate.getIdSongs());
+            artistToUpdate.setImage(artist.getImage() != null ? artist.getImage() : artistToUpdate.getImage());
+            artistToUpdate.setUpdatedAt(new Date(System.currentTimeMillis()));
+
+            if (image != null) {
+                com.google.api.services.drive.model.File fileToUpdate = driveService.uploadFile(artist.getName(), image, "image/jpeg", artistImgFolderId);
+                artistToUpdate.setImage(fileToUpdate.getId());
+
+                driveService.deleteLocalFile(image.getOriginalFilename());
+                driveService.deleteFile(artist.getImage());
+            }
+
+            return artistRepository.save(artistToUpdate);
+        } else {
+            throw new ArtistException(ArtistException.NotFoundException(artist.getId()));
+        }
+
     }
 
     public void deleteArtist(String id) throws ArtistException {
@@ -72,7 +100,7 @@ public class ArtistService {
         }
     }
 
-    public List<ArtistResult> findAllSongs(String idArtist){
+    public List<ArtistResult> findAllSongs(String idArtist) {
         return artistRepository.findAllSongs(idArtist);
     }
 }

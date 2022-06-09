@@ -55,8 +55,10 @@ public class SongService {
             com.google.api.services.drive.model.File fileUpload = driveService.uploadFile(song.getName(), file, "audio/mpeg", songFolderId);
             song.setFile(fileUpload.getId());
             song.setAlbum(album);
+            song.setWeekView(0);
+            song.setTotalView(0);
             song.setCreatedAt(new Date(System.currentTimeMillis()));
-            System.out.println(file.getOriginalFilename());
+
             driveService.deleteLocalFile(file.getOriginalFilename() );
             return songRepository.save(song);
         }
@@ -114,8 +116,6 @@ public class SongService {
             songToUpdate.setGenres(song.getGenres() != null ? song.getGenres() : songToUpdate.getGenres());
             songToUpdate.setAlbum(song.getAlbum() != null ? song.getAlbum() : songToUpdate.getAlbum());
             songToUpdate.setFile(song.getFile() != null ? song.getFile() : songToUpdate.getFile());
-            songToUpdate.setWeekView(song.getWeekView() != null ? song.getWeekView() : songToUpdate.getWeekView());
-            songToUpdate.setTotalView(song.getTotalView() != null ? song.getTotalView() : songToUpdate.getTotalView());
             songToUpdate.setUpdatedAt(new Date(System.currentTimeMillis()));
 
             if(file != null){

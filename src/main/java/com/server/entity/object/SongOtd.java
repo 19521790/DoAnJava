@@ -11,12 +11,11 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class SongInPlaylist {
+public class SongOtd {
     private String id;
     private String name;
-    private String image;
     private String file;
     private Album album;
-    private List<ArtistInSong> artistInSongList = new ArrayList<ArtistInSong>();
+    private List<ArtistOtd> artistOtdList = new ArrayList<ArtistOtd>();
     private String addedAt;
 }

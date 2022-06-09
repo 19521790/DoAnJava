@@ -1,5 +1,6 @@
 package com.server.entity;
 
+import com.server.entity.object.ArtistOtd;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,6 +27,8 @@ public class Album {
     private String image;
 
     private List<String> idSongs = new ArrayList<String>();
+    private ArtistOtd artist;
+    private int TotalView;
     private Date createdAt;
     private Date updatedAt;
 

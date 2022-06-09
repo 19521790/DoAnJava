@@ -48,7 +48,9 @@ public class AlbumController {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(albumService.updateAlbum(albumString, image));
         } catch (JsonProcessingException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(e.getMessage());
+        } catch(AlbumException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 

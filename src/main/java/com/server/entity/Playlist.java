@@ -1,8 +1,6 @@
 package com.server.entity;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import com.server.entity.object.SongInPlaylist;
+import com.server.entity.object.SongOtd;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,7 +27,7 @@ public class Playlist {
     @NotNull(message = "Playlist idUser cannot be null")
     private int idUser;
 
-    private List<SongInPlaylist>songs = new ArrayList<SongInPlaylist>();
+    private List<SongOtd>songs = new ArrayList<SongOtd>();
 
     private int totalView;
     private Date createdAt;

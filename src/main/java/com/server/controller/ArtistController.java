@@ -24,11 +24,11 @@ public class ArtistController {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(artistService.addArtist(artistString, image));
         }catch (ArtistException e){
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }catch (ConstraintViolationException e){
-            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(e.getMessage());
-        }catch (JsonProcessingException e){
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        }catch (JsonProcessingException e){
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(e.getMessage());
         }
     }
 
@@ -53,8 +53,15 @@ public class ArtistController {
     }
 
     @PutMapping("/updateArtist")
-    public Artist updateArtist(@RequestBody Artist artist) {
-        return artistService.updateArtist(artist);
+    public ResponseEntity updateArtist(@RequestPart("artist") String artistString,
+                                       @RequestPart(value = "image",required = false) MultipartFile image) {
+        try{
+            return ResponseEntity.status(HttpStatus.OK).body(artistService.updateArtist(artistString,image));
+        }catch(JsonProcessingException e){
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(e.getMessage());
+        }catch (ArtistException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 
  @GetMapping("/findAllSongs/{id}")

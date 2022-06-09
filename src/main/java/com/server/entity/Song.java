@@ -1,6 +1,6 @@
 package com.server.entity;
 
-import com.server.entity.object.ArtistInSong;
+import com.server.entity.object.ArtistOtd;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,12 +30,12 @@ public class Song {
     private double duration;
 
     private List<String> genres = new ArrayList<String>();
-    private List<ArtistInSong> artists = new ArrayList<ArtistInSong>();
+    private List<ArtistOtd> artists = new ArrayList<ArtistOtd>();
 
     @NotNull(message = "Song album cannot be null")
     private Album album;
-    private Integer weekView;
-    private Integer totalView;
+    private int weekView;
+    private int totalView;
     private Date createdAt;
     private Date updatedAt;
 }

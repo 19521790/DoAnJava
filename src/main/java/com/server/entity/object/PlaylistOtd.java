@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PlaylistInUser {
+public class PlaylistOtd {
     private String id;
     private String name;
     private String image;

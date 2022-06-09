@@ -25,9 +25,9 @@ public class PlaylistController {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(playlistService.addPlaylist(playlistString, image));
         }catch(JsonProcessingException e){
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-        }catch(ConstraintViolationException e){
             return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(e.getMessage());
+        }catch(ConstraintViolationException e){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         }
     }
 

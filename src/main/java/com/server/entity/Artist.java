@@ -30,8 +30,10 @@ public class Artist {
     private String image;
 
     private List<String>idSongs = new ArrayList<String>();
+    private List<String>idAlbums = new ArrayList<String>();
 
     private String description;
+    private int totalView;
     private Date createdAt;
     private Date updatedAt;
 

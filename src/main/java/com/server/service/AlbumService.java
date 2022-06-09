@@ -24,11 +24,11 @@ public class AlbumService {
     @Autowired
     private GoogleDriveService driveService;
 
+    private String albumImgFolderId = "1RPmGzNV-xQ1n3F53tYAlq1P4_40hBxZ7";
+
     public Album addAlbum(String albumString, MultipartFile image) throws ConstraintViolationException, AlbumException, JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         Album album = objectMapper.readValue(albumString, Album.class);
-
-        String albumImgFolderId = "1RPmGzNV-xQ1n3F53tYAlq1P4_40hBxZ7";
 
         Album albumOptional = albumRepository.findByName(album.getName());
 
@@ -36,7 +36,10 @@ public class AlbumService {
             throw new AlbumException(AlbumException.AlbumAlreadyExist(album.getName()));
         } else {
             album.setImage(driveService.uploadFile(album.getName(), image, "image/jpeg", albumImgFolderId).getId());
+            album.setTotalView(0);
             album.setCreatedAt(new Date(System.currentTimeMillis()));
+
+            driveService.deleteLocalFile(image.getOriginalFilename() );
             return albumRepository.save(album);
         }
     }
@@ -49,27 +52,31 @@ public class AlbumService {
         return albumRepository.findAll();
     }
 
-    public Album updateAlbum(String albumString, MultipartFile image) throws JsonProcessingException {
+    public Album updateAlbum(String albumString, MultipartFile image) throws JsonProcessingException, AlbumException {
         ObjectMapper objectMapper = new ObjectMapper();
         Album album = objectMapper.readValue(albumString, Album.class);
 
-//        Song songToUpdate = alb.findById(song.getId()).get();
-//
-//        if (songToUpdate != null) {
-//            songToUpdate.setName(song.getName() != null ? song.getName() : songToUpdate.getName());
-//            songToUpdate.setDuration(song.getDuration());
-//            songToUpdate.setArtists(song.getArtists() != null ? song.getArtists() : songToUpdate.getArtists());
-//            songToUpdate.setGenres(song.getGenres() != null ? song.getGenres() : songToUpdate.getGenres());
-//            songToUpdate.setAlbum(song.getAlbum() != null ? song.getAlbum() : songToUpdate.getAlbum());
-//            songToUpdate.setFile(song.getFile() != null ? song.getFile() : songToUpdate.getFile());
-//            songToUpdate.setWeekView(song.getWeekView() != null ? song.getWeekView() : songToUpdate.getWeekView());
-//            songToUpdate.setTotalView(song.getTotalView() != null ? song.getTotalView() : songToUpdate.getTotalView());
-//            songToUpdate.setUpdatedAt(new Date(System.currentTimeMillis()));
-//            return songRepository.save(songToUpdate);
-//        } else {
-//            throw new SongException(SongException.NotFoundException(song.getId()));
-//        }
-        return albumRepository.save(album);
+        Album albumToUpdate = albumRepository.findById(album.getId()).get();
+
+        if (albumToUpdate != null) {
+            albumToUpdate.setName(album.getName() != null ? album.getName() : albumToUpdate.getName());
+            albumToUpdate.setArtist(album.getArtist() != null ? album.getArtist() : albumToUpdate.getArtist());
+            albumToUpdate.setImage(album.getImage() != null ? album.getImage() : albumToUpdate.getImage());
+            albumToUpdate.setIdSongs(album.getIdSongs() != null ? album.getIdSongs() : albumToUpdate.getIdSongs());
+            albumToUpdate.setUpdatedAt(new Date(System.currentTimeMillis()));
+
+            if (image != null) {
+                com.google.api.services.drive.model.File fileToUpdate = driveService.uploadFile(album.getName(),image,"image/jpeg",albumImgFolderId);
+                albumToUpdate.setImage(fileToUpdate.getId());
+
+                driveService.deleteLocalFile(image.getOriginalFilename());
+                driveService.deleteFile(album.getImage());
+            }
+
+            return albumRepository.save(albumToUpdate);
+        } else {
+            throw new AlbumException(AlbumException.NotFoundException(album.getId()));
+        }
     }
 
     public String deleteAlbum(String id) {
