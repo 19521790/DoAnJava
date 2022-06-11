@@ -56,7 +56,13 @@ public class UserController {
 
     @PutMapping("/addPlaylistToUser")
     public ResponseEntity addPlaylistToUser(@RequestParam String idUser, @RequestParam String idPlaylist) {
-        return ResponseEntity.status(HttpStatus.OK).body(userService.addPlaylistToUser(idUser, idPlaylist));
+        try{
+            userService.addPlaylistToUser(idUser, idPlaylist);
+            return ResponseEntity.status(HttpStatus.OK).body("Successfully add playlist "+idPlaylist+"to user "+idUser);
+        }catch (UserException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+
     }
 
     @DeleteMapping("/deleteUser/{id}")

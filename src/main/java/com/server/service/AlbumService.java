@@ -7,6 +7,7 @@ import com.server.entity.Song;
 import com.server.exception.AlbumException;
 import com.server.exception.SongException;
 import com.server.repository.AlbumRepository;
+import com.server.repository.SongRepository;
 import com.server.service.drive.GoogleDriveService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,9 @@ import java.util.List;
 public class AlbumService {
     @Autowired
     private AlbumRepository albumRepository;
+
+    @Autowired
+    private SongRepository songRepository;
 
     @Autowired
     private GoogleDriveService driveService;
@@ -39,13 +43,20 @@ public class AlbumService {
             album.setTotalView(0);
             album.setCreatedAt(new Date(System.currentTimeMillis()));
 
-            driveService.deleteLocalFile(image.getOriginalFilename() );
+            driveService.deleteLocalFile(image.getOriginalFilename());
             return albumRepository.save(album);
         }
     }
 
-    public Album findAlbumById(String id) {
-        return albumRepository.findById(id).orElse(null);
+    public Album findAlbumById(String id) throws AlbumException {
+        Album album = albumRepository.findById(id).orElse(null);
+
+        if (album != null) {
+            album.setSongs(songRepository.findSongByAlbum(id));
+            return album;
+        } else {
+            throw new AlbumException(AlbumException.NotFoundException(id));
+        }
     }
 
     public List<Album> findAllAlbums() {
@@ -66,7 +77,7 @@ public class AlbumService {
             albumToUpdate.setUpdatedAt(new Date(System.currentTimeMillis()));
 
             if (image != null) {
-                com.google.api.services.drive.model.File fileToUpdate = driveService.uploadFile(album.getName(),image,"image/jpeg",albumImgFolderId);
+                com.google.api.services.drive.model.File fileToUpdate = driveService.uploadFile(album.getName(), image, "image/jpeg", albumImgFolderId);
                 albumToUpdate.setImage(fileToUpdate.getId());
 
                 driveService.deleteLocalFile(image.getOriginalFilename());

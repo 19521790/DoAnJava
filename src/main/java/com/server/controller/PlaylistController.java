@@ -61,11 +61,11 @@ public class PlaylistController {
         return playlistService.updatePlaylist(playlist);
     }
 
-    @PutMapping("/addSongToPlaylist")
-    public Playlist addSongToPlaylist(
-            @RequestParam(name = "idPlaylist") String idPlaylist,
-            @RequestParam(name = "idSong") String idSong
-    ) {
-        return playlistService.addSongToPlaylist(idPlaylist, idSong);
-    }
+//    @PutMapping("/addSongToPlaylist")
+//    public Playlist addSongToPlaylist(
+//            @RequestParam(name = "idPlaylist") String idPlaylist,
+//            @RequestParam(name = "idSong") String idSong
+//    ) {
+//        playlistService.addSongToPlaylist(idPlaylist, idSong);
+//    }
 }

@@ -64,16 +64,13 @@ public class UserService {
 
     }
 
-    public String addPlaylistToUser(String idUser, String idPlaylist) {
-        User user = userRepository.findById(idUser).get();
-        Playlist playlist = playlistRepository.findById(idPlaylist).get();
-        System.out.println(user);
-        System.out.println(playlist);
-        if (playlist != null) {
-//            user.addPlaylistToUser(idPlaylist);
-            return "Succeeded in adding playlist " + idPlaylist + " to user " + idUser;
-        } else {
-            return "Failed to add playlist to user";
+    public void addPlaylistToUser(String idUser, String idPlaylist) throws UserException{
+        User user = userRepository.findById(idUser).orElse(null);
+
+        if(user!=null){
+            userRepository.addPlaylistToUser(idUser,idPlaylist);
+        }else{
+            throw new UserException(UserException.NotFoundException(idUser));
         }
     }
 

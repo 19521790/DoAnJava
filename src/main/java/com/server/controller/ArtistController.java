@@ -33,8 +33,12 @@ public class ArtistController {
     }
 
     @GetMapping("/findArtistById/{id}")
-    public Artist findArtistById(@PathVariable String id) {
-        return artistService.findArtistById(id);
+    public ResponseEntity findArtistById(@PathVariable String id) {
+        try{
+            return ResponseEntity.status(HttpStatus.OK).body(artistService.findArtistById(id));
+        }catch(ArtistException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 
     @GetMapping("/findAllArtists")

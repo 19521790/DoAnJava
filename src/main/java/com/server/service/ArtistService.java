@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.ConstraintViolationException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -48,13 +49,20 @@ public class ArtistService {
             artist.setTotalView(0);
             artist.setCreatedAt(new Date(System.currentTimeMillis()));
 
-            driveService.deleteLocalFile(image.getOriginalFilename() );
+            driveService.deleteLocalFile(image.getOriginalFilename());
             return artistRepository.save(artist);
         }
     }
 
-    public Artist findArtistById(String id) {
-        return artistRepository.findById(id).orElse(null);
+    public Artist findArtistById(String id) throws ArtistException {
+        Artist artist = artistRepository.findById(id).orElse(null);
+
+        if (artist != null) {
+            artist.setSongs(songRepository.findSongByArtist(id));
+            return artist;
+        } else {
+            throw new ArtistException(ArtistException.NotFoundException(id));
+        }
     }
 
     public List<Artist> findAllArtists() {
@@ -93,10 +101,10 @@ public class ArtistService {
         Artist artist = artistRepository.findById(id).orElse(null);
 
         if (artist == null) {
-            driveService.deleteFile(artist.getImage());
             throw new ArtistException(ArtistException.NotFoundException(id));
         } else {
             artistRepository.deleteById(id);
+            driveService.deleteFile(artist.getImage());
         }
     }
 

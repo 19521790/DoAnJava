@@ -3,6 +3,7 @@ package com.server.entity;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,6 +20,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Document(collection = "artists")
 public class Artist {
     @Id
@@ -32,6 +34,7 @@ public class Artist {
 
     private String description;
     private int totalView;
+    private List<Song> songs;
     private Date createdAt;
     private Date updatedAt;
 }

@@ -33,8 +33,12 @@ public class AlbumController {
     }
 
     @GetMapping("/findAlbumById/{id}")
-    public Album findAlbumById(@PathVariable String id) {
-        return albumService.findAlbumById(id);
+    public ResponseEntity findAlbumById(@PathVariable String id) {
+        try{
+            return ResponseEntity.status(HttpStatus.OK).body(albumService.findAlbumById(id));
+        }catch(AlbumException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 
     @GetMapping("/findAllAlbums")

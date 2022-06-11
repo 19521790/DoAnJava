@@ -1,5 +1,6 @@
 package com.server.entity;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.server.entity.object.SongOtd;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,6 +17,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Document(collection = "playlists")
 public class Playlist {
     @Id

@@ -4,11 +4,15 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.api.client.http.FileContent;
 import com.server.entity.Album;
+import com.server.entity.Artist;
 import com.server.entity.Song;
 import com.server.entity.object.AlbumOtd;
 import com.server.entity.result.SongResult;
+import com.server.exception.AlbumException;
+import com.server.exception.ArtistException;
 import com.server.exception.SongException;
 import com.server.repository.AlbumRepository;
+import com.server.repository.ArtistRepository;
 import com.server.repository.SongRepository;
 import com.server.service.drive.GoogleDriveService;
 import org.bson.types.ObjectId;
@@ -34,7 +38,7 @@ public class SongService {
     private AlbumRepository albumRepository;
 
     @Autowired
-    private ArtistService artistService;
+    private ArtistRepository artistRepository;
 
     @Autowired
     private GoogleDriveService driveService;

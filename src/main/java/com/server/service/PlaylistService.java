@@ -74,7 +74,7 @@ public class PlaylistService {
         return playlistRepository.save(playlist);
     }
 
-    public Playlist addSongToPlaylist(String idPlaylist, String idSong) {
+    public void addSongToPlaylist(String idPlaylist, String idSong) {
         Playlist playlist = playlistRepository.findById(idPlaylist).get();
         Song song = songRepository.findById(idSong).get();
 
@@ -85,6 +85,6 @@ public class PlaylistService {
         songToUpload.setAlbum(song.getAlbum());
         songToUpload.setFile(song.getFile());
 
-        return playlistRepository.addSongToPlaylist(playlist, songToUpload);
+//        playlistRepository.addSongToPlaylist(playlist, songToUpload);
     }
 }
