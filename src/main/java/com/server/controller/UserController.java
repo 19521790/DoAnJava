@@ -84,4 +84,14 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(e.getMessage());
         }
     }
+
+    @PutMapping("/addLastListenSong")
+    public ResponseEntity addLastListenSong(@RequestParam("idUser") String idUser, @RequestParam("idSong") String idSong){
+        try{
+            userService.addLastListenSong(idUser,idSong);
+            return ResponseEntity.status(HttpStatus.OK).body("Successfully add last listen song "+idSong+" to user "+idUser);
+        }catch (UserException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
 }

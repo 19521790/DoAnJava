@@ -89,4 +89,13 @@ public class UserService {
             throw new UserException(UserException.NotFoundException(id));
         }
     }
+
+    public void addLastListenSong(String idUser, String idSong)throws UserException{
+        User user = userRepository.findById(idUser).orElse(null);
+        if(user!=null){
+            userRepository.addLastListenSong(idUser, idSong);
+        }else{
+            throw new UserException(UserException.NotFoundException(idUser));
+        }
+    }
 }

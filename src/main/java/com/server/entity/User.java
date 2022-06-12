@@ -1,6 +1,7 @@
 package com.server.entity;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.server.entity.object.SongLastListen;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

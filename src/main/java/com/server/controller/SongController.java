@@ -96,90 +96,79 @@ public class SongController {
         }
     }
 
-//    @GetMapping(value = "/getData",produces = MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity<StreamingResponseBody> getData(final HttpServletResponse response){
-//        response.setContentType("audio/mpeg");
-//        response.setHeader("Content-Disposition","attachment; filename=");
+//    @GetMapping("/audios")
+//    public Mono<ResponseEntity<byte[]>> streamAudio() {
+//        System.out.println("Has been call streamAudio");
+//        return Mono.just(getContent("C:\\Users\\nguye\\Desktop\\DoAnJava\\server\\src\\main\\resources\\data\\jean.m4a", null, "audio"));
 //    }
-
-    public static final String AUDIO_PATH = "/data";
-    @GetMapping("/audios")
-    public Mono<ResponseEntity<byte[]>> streamAudio() {
-        System.out.println("Has been call streamAudio");
-        return Mono.just(getContent(AUDIO_PATH, "blue-jean.m4a", null, "audio"));
-    }
-
-    private ResponseEntity<byte[]> getContent(String location, String fileName, String range, String contentTypePrefix) {
-        long rangeStart = 0;
-        long rangeEnd;
-        byte[] data;
-        Long fileSize;
-        String fileType = fileName.substring(fileName.lastIndexOf(".")+1);
-        try {
-            fileSize = Optional.ofNullable(fileName)
-                    .map(file -> Paths.get(getFilePath(location), file))
-                    .map(this::sizeFromFile)
-                    .orElse(0L);
-            if (range == null) {
-                return ResponseEntity.status(HttpStatus.OK)
-                        .header("Content-Type", contentTypePrefix+"/" + fileType)
-                        .header("Content-Length", String.valueOf(fileSize))
-                        .body(readByteRange(location, fileName, rangeStart, fileSize - 1));
-            }
-            String[] ranges = range.split("-");
-            rangeStart = Long.parseLong(ranges[0].substring(6));
-            if (ranges.length > 1) {
-                rangeEnd = Long.parseLong(ranges[1]);
-            } else {
-                rangeEnd = fileSize - 1;
-            }
-            if (fileSize < rangeEnd) {
-                rangeEnd = fileSize - 1;
-            }
-            data = readByteRange(location, fileName, rangeStart, rangeEnd);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-        String contentLength = String.valueOf((rangeEnd - rangeStart) + 1);
-        return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
-                .header("Content-Type", contentTypePrefix + "/" + fileType)
-                .header("Accept-Ranges", "bytes")
-                .header("Content-Length", contentLength)
-                .header("Content-Range", "bytes" + " " + rangeStart + "-" + rangeEnd + "/" + fileSize)
-                .body(data);
-    }
-
-    public static final int BYTE_RANGE = 128;
-
-    public byte[] readByteRange(String location, String filename, long start, long end) throws IOException {
-        Path path = Paths.get(getFilePath(location), filename);
-        try (InputStream inputStream = (Files.newInputStream(path));
-             ByteArrayOutputStream bufferedOutputStream = new ByteArrayOutputStream()) {
-            byte[] data = new byte[BYTE_RANGE];
-            int nRead;
-            while ((nRead = inputStream.read(data, 0, data.length)) != -1) {
-                bufferedOutputStream.write(data, 0, nRead);
-            }
-            bufferedOutputStream.flush();
-            byte[] result = new byte[(int) (end - start) + 1];
-            System.arraycopy(bufferedOutputStream.toByteArray(), (int) start, result, 0, result.length);
-            return result;
-        }
-    }
-
-    private String getFilePath(String location) {
-        URL url = this.getClass().getResource(location);
-        return new File(url.getFile()).getAbsolutePath();
-    }
-
-    private Long sizeFromFile(Path path) {
-        try {
-            return Files.size(path);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-        return 0L;
-    }
+//
+//    private ResponseEntity<byte[]> getContent(String fileName, String range, String contentTypePrefix) {
+//        long rangeStart = 0;
+//        long rangeEnd;
+//        byte[] data;
+//        Long fileSize;
+//        String fileType = fileName.substring(fileName.lastIndexOf(".")+1);
+//        try {
+//            fileSize = Optional.ofNullable(fileName)
+//                    .map(file -> Paths.get(fileName))
+//                    .map(this::sizeFromFile)
+//                    .orElse(0L);
+//            if (range == null) {
+//                return ResponseEntity.status(HttpStatus.OK)
+//                        .header("Content-Type", contentTypePrefix+"/" + fileType)
+//                        .header("Content-Length", String.valueOf(fileSize))
+//                        .body(readByteRange(fileName, rangeStart, fileSize - 1));
+//            }
+//            String[] ranges = range.split("-");
+//            rangeStart = Long.parseLong(ranges[0].substring(6));
+//            if (ranges.length > 1) {
+//                rangeEnd = Long.parseLong(ranges[1]);
+//            } else {
+//                rangeEnd = fileSize - 1;
+//            }
+//            if (fileSize < rangeEnd) {
+//                rangeEnd = fileSize - 1;
+//            }
+//            data = readByteRange(fileName, rangeStart, rangeEnd);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+//        }
+//        String contentLength = String.valueOf((rangeEnd - rangeStart) + 1);
+//        return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
+//                .header("Content-Type", contentTypePrefix + "/" + fileType)
+//                .header("Accept-Ranges", "bytes")
+//                .header("Content-Length", contentLength)
+//                .header("Content-Range", "bytes" + " " + rangeStart + "-" + rangeEnd + "/" + fileSize)
+//                .body(data);
+//    }
+//
+//    public static final int BYTE_RANGE = 128;
+//
+//    public byte[] readByteRange(String filename, long start, long end) throws IOException {
+//        Path path = Paths.get(filename);
+//        System.out.println(path);
+//        try (InputStream inputStream = (Files.newInputStream(path));
+//             ByteArrayOutputStream bufferedOutputStream = new ByteArrayOutputStream()) {
+//            byte[] data = new byte[BYTE_RANGE];
+//            int nRead;
+//            while ((nRead = inputStream.read(data, 0, data.length)) != -1) {
+//                bufferedOutputStream.write(data, 0, nRead);
+//            }
+//            bufferedOutputStream.flush();
+//            byte[] result = new byte[(int) (end - start) + 1];
+//            System.arraycopy(bufferedOutputStream.toByteArray(), (int) start, result, 0, result.length);
+//            return result;
+//        }
+//    }
+//
+//    private Long sizeFromFile(Path path) {
+//        try {
+//            return Files.size(path);
+//        } catch (IOException ex) {
+//            ex.printStackTrace();
+//        }
+//        return 0L;
+//    }
 }
 
