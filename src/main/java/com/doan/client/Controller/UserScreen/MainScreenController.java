@@ -112,6 +112,7 @@ public class MainScreenController implements Initializable {
     public VBox mainVbox;
 
     public Group group3;
+    LoginFormController loginFormController;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -125,7 +126,7 @@ public class MainScreenController implements Initializable {
         try {
             //login
             AnchorPane newLoginPane = loginFxmlLoader.load();
-            LoginFormController loginFormController = loginFxmlLoader.getController();
+            loginFormController = loginFxmlLoader.getController();
             loginPaneFromHome.getChildren().add(newLoginPane);
             loginFormController.mainController = this;
             // home
@@ -221,8 +222,8 @@ public class MainScreenController implements Initializable {
 
     }
 
-    public void setLoginPaneVisible() {
-        loginPaneFromHome.setVisible(false);
+    public void setLoginPaneVisible(boolean x) {
+        loginPaneFromHome.setVisible(x);
     }
 
     public void setUser(User user) {
@@ -517,20 +518,103 @@ public class MainScreenController implements Initializable {
     int count=1;
     public void addNewPlaylist(ActionEvent actionEvent) {
 
-        ToggleButton button= new ToggleButton();
-        button.setText("Playlist # " + count);
-        FontAwesomeIconView fontAwesomeIconView = new FontAwesomeIconView();
-        fontAwesomeIconView.setGlyphName("CHECK");
-        button.setGraphic(fontAwesomeIconView);
-        button.getStyleClass().add("playlistBtn");
-        VBox.setMargin(button, new Insets(10,0,0,0));
-        mainVbox.getChildren().add(button);
-        button.setToggleGroup(Group1);
-        count+=1;
-        button.setOnAction(this::toggleBtn);
-        button.setId("Playlist"+count);
-        button.fire();
+        if (login){
+            ToggleButton button= new ToggleButton();
+            button.setText("Playlist # " + count);
+            FontAwesomeIconView fontAwesomeIconView = new FontAwesomeIconView();
+            fontAwesomeIconView.setGlyphName("CHECK");
+            button.setGraphic(fontAwesomeIconView);
+            button.getStyleClass().add("playlistBtn");
+            VBox.setMargin(button, new Insets(10,0,0,0));
+            mainVbox.getChildren().add(button);
+            button.setToggleGroup(Group1);
+            count+=1;
+            button.setOnAction(this::toggleBtn);
+            button.setId("Playlist"+count);
+            button.fire();
 
+        }else{
+            loginPaneFromHome.setVisible(true
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            );
+        }
     }
 
 }

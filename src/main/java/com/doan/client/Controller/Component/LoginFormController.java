@@ -108,7 +108,7 @@ public class LoginFormController implements Initializable {
 
     public void setVisibleLogin(boolean x) {
 
-        mainController.setLoginPaneVisible();
+        mainController.setLoginPaneVisible(x);
     }
 
     @FXML

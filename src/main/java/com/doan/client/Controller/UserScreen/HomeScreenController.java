@@ -30,7 +30,6 @@ public class HomeScreenController implements Initializable {
     public TextField searchBar;
     public AnchorPane clipPane;
     public AnchorPane slidePane;
-
     public AnchorPane clipPaneBackground;
     public AnchorPane slideCard;
     public AnchorPane outsideParent;

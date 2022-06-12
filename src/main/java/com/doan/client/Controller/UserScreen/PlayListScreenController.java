@@ -24,15 +24,8 @@ public class PlayListScreenController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        if (isSetUser) {
             avatarUser.setImage(new Image(image));
             username.setText(name);
-        } else {
-            username.setText("Anonymous");
-        }
-
-
-
     }
 
     public void setPlaylistName(String playlistName) {
