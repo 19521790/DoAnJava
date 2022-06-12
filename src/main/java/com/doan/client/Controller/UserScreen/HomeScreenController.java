@@ -2,6 +2,12 @@ package com.doan.client.Controller.UserScreen;
 
 import com.doan.client.Controller.PublicController;
 
+import com.doan.client.Model.Song;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
@@ -23,6 +29,7 @@ import javafx.util.Duration;
 
 import java.io.File;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class HomeScreenController implements Initializable {
@@ -46,8 +53,24 @@ public class HomeScreenController implements Initializable {
         rectangle.setWidth(900);
         rectangle.setHeight(200);
         clipPane.setClip(rectangle);
+        List<Song> listSong= null;
+        try {
+            HttpResponse<JsonNode> jsonNodeHttpResponse= Unirest.get("http://localhost:8080/song/findAllSongs").asJson();
+
+            ObjectMapper mapper = new ObjectMapper();
+            listSong = mapper.readValue(jsonNodeHttpResponse.getBody().toString(), new TypeReference<>() {
+            });
+
+
+        } catch (UnirestException e) {
+            throw new RuntimeException(e);
+        } catch (JsonMappingException e) {
+            throw new RuntimeException(e);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
         for (int i =0 ; i< 9; i++){
-            ImageView imageView = new ImageView(new Image("http://localhost:8080/image/long.png"));
+            ImageView imageView = new ImageView(new Image("http://localhost:8080/image/loading.gif"));
             imageView.setFitWidth(250);
             imageView.setFitHeight(170);
             imageView.setLayoutY(15);

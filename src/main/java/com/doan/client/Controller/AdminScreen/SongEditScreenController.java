@@ -68,10 +68,9 @@ public class SongEditScreenController extends GetDataFromServerController implem
         String currentSaveSongId = button.getId();
         scrollPaneSongName.setVisible(false);
         try {
-            HttpResponse<JsonNode> response = Unirest.get("http://localhost:8080/song/findSongById/" + currentSaveSongId + "/false").asJson();
-            Song song = new Gson().fromJson(response.getBody().getObject().get("song").toString(), Song.class);
+            HttpResponse<JsonNode> response = Unirest.get("http://localhost:8080/song/findSongById/" + currentSaveSongId).asJson();
+            Song song = new Gson().fromJson(response.getBody().toString(), Song.class);
             fileSongName.setText(song.getFile());
-
             duration.setText(convertTimePlay(song.getDuration()));
             currentEditSong= song;
             for (int i = listNotAddedArtist.getChildren().size() - 1; i > -1; i--) {
@@ -99,7 +98,6 @@ public class SongEditScreenController extends GetDataFromServerController implem
         }
     }
 
-
     public void getFileMusic(ActionEvent actionEvent) {
         FileChooser fc = new FileChooser();
         fc.setTitle("Select your Image");
@@ -107,7 +105,6 @@ public class SongEditScreenController extends GetDataFromServerController implem
         fileMusic = fc.showOpenDialog(null);
         if (fileMusic != null) {
             fileSongName.setText(fileMusic.getName());
-
             media = new Media(fileMusic.toURI().toString());
             MediaPlayer mediaPlayer = new MediaPlayer(media);
             mediaPlayer.setOnReady(new Runnable() {
