@@ -68,6 +68,7 @@ public abstract class GetDataFromServerController {
     }
 
     public void initArtist() {
+
         addArtistToSearchFilter(AdminScreenController.listArtist);
     }
 
@@ -75,6 +76,7 @@ public abstract class GetDataFromServerController {
         addAlbumToSelectForm(AdminScreenController.listAlbum);
 
     }
+
 
 
     public Button createNewBtnItem(String name, String id) {

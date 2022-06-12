@@ -31,10 +31,7 @@ public class PlayListScreenController implements Initializable {
             username.setText("Anonymous");
         }
 
-
-
     }
-
     public void setPlaylistName(String playlistName) {
         this.playlistName.setText(playlistName);
     }

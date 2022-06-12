@@ -103,7 +103,7 @@ public class SongEditScreenController extends GetDataFromServerController implem
     public void getFileMusic(ActionEvent actionEvent) {
         FileChooser fc = new FileChooser();
         fc.setTitle("Select your Image");
-        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Music Files", "*.mp3", "*.wav", "*.wma"));
+        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Music Files", "*.mp3", "*.m4a", "*.wav", "*.wma"));
         fileMusic = fc.showOpenDialog(null);
         if (fileMusic != null) {
             fileSongName.setText(fileMusic.getName());

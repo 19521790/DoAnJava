@@ -55,13 +55,15 @@ public class AdminScreenController implements Initializable {
     public  static List<Album> listAlbum;
     public  static List<Genre> listGenre;
     public AnchorPane adminMainBoard;
+    public ToggleButton genreTabBtn;
     AnchorPane songPane;
     AnchorPane artistPane;
     AnchorPane albumPane ;
+    AnchorPane genrePane ;
     private SongEditScreenController songEditScreenController;
     private ArtistEditScreenController artistEditScreenController;
     private  AlbumEditScreenController albumEditScreenController;
-
+    private  GenreEditScreenController genreEditScreenController;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         getSongData();
@@ -71,6 +73,7 @@ public class AdminScreenController implements Initializable {
         FXMLLoader fxmlSongLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/AdminScreen/SongEditScreen.fxml"));
         FXMLLoader fxmlArtistLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/AdminScreen/ArtistEditScreen.fxml"));
         FXMLLoader fxmlAlbumLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/AdminScreen/AlbumEditScreen.fxml"));
+        FXMLLoader fxmlGenreLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/AdminScreen/GenreEditScreen.fxml"));
         try {
             songPane = fxmlSongLoader.load();
             songEditScreenController = fxmlSongLoader.getController();
@@ -78,6 +81,8 @@ public class AdminScreenController implements Initializable {
             artistEditScreenController= fxmlArtistLoader.getController();
             albumPane = fxmlAlbumLoader.load();
             albumEditScreenController= fxmlAlbumLoader.getController();
+            genrePane= fxmlGenreLoader.load();
+            genreEditScreenController= fxmlGenreLoader.getController();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -107,6 +112,7 @@ public class AdminScreenController implements Initializable {
             ObjectMapper mapper = new ObjectMapper();
             listArtist = mapper.readValue(jsonValue, new TypeReference<>() {
             });
+
         } catch (UnirestException | JsonProcessingException e) {
             throw new RuntimeException(e);
         }
@@ -171,12 +177,18 @@ public class AdminScreenController implements Initializable {
 
         if (toggleButton.getId().equals("songTabBtn")) {
             adminMainBoard.getChildren().setAll(songPane);
+            songEditScreenController.resetAllField();
 
         } else if (toggleButton.getId().equals("artistTabBtn")) {
             adminMainBoard.getChildren().setAll(artistPane);
+            artistEditScreenController.resetAllField();
 
-        } else {
+        } else if (toggleButton.getId().equals("albumTabBtn")) {
             adminMainBoard.getChildren().setAll(albumPane);
+            albumEditScreenController.resetAllField();
+        }else{
+            adminMainBoard.getChildren().setAll(genrePane);
+            genreEditScreenController.resetAllField();
         }
     }
 

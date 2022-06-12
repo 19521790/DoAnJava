@@ -16,7 +16,7 @@ module com.doan.client {
     requires com.jfoenix;
     requires  javafx.media;
     requires json;
-
+    requires  javafx.web;
     opens com.doan.client to javafx.fxml;
     exports com.doan.client;
     exports com.doan.client.Controller;
