@@ -2,6 +2,7 @@ package com.server.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.server.entity.Genre;
+import com.server.exception.FileFormatException;
 import com.server.exception.GenreException;
 import com.server.service.GenreService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -19,12 +21,12 @@ public class GenreController {
     private GenreService genreService;
 
     @PostMapping("/addGenre")
-    public ResponseEntity addGenre(@RequestPart("genre") String genreString, @RequestPart("image")MultipartFile image) {
-        try{
-            return ResponseEntity.status(HttpStatus.OK).body(genreService.addGenre(genreString,image));
-        }catch(JsonProcessingException e){
+    public ResponseEntity addGenre(@RequestPart("genre") String genreString, @RequestPart("image") MultipartFile image) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(genreService.addGenre(genreString, image));
+        } catch (IOException | FileFormatException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-        }catch (GenreException e){
+        } catch (GenreException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
@@ -40,8 +42,15 @@ public class GenreController {
     }
 
     @DeleteMapping("/deleteGenre/{id}")
-    public String deleteGenre(@PathVariable String id) {
-        return genreService.deleteGenre(id);
+    public ResponseEntity deleteGenre(@PathVariable String id) {
+        try {
+            genreService.deleteGenre(id);
+            return ResponseEntity.status(HttpStatus.OK).body("Successfully delete genre with id: " + id);
+        } catch (FileFormatException e) {
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(e.getMessage());
+        } catch (GenreException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 
     @PutMapping("/updateGenre")

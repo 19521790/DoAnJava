@@ -4,7 +4,6 @@ import com.server.exception.FileFormatException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.ws.rs.NotFoundException;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;

@@ -5,13 +5,16 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.server.entity.Album;
 import com.server.entity.Genre;
+import com.server.exception.FileFormatException;
 import com.server.exception.GenreException;
 import com.server.repository.GenreRepository;
+import com.server.service.data.DataService;
 import com.server.service.drive.GoogleDriveService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -21,11 +24,9 @@ public class GenreService {
     private GenreRepository genreRepository;
 
     @Autowired
-    private GoogleDriveService driveService;
+    private DataService dataService;
 
-    private String genreFolderId = "1UE5E0PFuzW5v-TRBQf-USGSjq_gOwRsD";
-
-    public Genre addGenre(String genreString, MultipartFile image) throws JsonProcessingException, GenreException {
+    public Genre addGenre(String genreString, MultipartFile image) throws IOException, GenreException, FileFormatException {
         ObjectMapper objectMapper = new ObjectMapper();
         Genre genre = objectMapper.readValue(genreString, Genre.class);
 
@@ -34,7 +35,7 @@ public class GenreService {
         if (genreOptional != null && genreOptional.getName().equals(genre.getName())) {
             throw new GenreException(GenreException.GenreAlreadyExist(genre.getName()));
         } else {
-            genre.setImage(driveService.uploadFile(genre.getName(), image, "image/jpeg", genreFolderId).getId());
+            genre.setImage(dataService.storeData(image, ".jpg"));
             genre.setCreatedAt(new Date(System.currentTimeMillis()));
 
             return genreRepository.save(genre);
@@ -49,9 +50,15 @@ public class GenreService {
         return genreRepository.findAll();
     }
 
-    public String deleteGenre(String id) {
-        genreRepository.deleteById(id);
-        return ("Genre has been deleted: " + id);
+    public void deleteGenre(String id) throws FileFormatException, GenreException {
+        Genre genre = genreRepository.findById(id).orElse(null);
+
+        if (genre != null) {
+            dataService.deleteData(genre.getImage());
+            genreRepository.deleteById(id);
+        } else {
+            throw new GenreException(GenreException.NotFoundException(id));
+        }
     }
 
     public Genre updateGenre(Genre genre) {
