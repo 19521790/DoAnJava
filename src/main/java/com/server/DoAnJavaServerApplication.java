@@ -6,13 +6,14 @@ import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.FileList;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 
 import java.io.File;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.List;
 
-@SpringBootApplication
+@SpringBootApplication(exclude = {SecurityAutoConfiguration.class })
 public class DoAnJavaServerApplication {
 
     public static void main(String[] args) {
