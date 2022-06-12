@@ -74,7 +74,7 @@ public class UserController {
     }
 
     @DeleteMapping("/deleteUser/{id}")
-    public ResponseEntity deleteUser(@RequestParam String idUser) {
+    public ResponseEntity deleteUser(@PathVariable String idUser) {
         try {
             userService.deleteUser(idUser);
             return ResponseEntity.status(HttpStatus.OK).body("Successfully delete user with id " + idUser);
@@ -86,11 +86,20 @@ public class UserController {
     }
 
     @PutMapping("/addLastListenSong")
-    public ResponseEntity addLastListenSong(@RequestParam("idUser") String idUser, @RequestParam("idSong") String idSong){
-        try{
-            userService.addLastListenSong(idUser,idSong);
-            return ResponseEntity.status(HttpStatus.OK).body("Successfully add last listen song "+idSong+" to user "+idUser);
-        }catch (UserException e){
+    public ResponseEntity addLastListenSong(@RequestParam("idUser") String idUser, @RequestParam("idSong") String idSong) {
+        try {
+            userService.addLastListenSong(idUser, idSong);
+            return ResponseEntity.status(HttpStatus.OK).body("Successfully add last listen song " + idSong + " to user " + idUser);
+        } catch (UserException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/getLastListenSong/{idUser}")
+    public ResponseEntity getLastListenSong(@PathVariable String idUser) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(userService.getLastListenSong(idUser));
+        } catch (UserException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }

@@ -1,7 +1,9 @@
 package com.server.service;
 
 import com.server.entity.Playlist;
+import com.server.entity.Song;
 import com.server.entity.User;
+import com.server.entity.object.SongLastListen;
 import com.server.exception.FileFormatException;
 import com.server.exception.UserException;
 import com.server.repository.PlaylistTemplate;
@@ -9,6 +11,7 @@ import com.server.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.server.service.data.DataService;
 import com.server.service.drive.GoogleDriveService;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -90,11 +93,23 @@ public class UserService {
         }
     }
 
-    public void addLastListenSong(String idUser, String idSong)throws UserException{
+    public void addLastListenSong(String idUser, String idSong) throws UserException {
         User user = userRepository.findById(idUser).orElse(null);
-        if(user!=null){
+
+        if (user != null) {
+            List<String> idLastListenSong = user.getIdLastListenSongs();
             userRepository.addLastListenSong(idUser, idSong);
-        }else{
+        } else {
+            throw new UserException(UserException.NotFoundException(idUser));
+        }
+    }
+
+    public User getLastListenSong(String idUser) throws UserException {
+        User user = userRepository.findById(idUser).orElse(null);
+
+        if (user != null) {
+            return userRepository.getLastListenSong(idUser);
+        } else {
             throw new UserException(UserException.NotFoundException(idUser));
         }
     }

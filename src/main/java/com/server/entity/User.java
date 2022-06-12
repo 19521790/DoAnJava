@@ -37,4 +37,7 @@ public class User {
     private String role = "user";
     private Date createdAt;
     private Date updatedAt;
+
+    private List<String> idLastListenSongs;
+    private List<Song> lastListenSongs;
 }
