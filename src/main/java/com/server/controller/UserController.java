@@ -1,6 +1,7 @@
 package com.server.controller;
 
 import com.server.entity.User;
+import com.server.exception.FileFormatException;
 import com.server.exception.UserException;
 import com.server.service.UserService;
 import org.apache.coyote.Response;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.ConstraintViolationException;
 import java.io.IOException;
 import java.util.List;
 
@@ -20,8 +22,14 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/addUser")
-    public boolean addUser(@RequestPart("image") MultipartFile image, @RequestPart("user") String userString) throws IOException {
-        return userService.addUser(image, userString);
+    public ResponseEntity addUser(@RequestPart("image") MultipartFile image, @RequestPart("user") String userString) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(userService.addUser(image, userString));
+        } catch (ConstraintViolationException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        } catch (IOException | FileFormatException e) {
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(e.getMessage());
+        }
     }
 
     @GetMapping("/findAllUsers")
@@ -56,10 +64,10 @@ public class UserController {
 
     @PutMapping("/addPlaylistToUser")
     public ResponseEntity addPlaylistToUser(@RequestParam String idUser, @RequestParam String idPlaylist) {
-        try{
+        try {
             userService.addPlaylistToUser(idUser, idPlaylist);
-            return ResponseEntity.status(HttpStatus.OK).body("Successfully add playlist "+idPlaylist+"to user "+idUser);
-        }catch (UserException e){
+            return ResponseEntity.status(HttpStatus.OK).body("Successfully add playlist " + idPlaylist + "to user " + idUser);
+        } catch (UserException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
 
@@ -72,6 +80,8 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.OK).body("Successfully delete user with id " + idUser);
         } catch (UserException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (FileFormatException e) {
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(e.getMessage());
         }
     }
 }

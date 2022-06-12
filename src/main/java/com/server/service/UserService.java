@@ -2,15 +2,18 @@ package com.server.service;
 
 import com.server.entity.Playlist;
 import com.server.entity.User;
+import com.server.exception.FileFormatException;
 import com.server.exception.UserException;
 import com.server.repository.PlaylistTemplate;
 import com.server.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.server.service.data.DataService;
 import com.server.service.drive.GoogleDriveService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.ConstraintViolationException;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
@@ -25,17 +28,19 @@ public class UserService {
     private PlaylistTemplate playlistRepository;
 
     @Autowired
+    private DataService dataService;
+
+    @Autowired
     private GoogleDriveService driveService;
 
-    public boolean addUser(MultipartFile file, String json) throws IOException {
+    public boolean addUser(MultipartFile image, String json) throws ConstraintViolationException, IOException, FileFormatException {
         ObjectMapper mapper = new ObjectMapper();
         User user = mapper.readValue(json, User.class);
         if (userRepository.existsByNameOrEmail(user.getName(), user.getEmail())) {
             return false;
         }
 
-        String userImgFolderId = "1ZtqcTpapCismmefalDItN5rxb9UDB5-R";
-        user.setImage(driveService.uploadFile(user.getName(), file, "audio/mpeg", userImgFolderId).getId());
+        user.setImage(dataService.storeData(image, ".jpg"));
         user.setCreatedAt(new Date(System.currentTimeMillis()));
         userRepository.save(user);
         return true;
@@ -64,21 +69,21 @@ public class UserService {
 
     }
 
-    public void addPlaylistToUser(String idUser, String idPlaylist) throws UserException{
+    public void addPlaylistToUser(String idUser, String idPlaylist) throws UserException {
         User user = userRepository.findById(idUser).orElse(null);
 
-        if(user!=null){
-            userRepository.addPlaylistToUser(idUser,idPlaylist);
-        }else{
+        if (user != null) {
+            userRepository.addPlaylistToUser(idUser, idPlaylist);
+        } else {
             throw new UserException(UserException.NotFoundException(idUser));
         }
     }
 
-    public void deleteUser(String id) throws UserException {
+    public void deleteUser(String id) throws UserException, FileFormatException {
         User user = userRepository.findById(id).orElse(null);
 
         if (user != null) {
-            driveService.deleteFile(id);
+            dataService.deleteData(id);
             userRepository.deleteById(id);
         } else {
             throw new UserException(UserException.NotFoundException(id));
