@@ -9,8 +9,10 @@ import com.server.entity.Song;
 import com.server.entity.result.ArtistResult;
 import com.server.exception.AlbumException;
 import com.server.exception.ArtistException;
+import com.server.exception.FileFormatException;
 import com.server.repository.ArtistRepository;
 import com.server.repository.SongRepository;
+import com.server.service.data.DataService;
 import com.server.service.drive.GoogleDriveService;
 import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.ConstraintViolationException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -32,11 +35,14 @@ public class ArtistService {
     private SongRepository songRepository;
 
     @Autowired
+    private DataService dataService;
+
+    @Autowired
     private GoogleDriveService driveService;
 
     private String artistImgFolderId = "1AZozXXRklkIhhNf9I6C0GVb4czPl8X_C";
 
-    public Artist addArtist(String artistString, MultipartFile image) throws ConstraintViolationException, JsonProcessingException, ArtistException {
+    public Artist addArtist(String artistString, MultipartFile image) throws ConstraintViolationException, IOException, ArtistException, FileFormatException {
         ObjectMapper objectMapper = new ObjectMapper();
         Artist artist = objectMapper.readValue(artistString, Artist.class);
 
@@ -45,11 +51,10 @@ public class ArtistService {
         if (artistOptional != null) {
             throw new ArtistException(ArtistException.ArtistAlreadyExist(artist.getName()));
         } else {
-            artist.setImage(driveService.uploadFile(artist.getName(), image, "image/jpeg", artistImgFolderId).getId());
+            artist.setImage(dataService.storeData(image,".jpg"));
             artist.setTotalView(0);
             artist.setCreatedAt(new Date(System.currentTimeMillis()));
 
-            driveService.deleteLocalFile(image.getOriginalFilename());
             return artistRepository.save(artist);
         }
     }
@@ -97,18 +102,14 @@ public class ArtistService {
 
     }
 
-    public void deleteArtist(String id) throws ArtistException {
+    public void deleteArtist(String id) throws ArtistException, FileFormatException {
         Artist artist = artistRepository.findById(id).orElse(null);
 
         if (artist == null) {
             throw new ArtistException(ArtistException.NotFoundException(id));
         } else {
-            artistRepository.deleteById(id);
+            dataService.deleteData(id);
             driveService.deleteFile(artist.getImage());
         }
-    }
-
-    public List<ArtistResult> findAllSongs(String idArtist) {
-        return artistRepository.findAllSongs(idArtist);
     }
 }

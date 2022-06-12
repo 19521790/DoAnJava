@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.server.entity.Song;
 import com.server.exception.AlbumException;
 import com.server.exception.ArtistException;
+import com.server.exception.FileFormatException;
 import com.server.exception.SongException;
 import com.server.service.SongService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,19 +38,23 @@ public class SongController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         } catch (SongException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        } catch (JsonProcessingException e) {
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(e.getMessage());
+        } catch (FileFormatException e) {
             return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(e.getMessage());
         }
     }
 
-    @GetMapping("/findSongById/{id}/{getFileYes}")
-    public ResponseEntity findSongById(@PathVariable String id, @PathVariable boolean getFileYes) throws SongException, IOException {
+    @GetMapping("/findSongById/{id}")
+    public ResponseEntity findSongById(@PathVariable String id) throws SongException, IOException {
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(songService.findSongById(id, getFileYes));
+            return ResponseEntity.status(HttpStatus.OK).body(songService.findSongById(id));
         } catch (SongException e) {
-            throw new SongException(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (IOException e) {
-            throw new IOException(e.getMessage());
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        } catch (FileFormatException e) {
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(e.getMessage());
         }
     }
 
@@ -68,7 +73,7 @@ public class SongController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         } catch (SongException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }catch (JsonProcessingException e){
+        } catch (IOException | FileFormatException e) {
             return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(e.getMessage());
         }
 
@@ -81,6 +86,8 @@ public class SongController {
             return ResponseEntity.status(HttpStatus.OK).body("Successfully delete song with id: " + id);
         } catch (SongException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (FileFormatException e) {
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(e.getMessage());
         }
     }
 }

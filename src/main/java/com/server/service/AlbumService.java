@@ -5,15 +5,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.server.entity.Album;
 import com.server.entity.Song;
 import com.server.exception.AlbumException;
+import com.server.exception.FileFormatException;
 import com.server.exception.SongException;
 import com.server.repository.AlbumRepository;
 import com.server.repository.SongRepository;
+import com.server.service.data.DataService;
 import com.server.service.drive.GoogleDriveService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.ConstraintViolationException;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -28,9 +31,12 @@ public class AlbumService {
     @Autowired
     private GoogleDriveService driveService;
 
+    @Autowired
+    private DataService dataService;
+
     private String albumImgFolderId = "1RPmGzNV-xQ1n3F53tYAlq1P4_40hBxZ7";
 
-    public Album addAlbum(String albumString, MultipartFile image) throws ConstraintViolationException, AlbumException, JsonProcessingException {
+    public Album addAlbum(String albumString, MultipartFile image) throws ConstraintViolationException, AlbumException, IOException, FileFormatException {
         ObjectMapper objectMapper = new ObjectMapper();
         Album album = objectMapper.readValue(albumString, Album.class);
 
@@ -39,11 +45,10 @@ public class AlbumService {
         if (albumOptional != null && albumOptional.getName().equals(album.getName())) {
             throw new AlbumException(AlbumException.AlbumAlreadyExist(album.getName()));
         } else {
-            album.setImage(driveService.uploadFile(album.getName(), image, "image/jpeg", albumImgFolderId).getId());
+            album.setImage(dataService.storeData(image,".jpg"));
             album.setTotalView(0);
             album.setCreatedAt(new Date(System.currentTimeMillis()));
 
-            driveService.deleteLocalFile(image.getOriginalFilename());
             return albumRepository.save(album);
         }
     }
@@ -90,9 +95,14 @@ public class AlbumService {
         }
     }
 
-    public String deleteAlbum(String id) {
-        albumRepository.deleteById(id);
-        return ("Album has been deleted: " + id);
+    public void deleteAlbum(String id)throws AlbumException, FileFormatException{
+        Album album = albumRepository.findById(id).orElse(null);
+        if (album == null) {
+            throw new AlbumException(AlbumException.NotFoundException(id));
+        } else {
+            dataService.deleteData(album.getImage());
+            songRepository.deleteById(id);
+        }
     }
 
 //    public Album addSongToAlbum(List<String> idSongs, String idAlbum) throws AlbumException {

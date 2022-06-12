@@ -10,10 +10,12 @@ import com.server.entity.object.AlbumOtd;
 import com.server.entity.result.SongResult;
 import com.server.exception.AlbumException;
 import com.server.exception.ArtistException;
+import com.server.exception.FileFormatException;
 import com.server.exception.SongException;
 import com.server.repository.AlbumRepository;
 import com.server.repository.ArtistRepository;
 import com.server.repository.SongRepository;
+import com.server.service.data.DataService;
 import com.server.service.drive.GoogleDriveService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,11 +43,12 @@ public class SongService {
     private ArtistRepository artistRepository;
 
     @Autowired
+    private DataService dataService;
+
+    @Autowired
     private GoogleDriveService driveService;
 
-    String songFolderId = "1LdzTFIFV9AALrvPHC9llu2OTI2LVeKm2";
-
-    public Song addSong(String songString, MultipartFile file) throws ConstraintViolationException, SongException, JsonProcessingException {
+    public Song addSong(String songString, MultipartFile file) throws ConstraintViolationException, SongException, IOException, FileFormatException {
         ObjectMapper objectMapper = new ObjectMapper();
         Song song = objectMapper.readValue(songString, Song.class);
 
@@ -57,34 +60,21 @@ public class SongService {
             throw new SongException(SongException.SongAlreadyExist(song.getName()));
         } else {
             AlbumOtd album = new AlbumOtd().albumToAlbumOtd(albumRepository.findById(song.getAlbum().getId()).get());
-
-            com.google.api.services.drive.model.File fileUpload = driveService.uploadFile(song.getName(), file, "audio/mpeg", songFolderId);
-            song.setFile(fileUpload.getId());
+            song.setFile(dataService.storeData(file, ".m4a"));
             song.setAlbum(album);
             song.setWeekView(0);
             song.setTotalView(0);
             song.setCreatedAt(new Date(System.currentTimeMillis()));
 
-            driveService.deleteLocalFile(file.getOriginalFilename() );
             return songRepository.save(song);
         }
     }
 
-    public SongResult findSongById(String id,boolean getFileYes) throws SongException, IOException {
+    public Song findSongById(String id) throws SongException, IOException, FileFormatException {
         Song song = songRepository.findById(id).orElse(null);
-        SongResult songResult = new SongResult();
+
         if (song != null) {
-            String imageId = song.getAlbum().getImage();
-            String fileId = song.getFile();
-
-            songResult.setSong(song);
-
-            if(getFileYes) {
-                songResult.setImagePath(driveService.downloadFile(imageId, ".jpg"));
-                songResult.setFilePath(driveService.downloadFile(fileId, ".m4a"));
-            }
-            return songResult;
-
+            return song;
         } else {
             throw new SongException(SongException.NotFoundException(id));
         }
@@ -99,19 +89,19 @@ public class SongService {
         }
     }
 
-    public void deleteSong(String id) throws SongException {
+    public void deleteSong(String id) throws SongException, FileFormatException {
         Song song = songRepository.findById(id).orElse(null);
         if (song == null) {
             throw new SongException(SongException.NotFoundException(id));
         } else {
-            driveService.deleteFile(song.getFile());
+            dataService.deleteData(song.getFile());
             songRepository.deleteById(id);
         }
     }
 
-    public Song updateSong(String songString, MultipartFile file) throws ConstraintViolationException, SongException, JsonProcessingException {
+    public Song updateSong(String songString, MultipartFile file) throws ConstraintViolationException, SongException, IOException, FileFormatException {
         ObjectMapper objectMapper = new ObjectMapper();
-        Song song = objectMapper.readValue(songString,Song.class);
+        Song song = objectMapper.readValue(songString, Song.class);
 
         Song songToUpdate = songRepository.findById(song.getId()).get();
 
@@ -121,16 +111,13 @@ public class SongService {
             songToUpdate.setArtists(song.getArtists() != null ? song.getArtists() : songToUpdate.getArtists());
             songToUpdate.setGenres(song.getGenres() != null ? song.getGenres() : songToUpdate.getGenres());
             songToUpdate.setAlbum(song.getAlbum() != null ? song.getAlbum() : songToUpdate.getAlbum());
-            songToUpdate.setFile(song.getFile() != null ? song.getFile() : songToUpdate.getFile());
+
+            if(file.getOriginalFilename()!=null){
+                dataService.deleteData(songToUpdate.getFile());
+                songToUpdate.setFile(dataService.storeData(file,".m4a"));
+            }
             songToUpdate.setUpdatedAt(new Date(System.currentTimeMillis()));
 
-            if(file != null){
-                com.google.api.services.drive.model.File fileToUpdate = driveService.uploadFile(song.getName(),file,"audio/mpeg",songFolderId);
-                songToUpdate.setFile(fileToUpdate.getId());
-
-                driveService.deleteLocalFile(file.getOriginalFilename());
-                driveService.deleteFile(song.getFile());
-            }
             return songRepository.save(songToUpdate);
         } else {
             throw new SongException(SongException.NotFoundException(song.getId()));

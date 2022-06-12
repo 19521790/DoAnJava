@@ -30,7 +30,7 @@ public class Playlist {
     @NotNull(message = "Playlist idUser cannot be null")
     private Object idUser;
 
-    private List<SongOtd>songs = new ArrayList<SongOtd>();
+    private List<Song>songs = new ArrayList<Song>();
 
     private int totalView;
     private Date createdAt;

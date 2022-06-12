@@ -3,6 +3,7 @@ package com.server.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.server.entity.Album;
 import com.server.exception.AlbumException;
+import com.server.exception.FileFormatException;
 import com.server.service.AlbumService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.ConstraintViolationException;
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -25,18 +27,18 @@ public class AlbumController {
             return ResponseEntity.status(HttpStatus.OK).body(albumService.addAlbum(albumString, image));
         } catch (AlbumException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-        } catch (ConstraintViolationException e) {
-            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(e.getMessage());
         } catch (JsonProcessingException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        } catch (ConstraintViolationException | FileFormatException | IOException e) {
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(e.getMessage());
         }
     }
 
     @GetMapping("/findAlbumById/{id}")
     public ResponseEntity findAlbumById(@PathVariable String id) {
-        try{
+        try {
             return ResponseEntity.status(HttpStatus.OK).body(albumService.findAlbumById(id));
-        }catch(AlbumException e){
+        } catch (AlbumException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
@@ -53,13 +55,20 @@ public class AlbumController {
             return ResponseEntity.status(HttpStatus.OK).body(albumService.updateAlbum(albumString, image));
         } catch (JsonProcessingException e) {
             return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(e.getMessage());
-        } catch(AlbumException e){
+        } catch (AlbumException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
     @DeleteMapping("/deleteAlbum/{id}")
-    public String deleteAlbum(@PathVariable String id) {
-        return albumService.deleteAlbum(id);
+    public ResponseEntity deleteAlbum(@PathVariable String id) {
+        try {
+            albumService.deleteAlbum(id);
+            return ResponseEntity.status(HttpStatus.OK).body("Successfully delete album with id: " + id);
+        } catch (AlbumException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (FileFormatException e) {
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(e.getMessage());
+        }
     }
 }

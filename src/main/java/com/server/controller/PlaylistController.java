@@ -2,6 +2,7 @@ package com.server.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.server.entity.Playlist;
+import com.server.exception.FileFormatException;
 import com.server.exception.PlaylistException;
 import com.server.exception.SongException;
 import com.server.service.PlaylistService;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.ConstraintViolationException;
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -24,7 +26,7 @@ public class PlaylistController {
     public ResponseEntity addPlaylist(@RequestPart("playlist") String playlistString, @RequestPart("image") MultipartFile image) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(playlistService.addPlaylist(playlistString, image));
-        } catch (JsonProcessingException e) {
+        } catch (FileFormatException | IOException e) {
             return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(e.getMessage());
         } catch (ConstraintViolationException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
@@ -53,6 +55,8 @@ public class PlaylistController {
             return ResponseEntity.status(HttpStatus.OK).body("Successfully delete playlist with id " + id);
         } catch (PlaylistException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (FileFormatException e) {
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(e.getMessage());
         }
     }
 
