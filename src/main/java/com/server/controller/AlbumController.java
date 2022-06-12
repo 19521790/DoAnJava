@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.ConstraintViolationException;
+import java.io.FileNotFoundException;
 import java.util.List;
 
 @RestController
@@ -37,6 +38,8 @@ public class AlbumController {
         try{
             return ResponseEntity.status(HttpStatus.OK).body(albumService.findAlbumById(id));
         }catch(AlbumException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }catch(FileNotFoundException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }

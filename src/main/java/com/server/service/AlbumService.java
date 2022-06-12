@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.ConstraintViolationException;
+import java.io.FileNotFoundException;
 import java.util.Date;
 import java.util.List;
 
@@ -48,11 +49,12 @@ public class AlbumService {
         }
     }
 
-    public Album findAlbumById(String id) throws AlbumException {
+    public Album findAlbumById(String id) throws AlbumException, FileNotFoundException {
         Album album = albumRepository.findById(id).orElse(null);
 
         if (album != null) {
             album.setSongs(songRepository.findSongByAlbum(id));
+            album.setImage(driveService.downloadFile(album.getImage(), ".jpg"));
             return album;
         } else {
             throw new AlbumException(AlbumException.NotFoundException(id));
@@ -60,6 +62,7 @@ public class AlbumService {
     }
 
     public List<Album> findAllAlbums() {
+        List<Album> albums = albumRepository.findAll();
         return albumRepository.findAll();
     }
 

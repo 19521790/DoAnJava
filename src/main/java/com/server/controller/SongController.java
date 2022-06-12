@@ -2,21 +2,17 @@ package com.server.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.server.entity.Song;
-import com.server.exception.AlbumException;
-import com.server.exception.ArtistException;
 import com.server.exception.SongException;
 import com.server.service.SongService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import javax.validation.ConstraintViolationException;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
@@ -71,7 +67,6 @@ public class SongController {
         }catch (JsonProcessingException e){
             return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(e.getMessage());
         }
-
     }
 
     @DeleteMapping("/deleteSong/{id}")
@@ -83,5 +78,12 @@ public class SongController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
+
+//    @GetMapping("/data/{id}")
+//    public ResponseEntity<StreamingResponseBody> streamData(@PathVariable String id){
+//        StreamingResponseBody stream = outputStream ->
+//
+//        return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.TEXT_PLAIN).body(responseBody);
+//    }
 }
 
