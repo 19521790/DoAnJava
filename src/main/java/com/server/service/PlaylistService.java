@@ -1,13 +1,10 @@
 package com.server.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.server.entity.Playlist;
 import com.server.entity.Song;
-import com.server.entity.result.PlaylistResult;
 import com.server.exception.FileFormatException;
 import com.server.exception.PlaylistException;
-import com.server.exception.SongException;
 import com.server.repository.PlaylistTemplate;
 import com.server.repository.SongRepository;
 import com.server.service.data.DataService;
@@ -47,13 +44,13 @@ public class PlaylistService {
         return playlistRepository.save(playlist);
     }
 
-    public PlaylistResult findPlaylistById(String id) throws PlaylistException {
+    public Playlist findPlaylistById(String id) throws PlaylistException {
         Playlist playlist = playlistRepository.findById(id).orElse(null);
 
         if (playlist == null) {
             throw new PlaylistException(PlaylistException.NotFoundException(id));
         } else {
-            return new PlaylistResult().playlistToPlaylistResult(playlist);
+            return playlist;
         }
     }
 
