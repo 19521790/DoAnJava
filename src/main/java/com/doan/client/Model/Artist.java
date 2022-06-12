@@ -16,6 +16,7 @@ public class Artist {
     private String name;
     private String image;
     private String description;
+    private int totalView;
     private Date createdAt;
     private Date updatedAt;
 }

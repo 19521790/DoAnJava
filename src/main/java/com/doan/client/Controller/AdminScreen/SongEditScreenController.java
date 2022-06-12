@@ -1,278 +1,104 @@
 package com.doan.client.Controller.AdminScreen;
 
 import com.doan.client.Model.Album;
-import com.doan.client.Model.Artist;
-import com.doan.client.Model.Genre;
-import com.doan.client.Model.Object.ArtistInSong;
+
+import com.doan.client.Model.Object.AlbumOtd;
+import com.doan.client.Model.Object.ArtistOtd;
 import com.doan.client.Model.Song;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.google.gson.Gson;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import com.sun.mail.iap.Response;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
-import javafx.scene.Cursor;
+
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyEvent;
+
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
+
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.FileChooser;
 
 import java.io.File;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
-public class SongEditScreenController implements Initializable {
-    public HBox listAddedArtist;
+public class SongEditScreenController extends GetDataFromServerController implements Initializable {
+
     public ScrollPane scrollPaneSearchArtist;
-    public VBox listNotAddedArtist;
     public Label fileSongName;
-    public TextField songName;
     public Label duration;
-    public Button addNewSongBtn;
-    public ImageView imageProfile;
-    public TextField addSongArtistField;
     public Media media;
-    public HBox listAddedGenre;
     public ScrollPane scrollPaneSearchGenre;
-    public VBox listNotAddedGenre;
-    public ChoiceBox albumSelectForm;
-    public TextField addGenreField;
-    public TextField addAlbumField;
     public ScrollPane scrollPaneSearchAlbum;
-    public VBox listNotAddedAlbum;
-    public HBox listAddedAlbum;
-    public ImageView testImage;
-    public ToggleButton addSongMode;
-    public ToggleButton editSongMode;
-    public ToggleGroup Group1;
     public Label chooseFileLabel;
     public Button chooseFile;
-    public Button editSongBtn;
     public ScrollPane scrollPaneSongName;
-    public VBox listNotAddedSong;
-    private String  currentSaveSongId;
+    public Double currentDuration;
     File fileMusic;
-    public List<Artist> artists;
-    public List<Genre> genres;
-    public List<Album> albums;
+    public Song currentEditSong;
+
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        scrollPaneSearchArtist.setVisible(false);
         initArtist();
         initGenre();
         initAlbum();
-
-
-    }
-    public void initGenre(){
-        HttpResponse<JsonNode> apiResponse = null;
-        try {
-            apiResponse = Unirest.get("http://localhost:8080/genre/findAllGenres").asJson();
-            String jsonValue = apiResponse.getBody().toString();
-
-            ObjectMapper mapper = new ObjectMapper();
-            genres = mapper.readValue(jsonValue, new TypeReference<>() {
-            });
-            addGenreToSearchFilter(genres);
-        } catch (UnirestException | JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-    }
-    public void initArtist() {
-        HttpResponse<JsonNode> apiResponse = null;
-        try {
-            apiResponse = Unirest.get("http://localhost:8080/artist/findAllArtists").asJson();
-            String jsonValue = apiResponse.getBody().toString();
-
-            ObjectMapper mapper = new ObjectMapper();
-            artists = mapper.readValue(jsonValue, new TypeReference<>() {
-            });
-            addArtistToSearchFilter(artists);
-        } catch (UnirestException | JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-    }
-    public void initAlbum() {
-        HttpResponse<JsonNode> apiResponse = null;
-        try {
-            apiResponse = Unirest.get("http://localhost:8080/album/findAllAlbums").asJson();
-            String jsonValue = apiResponse.getBody().toString();
-
-            ObjectMapper mapper = new ObjectMapper();
-            albums = mapper.readValue(jsonValue, new TypeReference<>() {
-            });
-            addAlbumToSelectForm(albums);
-        } catch (UnirestException | JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-    }
-    public void addAlbumToSelectForm(List<Album> albums){
-        for (Album album: albums) {
-            Button button = new Button();
-            button.setText(album.getName());
-            button.setId(album.getId());
-            button.getStyleClass().add("itemSearch");
-            button.setPrefWidth(280);
-            button.setAlignment(Pos.BASELINE_LEFT);
-            button.setCursor(Cursor.HAND);
-            button.setOnAction(this::clickItemSearchAlbum);
-            listNotAddedAlbum.getChildren().add(button);
-        }
-        
     }
 
-    public void addArtistToSearchFilter(List<Artist> artists) {
-        for (Artist artist : artists) {
-            Button button = new Button();
-            button.setText(artist.getName());
-            button.setId(artist.getId());
-            button.getStyleClass().add("itemSearch");
-            button.setPrefWidth(280);
-            button.setAlignment(Pos.BASELINE_LEFT);
-            button.setCursor(Cursor.HAND);
-            button.setOnAction(this::clickItemSearchArtist);
-            listNotAddedArtist.getChildren().add(button);
-        }
-    }
-    public void addGenreToSearchFilter(List<Genre> genres) {
-        for (Genre genre: genres) {
-            Button button = new Button();
-            button.setText(genre.getName());
-            button.setId(genre.getId());
-            button.getStyleClass().add("itemSearch");
-            button.setPrefWidth(280);
-            button.setAlignment(Pos.BASELINE_LEFT);
-            button.setCursor(Cursor.HAND);
-            button.setOnAction(this::clickItemSearchGenre);
-            listNotAddedGenre.getChildren().add(button);
-        }
-    }
-    public void addSongToSearchFilter(List<Song> songs) {
-        for (Song song: songs) {
-            Button button = new Button();
-            button.setText(song.getName());
-            button.setId(song.getId());
-            button.getStyleClass().add("itemSearch");
-            button.setPrefWidth(280);
-            button.setAlignment(Pos.BASELINE_LEFT);
-            button.setCursor(Cursor.HAND);
-            button.setOnAction(this::clickItemSearchSong);
-              listNotAddedSong.getChildren().add(button);
-        }
-    }
 
-    public void clickItemSearchArtist(ActionEvent actionEvent) {
-        Button button = (Button) actionEvent.getSource();
-        button.setPrefWidth(Region.USE_COMPUTED_SIZE);
-        FontAwesomeIconView fontAwesomeIconView = new FontAwesomeIconView();
-        fontAwesomeIconView.setGlyphName("REMOVE");
-        button.setGraphic(fontAwesomeIconView);
-        button.setContentDisplay(ContentDisplay.RIGHT);
-        listAddedArtist.getChildren().add(button);
-        listNotAddedArtist.getChildren().remove(button);
-        button.setOnAction(this::returnSongToListArtist);
-
-    }
-    public void clickItemSearchGenre(ActionEvent actionEvent) {
-        Button button = (Button) actionEvent.getSource();
-        button.setPrefWidth(Region.USE_COMPUTED_SIZE);
-        FontAwesomeIconView fontAwesomeIconView = new FontAwesomeIconView();
-        fontAwesomeIconView.setGlyphName("REMOVE");
-        button.setGraphic(fontAwesomeIconView);
-        button.setContentDisplay(ContentDisplay.RIGHT);
-        listAddedGenre.getChildren().add(button);
-        listNotAddedGenre.getChildren().remove(button);
-        button.setOnAction(this::returnSongToListGenre);
-
-    }
+    @Override
     public void clickItemSearchSong(ActionEvent actionEvent) {
+        resetAllField();
         Button button = (Button) actionEvent.getSource();
-        songName.setText(button.getText());
-        currentSaveSongId= button.getId();
+        addSongField.setText(button.getText());
+        String currentSaveSongId = button.getId();
         scrollPaneSongName.setVisible(false);
+        try {
+            HttpResponse<JsonNode> response = Unirest.get("http://localhost:8080/song/findSongById/" + currentSaveSongId + "/false").asJson();
+            Song song = new Gson().fromJson(response.getBody().getObject().get("song").toString(), Song.class);
+            fileSongName.setText(song.getFile());
 
-    }
-    public void clickItemSearchAlbum(ActionEvent actionEvent) {
-        if (listAddedAlbum.getChildren().size()== 0){
-            Button button = (Button) actionEvent.getSource();
-            button.setPrefWidth(Region.USE_COMPUTED_SIZE);
-            FontAwesomeIconView fontAwesomeIconView = new FontAwesomeIconView();
-            fontAwesomeIconView.setGlyphName("REMOVE");
-            button.setGraphic(fontAwesomeIconView);
-            button.setContentDisplay(ContentDisplay.RIGHT);
-            listAddedAlbum.getChildren().setAll(button);
-            listNotAddedArtist.getChildren().remove(button);
-            button.setOnAction(this::returnSongToListAlbum);
-        }else{
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setHeaderText("A song just belongs to one Album, Please remove album first!!!");
-            alert.show();
+            duration.setText(convertTimePlay(song.getDuration()));
+            currentEditSong= song;
+            for (int i = listNotAddedArtist.getChildren().size() - 1; i > -1; i--) {
+                Button button1 = (Button) listNotAddedArtist.getChildren().get(i);
+                song.getArtists().forEach(e -> {
+                    if (e.getId().equals(button1.getId())) {
+                        button1.fire();
+                    }
+                });
+            }
+            for (int i = listNotAddedAlbum.getChildren().size() - 1; i > -1; i--) {
+                Button button1 = (Button) listNotAddedAlbum.getChildren().get(i);
+                if (button1.getId().equals(song.getAlbum().getId())) {
+                    button1.fire();
+                }
+            }
+            for (int i = listNotAddedGenre.getChildren().size() - 1; i > -1; i--) {
+                Button button1 = (Button) listNotAddedGenre.getChildren().get(i);
+                if (song.getGenres().contains(button1.getText())) {
+                    button1.fire();
+                }
+            }
+        } catch (UnirestException e) {
+            throw new RuntimeException(e);
         }
-
-    }
-    public void returnSongToListArtist(ActionEvent actionEvent) {
-        Button button = (Button) actionEvent.getSource();
-        button.setPrefWidth(280);
-        button.setGraphic(null);
-        listNotAddedArtist.getChildren().add(button);
-        listAddedArtist.getChildren().remove(button);
-        button.setOnAction(this::clickItemSearchArtist);
-    }
-    public void returnSongToListAlbum(ActionEvent actionEvent) {
-        Button button = (Button) actionEvent.getSource();
-        button.setPrefWidth(280);
-        button.setGraphic(null);
-        listNotAddedAlbum.getChildren().add(button);
-        listAddedAlbum.getChildren().remove(button);
-        button.setOnAction(this::clickItemSearchAlbum);
-    }
-    public void returnSongToListGenre(ActionEvent actionEvent) {
-        Button button = (Button) actionEvent.getSource();
-        button.setPrefWidth(280);
-        button.setGraphic(null);
-        listNotAddedGenre.getChildren().add(button);
-        listAddedGenre.getChildren().remove(button);
-        button.setOnAction(this::clickItemSearchGenre);
     }
 
-
-    public void filterArtist(KeyEvent keyEvent) {
-        List<Artist> listFilter = artists.stream().filter(p -> p.getName().startsWith(addSongArtistField.getText())).toList();
-        listNotAddedArtist.getChildren().clear();
-        addArtistToSearchFilter(listFilter);
-    }
-    public void filterGenre(KeyEvent keyEvent) {
-        List<Genre> listFilter = genres.stream().filter(p -> p.getName().startsWith(addGenreField.getText())).toList();
-        listNotAddedGenre.getChildren().clear();
-        addGenreToSearchFilter(listFilter);
-    }
-    public void filterAlbum(KeyEvent keyEvent) {
-        List<Album> listFilter = albums.stream().filter(p -> p.getName().startsWith(addAlbumField.getText())).toList();
-        listNotAddedAlbum.getChildren().clear();
-        addAlbumToSelectForm(listFilter);
-    }
-    public void filterSong(KeyEvent keyEvent) {
-        List<Song> listFilter = AdminScreenController.listSong.stream().filter(p -> p.getName().startsWith(songName.getText())).toList();
-        listNotAddedSong.getChildren().clear();
-        addSongToSearchFilter(listFilter);
-    }
 
     public void getFileMusic(ActionEvent actionEvent) {
         FileChooser fc = new FileChooser();
@@ -287,7 +113,10 @@ public class SongEditScreenController implements Initializable {
             mediaPlayer.setOnReady(new Runnable() {
                 @Override
                 public void run() {
-                    duration.setText("Duration: " + convertTimePlay(media.getDuration().toSeconds()));
+
+                    duration.setText(convertTimePlay(media.getDuration().toSeconds()));
+                    currentDuration = media.getDuration().toSeconds();
+                    System.out.println(currentDuration);
                 }
             });
 
@@ -296,9 +125,7 @@ public class SongEditScreenController implements Initializable {
 
     public String convertTimePlay(double current) {
         int minutePlay = (int) Math.floor(current / 60);
-
         int secondPlay = (int) (Math.round(current) - Math.floor(current / 60) * 60);
-
         if (secondPlay == 60) {
             secondPlay = 0;
             minutePlay += 1;
@@ -313,9 +140,9 @@ public class SongEditScreenController implements Initializable {
         }
         return labelMinutePlay + ":" + labelSecondPlay;
     }
-
-    public void addNewSong(ActionEvent actionEvent) {
-        if (songName.getText().equals("")) {
+    @Override
+    public void addAction(ActionEvent actionEvent) {
+        if (addSongField.getText().equals("")) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setHeaderText("Song name can't be empty");
             alert.show();
@@ -323,21 +150,20 @@ public class SongEditScreenController implements Initializable {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setHeaderText("Please choose music file");
             alert.show();
-        } else if (listAddedArtist.getChildren().size()==0 || listAddedAlbum.getChildren().size()==0 || listAddedGenre.getChildren().size()==0){
+        } else if (listAddedArtist.getChildren().size() == 0 || listAddedAlbum.getChildren().size() == 0 || listAddedGenre.getChildren().size() == 0) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setHeaderText("Artist, Album, Genre can't be empty");
             alert.show();
-        }
-        else {
-            addNewSongBtn.setText("Uploading...");
+        } else {
+            addBtn.setText("Uploading...");
             ImageView imageView = new ImageView(new Image("http://localhost:8080/image/loading.gif"));
             imageView.setFitWidth(20);
             imageView.setFitHeight(20);
-            addNewSongBtn.setGraphic(imageView);
+            addBtn.setGraphic(imageView);
             new Thread(() -> {
 
                 Song song = new Song();
-                song.setName(songName.getText());
+                song.setName(addSongField.getText());
                 song.setDuration(media.getDuration().toSeconds());
                 song.setArtists(getListAddedArtist());
                 song.setGenres(getAddedGenre());
@@ -346,17 +172,23 @@ public class SongEditScreenController implements Initializable {
                 String json = null;
                 try {
                     json = ow.writeValueAsString(song);
-                    HttpResponse<JsonNode> apiResponse=  Unirest.post("http://localhost:8080/song/addSong").field("file", fileMusic).field("song", json).asJson();
+                    System.out.println(json);
+                    HttpResponse<JsonNode> apiResponse = Unirest.post("http://localhost:8080/song/addSong").field("file", fileMusic).field("song", json).asJson();
 
                     if (apiResponse.getStatus() == 200) {
+
                         Platform.runLater(new Runnable() {
                             @Override
                             public void run() {
+                                AdminScreenController.getSongData();
+                                initSong();
                                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                                 alert.setHeaderText("Successful upload");
                                 alert.show();
-                                addNewSongBtn.setText("Save");
-                                addNewSongBtn.setGraphic(null);
+                                addBtn.setText("Add Song");
+                                addBtn.setGraphic(null);
+                                resetAllField();
+
                             }
                         });
 
@@ -367,12 +199,13 @@ public class SongEditScreenController implements Initializable {
                                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                                 alert.setHeaderText("Song's name has been exists!");
                                 alert.show();
-                                addNewSongBtn.setText("Save");
-                                addNewSongBtn.setGraphic(null);
+                                addBtn.setText("Save");
+                                addBtn.setGraphic(null);
+                                resetAllField();
                             }
                         });
                     }
-                    resetAllField();
+
 
                 } catch (JsonProcessingException | UnirestException e) {
                     throw new RuntimeException(e);
@@ -383,48 +216,90 @@ public class SongEditScreenController implements Initializable {
         }
     }
 
-    public List<ArtistInSong> getListAddedArtist(){
-
-        List<ArtistInSong> artistInSongList= new ArrayList<>();
-        listAddedArtist.getChildren().forEach(e->{
-            Button button= (Button) e;
-            ArtistInSong artistInSong= new ArtistInSong();
-            artistInSong.setName(button.getText());
-            artistInSong.setId(button.getId());
-            artistInSongList.add(artistInSong);
+    public List<ArtistOtd> getListAddedArtist() {
+        List<ArtistOtd> artistOtdList = new ArrayList<>();
+        listAddedArtist.getChildren().forEach(e -> {
+            Button button = (Button) e;
+            ArtistOtd artistOtd = new ArtistOtd();
+            artistOtd.setName(button.getText());
+            artistOtd.setId(button.getId());
+            artistOtdList.add(artistOtd);
         });
-        return artistInSongList;
+        return artistOtdList;
     }
-    public List<String> getAddedGenre(){
-        List<String> genreArrayList= new ArrayList<>();
-        listAddedGenre.getChildren().forEach(e->{
-            Button button= (Button) e;
+
+    public List<String> getAddedGenre() {
+        List<String> genreArrayList = new ArrayList<>();
+        listAddedGenre.getChildren().forEach(e -> {
+            Button button = (Button) e;
             genreArrayList.add(button.getText());
         });
         return genreArrayList;
     }
 
-    public Album getAddedAlbum(){
-        Album album = new Album();
-        listAddedAlbum.getChildren().forEach(e->{
-            Button button= (Button) e;
+    public AlbumOtd getAddedAlbum() {
+        AlbumOtd album = new AlbumOtd();
+        listAddedAlbum.getChildren().forEach(e -> {
+            Button button = (Button) e;
             album.setId(button.getId());
         });
-       return album;
+        return album;
     }
+
     public void resetSong(ActionEvent actionEvent) {
-
-
         resetAllField();
     }
 
 
-    public void closeSearchFormArtist(MouseEvent mouseEvent) {
+    public void closeSearchForm(MouseEvent mouseEvent) {
         scrollPaneSearchArtist.setVisible(false);
         scrollPaneSearchGenre.setVisible(false);
         scrollPaneSearchAlbum.setVisible(false);
         scrollPaneSongName.setVisible(false);
-        
+
+    }
+
+    public void deleteAction(ActionEvent actionEvent) throws UnirestException {
+        Alert alert= new Alert(Alert.AlertType.WARNING);
+        if (currentEditSong == null){
+            alert.setHeaderText("Please choose songs to delete");
+            alert.show();
+        }else {
+
+            alert.setHeaderText("Are you sure want to delete this song?");
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == ButtonType.OK){
+                deleteBtn.setText("Deleting...");
+                ImageView imageView = new ImageView(new Image("http://localhost:8080/image/loading.gif"));
+                imageView.setFitWidth(20);
+                imageView.setFitHeight(20);
+                deleteBtn.setGraphic(imageView);
+                new Thread(()->{
+                    HttpResponse<String> jsonNodeHttpResponse= null;
+                    try {
+                        jsonNodeHttpResponse = Unirest.delete("http://localhost:8080/song/deleteSong/" + currentEditSong.getId()).asString();
+                    } catch (UnirestException e) {
+                        throw new RuntimeException(e);
+                    }
+                    if (jsonNodeHttpResponse.getStatus()== 200){
+                        AdminScreenController.getSongData();
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                initSong();
+                                resetAllField();
+                                Alert alert1= new Alert(Alert.AlertType.WARNING);
+                                alert1.setHeaderText("Successful deleted");
+                                alert1.show();
+                                deleteBtn.setGraphic(null);
+                                deleteBtn.setText("Remove Song");
+                            }
+                        });
+                    }
+                }).start();
+            }
+        }
     }
 
     public void showSearchFormArtist(MouseEvent mouseEvent) {
@@ -433,65 +308,120 @@ public class SongEditScreenController implements Initializable {
         scrollPaneSearchAlbum.setVisible(false);
         scrollPaneSongName.setVisible(false);
     }
+
     public void showSearchFormGenre(MouseEvent mouseEvent) {
         scrollPaneSearchArtist.setVisible(false);
         scrollPaneSearchGenre.setVisible(true);
         scrollPaneSearchAlbum.setVisible(false);
         scrollPaneSongName.setVisible(false);
     }
+
     public void showSearchFormAlbum(MouseEvent mouseEvent) {
         scrollPaneSearchArtist.setVisible(false);
         scrollPaneSearchGenre.setVisible(false);
         scrollPaneSearchAlbum.setVisible(true);
         scrollPaneSongName.setVisible(false);
     }
+
     public void showSearchFormSong(MouseEvent mouseEvent) {
         scrollPaneSearchArtist.setVisible(false);
         scrollPaneSearchGenre.setVisible(false);
         scrollPaneSearchAlbum.setVisible(false);
         scrollPaneSongName.setVisible(true);
     }
+   @Override
     public void resetAllField() {
         fileMusic = null;
-        songName.setText("");
+        addSongField.setText("");
         fileSongName.setText("");
         duration.setText("");
         listAddedAlbum.getChildren().clear();
         listAddedGenre.getChildren().clear();
         listAddedArtist.getChildren().clear();
+        listNotAddedAlbum.getChildren().clear();
+        listNotAddedGenre.getChildren().clear();
+        listNotAddedArtist.getChildren().clear();
+        listNotAddedSong.getChildren().clear();
+        initAlbum();
+        initArtist();
+        initGenre();
+        initSong();
     }
 
-    public void convertSongMode(ActionEvent actionEvent) {
-        ToggleButton toggleButton = (ToggleButton) actionEvent.getSource();
-        if (toggleButton.getId().equals("addSongMode")){
-            addSongMode.setStyle("-fx-background-color:  #3b75ff; -fx-text-fill: white");
-            editSongMode.setStyle("-fx-background-color: #d3dadb; -fx-text-fill: black");
-            songName.setPromptText("");
-            addNewSongBtn.setVisible(true);
-            editSongBtn.setVisible(false);
-            songName.setOnKeyTyped(null);
-            songName.setOnMouseClicked(null);
-            chooseFile.setVisible(true);
-            chooseFileLabel.setVisible(true);
 
-        }else{
-            editSongMode.setStyle("-fx-background-color:  #3b75ff; -fx-text-fill: white");
-            addSongMode.setStyle("-fx-background-color: #d3dadb; -fx-text-fill: black");
-            songName.setPromptText("Search for song name");
-            songName.setOnKeyTyped(this::filterSong);
-            songName.setOnMouseClicked(this::showSearchFormSong);
-            addNewSongBtn.setVisible(false);
-            editSongBtn.setVisible(true);
+    public void updateAction(ActionEvent actionEvent) {
+        if (addSongField.getText().equals("")) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setHeaderText("Song name can't be empty");
+            alert.show();
+        } else if (listAddedArtist.getChildren().size() == 0 || listAddedAlbum.getChildren().size() == 0 || listAddedGenre.getChildren().size() == 0) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setHeaderText("Artist, Album, Genre can't be empty");
+            alert.show();
+        } else {
+            editBtn.setText("Updating...");
+            ImageView imageView = new ImageView(new Image("http://localhost:8080/image/loading.gif"));
+            imageView.setFitWidth(20);
+            imageView.setFitHeight(20);
+            editBtn.setGraphic(imageView);
+            new Thread(() -> {
 
-            chooseFile.setVisible(false);
-            chooseFileLabel.setVisible(false);
+                Song song = new Song();
+                song.setId(currentEditSong.getId());
+                song.setName(addSongField.getText());
+                song.setDuration(currentEditSong.getDuration());
+                song.setArtists(getListAddedArtist());
+                song.setGenres(getAddedGenre());
+                song.setAlbum(getAddedAlbum());
+                ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+                String json = null;
+                try {
+                    json = ow.writeValueAsString(song);
+                    System.out.println(json);
+                    HttpResponse<JsonNode> apiResponse;
+                    if (currentEditSong.getFile().equals(fileSongName.getText())) {
 
+                        apiResponse = Unirest.put("http://localhost:8080/song/updateSong").field("file",  new File("src/main/resources/com/doan/client/Image/null")).field("song", json).asJson();
+                    } else {
+                        apiResponse = Unirest.put("http://localhost:8080/song/updateSong").field("file", fileMusic).field("song", json).asJson();
+                    }
+                    if (apiResponse.getStatus() == 200) {
+                        AdminScreenController.getSongData();
 
-            addSongToSearchFilter(AdminScreenController.listSong);
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                initSong();
+                                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                                alert.setHeaderText("Successful update");
+                                alert.show();
+                                editBtn.setText("Save Song");
+                                editBtn.setGraphic(null);
+                                resetAllField();
+                            }
+                        });
+
+                    } else {
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                                alert.setHeaderText("Somethings Wrong!");
+                                alert.show();
+                                editBtn.setText("Save Song");
+                                editBtn.setGraphic(null);
+                                resetAllField();
+                            }
+                        });
+                    }
+
+                } catch (JsonProcessingException | UnirestException e) {
+                    throw new RuntimeException(e);
+                }
+            }).start();
+
         }
     }
-
-
 
 
 }

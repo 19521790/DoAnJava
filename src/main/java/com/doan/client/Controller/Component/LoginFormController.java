@@ -133,7 +133,7 @@ public class LoginFormController implements Initializable {
                     apiResponse = Unirest.get("http://localhost:8080/user/findUserByNameAndPassword/" + userName.getText() + "/" + passWord.getText()).asJson();
                     User user = new Gson().fromJson(apiResponse.getBody().toString(), User.class);
                     if (user.getName() != null) {
-                        System.out.println(user.getRole());
+
                         if (user.getRole().equals("user")) {
                             Platform.runLater(new Runnable() {
                                 @Override

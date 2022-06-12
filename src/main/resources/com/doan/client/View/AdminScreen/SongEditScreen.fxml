@@ -11,24 +11,24 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane minHeight="0.0" minWidth="0.0" onMouseClicked="#closeSearchFormArtist" prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.doan.client.Controller.AdminScreen.SongEditScreenController">
+<AnchorPane minHeight="0.0" minWidth="0.0" onMouseClicked="#closeSearchForm" prefHeight="600.0" prefWidth="1000.0" style="-fx-background-color: #f4f4f4;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.doan.client.Controller.AdminScreen.SongEditScreenController">
    <children>
-      <Label fx:id="fileSongName" layoutX="242.0" layoutY="111.0" maxWidth="100.0">
+      <Button fx:id="chooseFile" layoutX="135.0" layoutY="109.0" mnemonicParsing="false" onAction="#getFileMusic" text="Choose file" />
+      <Label fx:id="fileSongName" layoutX="225.0" layoutY="112.0" maxWidth="111.0" prefHeight="20.0" prefWidth="83.0" text="Name.mp3">
          <font>
             <Font size="14.0" />
          </font>
       </Label>
-      <Button fx:id="chooseFile" layoutX="135.0" layoutY="109.0" mnemonicParsing="false" onAction="#getFileMusic" text="Choose file" />
-      <TextField fx:id="songName" focusTraversable="false" layoutX="135.0" layoutY="148.0" prefHeight="36.0" prefWidth="294.0">
+      <Label fx:id="duration" layoutX="320.0" layoutY="112.0" prefHeight="17.0" prefWidth="111.0" text="Duration">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <TextField fx:id="addSongField" focusTraversable="false" layoutX="135.0" layoutY="148.0" prefHeight="36.0" prefWidth="294.0">
          <font>
             <Font size="15.0" />
          </font>
       </TextField>
-      <Label fx:id="duration" layoutX="337.0" layoutY="111.0" prefHeight="17.0" prefWidth="111.0">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </Label>
       <Label fx:id="chooseFileLabel" layoutX="54.0" layoutY="112.0" maxWidth="100.0" text="File Music:">
          <font>
             <Font size="14.0" />
@@ -44,12 +44,7 @@
             <Font size="14.0" />
          </font>
       </Label>
-      <Button fx:id="addNewSongBtn" layoutX="149.0" layoutY="443.0" mnemonicParsing="false" onAction="#addNewSong" style="-fx-background-color: #3b75ff;" text="Add Song" textFill="WHITE">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </Button>
-      <Button layoutX="282.0" layoutY="443.0" mnemonicParsing="false" onAction="#resetSong" style="-fx-background-color: #3b75ff;" text="Reset" textFill="WHITE">
+      <Button layoutX="135.0" layoutY="393.0" mnemonicParsing="false" onAction="#resetSong" style="-fx-background-color: #3b75ff;" text="Reset" textFill="WHITE">
          <font>
             <Font size="14.0" />
          </font>
@@ -74,7 +69,22 @@
             <Font size="14.0" />
          </font>
       </Label>
-      <ScrollPane layoutX="446.0" layoutY="204.0" prefHeight="36.0" prefWidth="542.0">
+      <Button fx:id="editBtn" layoutX="210.0" layoutY="393.0" mnemonicParsing="false" onAction="#updateAction" style="-fx-background-color: #3b75ff;" text="Save Song" textFill="WHITE" visible="false">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Button>
+      <Button fx:id="addBtn" layoutX="212.0" layoutY="393.0" mnemonicParsing="false" onAction="#addAction" style="-fx-background-color: #3b75ff;" text="Add Song" textFill="WHITE">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Button>
+      <Button fx:id="deleteBtn" layoutX="135.0" layoutY="450.0" mnemonicParsing="false" onAction="#deleteAction" style="-fx-background-color: #3b75ff;" text="Remove Song" textFill="WHITE" visible="false">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Button>
+      <ScrollPane layoutX="446.0" layoutY="204.0" prefHeight="36.0" prefWidth="542.0" style="-fx-background-color: none;">
          <content>
             <AnchorPane minHeight="0.0" minWidth="0.0">
                <children>
@@ -83,7 +93,7 @@
             </AnchorPane>
          </content>
       </ScrollPane>
-      <ScrollPane layoutX="448.0" layoutY="260.0" prefHeight="36.0" prefWidth="542.0">
+      <ScrollPane layoutX="448.0" layoutY="260.0" prefHeight="36.0" prefWidth="542.0" style="-fx-background-color: none;">
          <content>
             <AnchorPane minHeight="0.0" minWidth="0.0">
                <children>
@@ -124,7 +134,7 @@
             </AnchorPane>
          </content>
       </ScrollPane>
-      <ScrollPane layoutX="446.0" layoutY="323.0" prefHeight="36.0" prefWidth="542.0">
+      <ScrollPane layoutX="446.0" layoutY="323.0" prefHeight="36.0" prefWidth="542.0" style="-fx-background-color: none;">
          <content>
             <AnchorPane minHeight="0.0" minWidth="0.0">
                <children>
@@ -133,7 +143,7 @@
             </AnchorPane>
          </content>
       </ScrollPane>
-      <ToggleButton fx:id="addSongMode" layoutX="48.0" layoutY="31.0" mnemonicParsing="false" onAction="#convertSongMode" selected="true" style="-fx-background-color: #3b75ff;" text="Add song" textFill="WHITE">
+      <ToggleButton fx:id="addModeBtn" layoutX="48.0" layoutY="31.0" mnemonicParsing="false" onAction="#convertMode" selected="true" style="-fx-background-color: #3b75ff;" text="Add song" textFill="WHITE">
          <font>
             <Font size="18.0" />
          </font>
@@ -141,16 +151,11 @@
             <ToggleGroup fx:id="Group1" />
          </toggleGroup>
       </ToggleButton>
-      <ToggleButton fx:id="editSongMode" layoutX="183.0" layoutY="31.0" mnemonicParsing="false" onAction="#convertSongMode" style="-fx-background-color: #d3dadb;" text="Edit Song" toggleGroup="$Group1">
+      <ToggleButton fx:id="editModeBtn" layoutX="183.0" layoutY="31.0" mnemonicParsing="false" onAction="#convertMode" style="-fx-background-color: #d3dadb;" text="Edit Song" toggleGroup="$Group1">
          <font>
             <Font size="18.0" />
          </font>
       </ToggleButton>
-      <Button fx:id="editSongBtn" layoutX="149.0" layoutY="443.0" mnemonicParsing="false" onAction="#addNewSong" style="-fx-background-color: #3b75ff;" text="Save Song" textFill="WHITE">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </Button>
       <ScrollPane fx:id="scrollPaneSongName" hbarPolicy="NEVER" layoutX="136.0" layoutY="184.0" prefHeight="181.0" prefWidth="294.0" visible="false">
          <content>
             <AnchorPane minHeight="0.0" minWidth="0.0">

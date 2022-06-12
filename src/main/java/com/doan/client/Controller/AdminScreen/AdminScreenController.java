@@ -2,6 +2,7 @@ package com.doan.client.Controller.AdminScreen;
 
 import com.doan.client.Model.Album;
 import com.doan.client.Model.Artist;
+import com.doan.client.Model.Genre;
 import com.doan.client.Model.Song;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -50,6 +51,9 @@ public class AdminScreenController implements Initializable {
 
 
     public  static List<Song> listSong;
+    public  static List<Artist> listArtist;
+    public  static List<Album> listAlbum;
+    public  static List<Genre> listGenre;
     public AnchorPane adminMainBoard;
     AnchorPane songPane;
     AnchorPane artistPane;
@@ -57,15 +61,19 @@ public class AdminScreenController implements Initializable {
     private SongEditScreenController songEditScreenController;
     private ArtistEditScreenController artistEditScreenController;
     private  AlbumEditScreenController albumEditScreenController;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        getSongData();
+        getArtistData();
+        getAlbumData();
+        getGenreData();
         FXMLLoader fxmlSongLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/AdminScreen/SongEditScreen.fxml"));
         FXMLLoader fxmlArtistLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/AdminScreen/ArtistEditScreen.fxml"));
         FXMLLoader fxmlAlbumLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/AdminScreen/AlbumEditScreen.fxml"));
         try {
             songPane = fxmlSongLoader.load();
             songEditScreenController = fxmlSongLoader.getController();
-
             artistPane = fxmlArtistLoader.load();
             artistEditScreenController= fxmlArtistLoader.getController();
             albumPane = fxmlAlbumLoader.load();
@@ -74,10 +82,12 @@ public class AdminScreenController implements Initializable {
             throw new RuntimeException(e);
         }
         songTabBtn.fire();
-        getSongData();
+
+
+
     }
 
-    public  void getSongData() {
+    public static void getSongData() {
         HttpResponse<JsonNode> apiResponse = null;
         try {
             apiResponse = Unirest.get("http://localhost:8080/song/findAllSongs").asJson();
@@ -85,13 +95,49 @@ public class AdminScreenController implements Initializable {
             ObjectMapper mapper = new ObjectMapper();
             listSong = mapper.readValue(jsonValue, new TypeReference<>() {
             });
-
         } catch (UnirestException | JsonProcessingException e) {
             throw new RuntimeException(e);
         }
-
     }
+    public static  void getArtistData() {
+        HttpResponse<JsonNode> apiResponse = null;
+        try {
+            apiResponse = Unirest.get("http://localhost:8080/artist/findAllArtists").asJson();
+            String jsonValue = apiResponse.getBody().toString();
+            ObjectMapper mapper = new ObjectMapper();
+            listArtist = mapper.readValue(jsonValue, new TypeReference<>() {
+            });
+        } catch (UnirestException | JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public static  void getAlbumData() {
+        HttpResponse<JsonNode> apiResponse = null;
+        try {
+            apiResponse = Unirest.get("http://localhost:8080/album/findAllAlbums").asJson();
+            String jsonValue = apiResponse.getBody().toString();
 
+            ObjectMapper mapper = new ObjectMapper();
+
+            listAlbum = mapper.readValue(jsonValue, new TypeReference<>() {
+            });
+        } catch (UnirestException | JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public static  void getGenreData() {
+        HttpResponse<JsonNode> apiResponse = null;
+        try {
+            apiResponse = Unirest.get("http://localhost:8080/genre/findAllGenres").asJson();
+            String jsonValue = apiResponse.getBody().toString();
+
+            ObjectMapper mapper = new ObjectMapper();
+            listGenre = mapper.readValue(jsonValue, new TypeReference<>() {
+            });
+        } catch (UnirestException | JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public void addMusicTab(ActionEvent actionEvent) {
 
@@ -125,9 +171,10 @@ public class AdminScreenController implements Initializable {
 
         if (toggleButton.getId().equals("songTabBtn")) {
             adminMainBoard.getChildren().setAll(songPane);
+
         } else if (toggleButton.getId().equals("artistTabBtn")) {
             adminMainBoard.getChildren().setAll(artistPane);
-            artistEditScreenController.initSongList();
+
         } else {
             adminMainBoard.getChildren().setAll(albumPane);
         }

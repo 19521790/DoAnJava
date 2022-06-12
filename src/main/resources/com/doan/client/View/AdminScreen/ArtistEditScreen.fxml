@@ -5,15 +5,25 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane minHeight="0.0" minWidth="0.0" onMouseClicked="#closeSearch" prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.doan.client.Controller.AdminScreen.ArtistEditScreenController">
+<AnchorPane minHeight="0.0" minWidth="0.0" onMouseClicked="#closeSearchForm" prefHeight="600.0" prefWidth="1000.0" style="-fx-background-color: #f4f4f4;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.doan.client.Controller.AdminScreen.ArtistEditScreenController">
    <children>
-      <TextField fx:id="addSongField" focusTraversable="false" layoutX="129.0" layoutY="300.0" onKeyTyped="#filterSong" onMouseClicked="#showSearchForm" prefHeight="36.0" prefWidth="294.0">
+      <ToggleButton fx:id="addModeBtn" layoutX="114.0" layoutY="6.0" mnemonicParsing="false" onAction="#convertMode" selected="true" style="-fx-background-color: none;" text="Add Artist" textFill="#121212">
+         <font>
+            <Font size="18.0" />
+         </font>
+         <toggleGroup>
+            <ToggleGroup fx:id="Group2" />
+         </toggleGroup>
+      </ToggleButton>
+      <TextField fx:id="addSongField" focusTraversable="false" layoutX="129.0" layoutY="300.0" onKeyTyped="#filterSong" onMouseClicked="#showSearchFormSong" prefHeight="36.0" prefWidth="294.0">
          <font>
             <Font size="15.0" />
          </font>
@@ -23,7 +33,7 @@
             <Font size="14.0" />
          </font>
       </Label>
-      <ScrollPane layoutX="444.0" layoutY="295.0" prefHeight="45.0" prefWidth="542.0">
+      <ScrollPane layoutX="444.0" layoutY="295.0" prefHeight="45.0" prefWidth="542.0" style="-fx-background-color: none;">
          <content>
             <AnchorPane minHeight="0.0" minWidth="0.0">
                <children>
@@ -45,8 +55,8 @@
       <AnchorPane layoutX="129.0" layoutY="123.0" prefHeight="145.0" prefWidth="155.0" style="-fx-background-color: #878383;" styleClass="edit_background">
          <children>
             <FontAwesomeIconView fill="#b34949" glyphName="MUSIC" layoutX="29.0" layoutY="106.0" size="100" wrappingWidth="94.66677856445312" />
-            <ImageView fx:id="imageArtist" fitHeight="145.0" fitWidth="159.0" pickOnBounds="true" />
-            <Button contentDisplay="TOP" layoutX="-1.0" mnemonicParsing="false" onAction="#addImageArtist" prefHeight="145.0" prefWidth="159.0" style="-fx-background-color: white;" styleClass="edit_background_btn" text="Edit">
+            <ImageView fx:id="imageDisplay" fitHeight="145.0" fitWidth="159.0" pickOnBounds="true" />
+            <Button contentDisplay="TOP" layoutX="-1.0" mnemonicParsing="false" onAction="#getFileImage" prefHeight="145.0" prefWidth="159.0" style="-fx-background-color: white;" styleClass="edit_background_btn" text="Edit">
                <graphic>
                   <FontAwesomeIconView glyphName="PENCIL" size="50" />
                </graphic>
@@ -56,31 +66,35 @@
             </Button>
          </children>
       </AnchorPane>
-      <TextField fx:id="nameArtistField" focusTraversable="false" layoutX="129.0" layoutY="59.0" prefHeight="36.0" prefWidth="294.0">
+      <TextField fx:id="addArtistField" focusTraversable="false" layoutX="129.0" layoutY="59.0" prefHeight="36.0" prefWidth="294.0">
          <font>
             <Font size="15.0" />
          </font>
       </TextField>
-      <Label layoutX="129.0" layoutY="14.0" text="Artist">
-         <font>
-            <Font name="System Bold" size="24.0" />
-         </font>
-      </Label>
-      <Button fx:id="addNewArtistBtn" layoutX="215.0" layoutY="375.0" mnemonicParsing="false" onAction="#addNewArtist" style="-fx-background-color: #3b75ff;" text="Save" textFill="WHITE">
+      <Button fx:id="addBtn" layoutX="215.0" layoutY="375.0" mnemonicParsing="false" onAction="#addAction" style="-fx-background-color: #3b75ff;" text="Save" textFill="WHITE">
          <font>
             <Font size="14.0" />
          </font>
       </Button>
-      <Button layoutX="294.0" layoutY="375.0" mnemonicParsing="false" onAction="#resetArtist" style="-fx-background-color: #3b75ff;" text="Reset" textFill="WHITE">
+      <Button layoutX="129.0" layoutY="375.0" mnemonicParsing="false" onAction="#resetAllField" style="-fx-background-color: #3b75ff;" text="Reset" textFill="WHITE">
          <font>
             <Font size="14.0" />
          </font>
       </Button>
-      <ScrollPane fx:id="scrollPaneSearch" hbarPolicy="NEVER" layoutX="129.0" layoutY="335.0" prefHeight="205.0" prefWidth="293.0" visible="false">
+      <ScrollPane fx:id="scrollPaneSongName" hbarPolicy="NEVER" layoutX="129.0" layoutY="335.0" prefHeight="205.0" prefWidth="293.0" visible="false">
          <content>
             <AnchorPane minHeight="0.0" minWidth="0.0">
                <children>
                   <VBox fx:id="listNotAddedSong" layoutY="-3.0" />
+               </children>
+            </AnchorPane>
+         </content>
+      </ScrollPane>
+      <ScrollPane fx:id="scrollPaneSearchArtist" hbarPolicy="NEVER" layoutX="129.0" layoutY="95.0" prefHeight="181.0" prefWidth="294.0" visible="false">
+         <content>
+            <AnchorPane minHeight="0.0" minWidth="0.0">
+               <children>
+                  <VBox fx:id="listNotAddedArtist" layoutY="-3.0" />
                </children>
             </AnchorPane>
          </content>

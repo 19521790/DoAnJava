@@ -4,17 +4,28 @@
  */
 package com.doan.client;
 
+
 import com.fasterxml.jackson.core.JsonProcessingException;
+
+import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.ObjectMapper;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 /**
  *
@@ -24,11 +35,8 @@ public class Application extends javafx.application.Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException, UnirestException {
-
-        FXMLLoader fxmlLoader= new FXMLLoader(getClass().getResource("/com/doan/client/View/UserScreen/MainScreen.fxml"));
-
-//        FXMLLoader fxmlLoader= new FXMLLoader(getClass().getResource("/com/doan/client/View/AdminScreen/AdminScreen.fxml"));
-
+//        FXMLLoader fxmlLoader= new FXMLLoader(getClass().getResource("/com/doan/client/View/UserScreen/MainScreen.fxml"));
+        FXMLLoader fxmlLoader= new FXMLLoader(getClass().getResource("/com/doan/client/View/AdminScreen/AdminScreen.fxml"));
         Parent root = fxmlLoader.load();
         Scene scene = new Scene(root);
         scene.getStylesheets().add(getClass().getResource("/com/doan/client/application.css").toExternalForm());
@@ -37,8 +45,6 @@ public class Application extends javafx.application.Application {
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
         primaryStage.show();
-
-
 
         Unirest.setObjectMapper(new ObjectMapper() {
             com.fasterxml.jackson.databind.ObjectMapper mapper
@@ -60,6 +66,7 @@ public class Application extends javafx.application.Application {
                 }
             }
         });
+
 
     }
 

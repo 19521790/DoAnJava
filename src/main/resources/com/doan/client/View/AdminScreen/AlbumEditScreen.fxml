@@ -5,57 +5,36 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.doan.client.Controller.AdminScreen.AlbumEditScreenController">
+<AnchorPane minHeight="0.0" minWidth="0.0" onMouseClicked="#closeSearchForm" prefHeight="600.0" prefWidth="1000.0" style="-fx-background-color: #f4f4f4;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.doan.client.Controller.AdminScreen.AlbumEditScreenController">
    <children>
-      <TextField fx:id="addSongField" focusTraversable="false" layoutX="121.0" layoutY="275.0" onKeyTyped="#filterSong" onMouseClicked="#showSearchForm" prefHeight="36.0" prefWidth="294.0">
-         <font>
-            <Font size="15.0" />
-         </font>
-      </TextField>
-      <Label layoutX="41.0" layoutY="275.0" text="Add songs">
+      <Label layoutX="42.0" layoutY="313.0" text="Add songs">
          <font>
             <Font size="14.0" />
          </font>
       </Label>
-      <ScrollPane fx:id="scrollPaneSearch1" hbarPolicy="NEVER" layoutX="121.0" layoutY="327.0" prefHeight="205.0" prefWidth="293.0">
-         <content>
-            <AnchorPane minHeight="0.0" minWidth="0.0">
-               <children>
-                  <VBox fx:id="listNotAddedSong1" layoutY="-3.0" />
-               </children>
-            </AnchorPane>
-         </content>
-      </ScrollPane>
-      <ScrollPane layoutX="431.0" layoutY="277.0" prefHeight="45.0" prefWidth="542.0">
-         <content>
-            <AnchorPane minHeight="0.0" minWidth="0.0">
-               <children>
-                  <HBox fx:id="listAddedSong1" />
-               </children>
-            </AnchorPane>
-         </content>
-      </ScrollPane>
-      <Label layoutX="42.0" layoutY="74.0" text="Name:">
+      <Label layoutX="39.0" layoutY="96.0" text="Name:">
          <font>
             <Font size="14.0" />
          </font>
       </Label>
-      <Label layoutX="41.0" layoutY="113.0" text="Image:">
+      <Label layoutX="39.0" layoutY="140.0" text="Image:">
          <font>
             <Font size="14.0" />
          </font>
       </Label>
-      <AnchorPane layoutX="121.0" layoutY="113.0" prefHeight="145.0" prefWidth="155.0" style="-fx-background-color: #878383;" styleClass="edit_background">
+      <AnchorPane layoutX="119.0" layoutY="140.0" prefHeight="145.0" prefWidth="155.0" style="-fx-background-color: #878383;" styleClass="edit_background">
          <children>
             <FontAwesomeIconView fill="#b34949" glyphName="MUSIC" layoutX="29.0" layoutY="106.0" size="100" wrappingWidth="94.66677856445312" />
-            <ImageView fx:id="imageAlbum" fitHeight="145.0" fitWidth="159.0" pickOnBounds="true" />
-            <Button contentDisplay="TOP" layoutX="-1.0" mnemonicParsing="false" onAction="#addAlbumArtist" prefHeight="145.0" prefWidth="159.0" style="-fx-background-color: white;" styleClass="edit_background_btn" text="Edit">
+            <ImageView fx:id="imageDisplay" fitHeight="145.0" fitWidth="159.0" pickOnBounds="true" />
+            <Button contentDisplay="TOP" layoutX="-1.0" mnemonicParsing="false" onAction="#getFileImage" prefHeight="145.0" prefWidth="159.0" style="-fx-background-color: white;" styleClass="edit_background_btn" text="Edit">
                <graphic>
                   <FontAwesomeIconView glyphName="PENCIL" size="50" />
                </graphic>
@@ -65,15 +44,69 @@
             </Button>
          </children>
       </AnchorPane>
-      <TextField focusTraversable="false" layoutX="121.0" layoutY="66.0" onKeyTyped="#filterSong" onMouseClicked="#showSearchForm" prefHeight="36.0" prefWidth="294.0">
+      <TextField fx:id="addAlbumField" focusTraversable="false" layoutX="118.0" layoutY="88.0" prefHeight="36.0" prefWidth="294.0">
          <font>
             <Font size="15.0" />
          </font>
       </TextField>
-      <Label layoutX="121.0" layoutY="14.0" text="Album">
+      <Button layoutX="142.0" layoutY="396.0" mnemonicParsing="false" onAction="#resetAllField" style="-fx-background-color: #3b75ff;" text="Reset" textFill="WHITE">
          <font>
-            <Font name="System Bold" size="24.0" />
+            <Font size="14.0" />
          </font>
-      </Label>
+      </Button>
+      <ToggleButton fx:id="addModeBtn" layoutX="118.0" layoutY="19.0" mnemonicParsing="false" onAction="#convertMode" selected="true" style="-fx-background-color: none;" text="Add Album" textFill="#121212">
+         <font>
+            <Font size="18.0" />
+         </font>
+         <toggleGroup>
+            <ToggleGroup fx:id="Group2" />
+         </toggleGroup>
+      </ToggleButton>
+      <Button fx:id="addBtn" layoutX="217.0" layoutY="396.0" mnemonicParsing="false" onAction="#addAction" prefHeight="29.0" style="-fx-background-color: #3b75ff;" text="Add Album" textFill="WHITE">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Button>
+      <TextField fx:id="addSongField" focusTraversable="false" layoutX="121.0" layoutY="305.0" onKeyTyped="#filterSong" onMouseClicked="#showSearchFormSong" prefHeight="36.0" prefWidth="294.0">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </TextField>
+      <ScrollPane fx:id="scrollPaneSongName" hbarPolicy="NEVER" layoutX="121.0" layoutY="341.0" prefHeight="205.0" prefWidth="293.0" visible="false">
+         <content>
+            <AnchorPane minHeight="0.0" minWidth="0.0">
+               <children>
+                  <VBox fx:id="listNotAddedSong" layoutY="-3.0" />
+               </children>
+            </AnchorPane>
+         </content>
+      </ScrollPane>
+      <ScrollPane layoutX="429.0" layoutY="300.0" prefHeight="45.0" prefWidth="542.0" style="-fx-background-color: none;">
+         <content>
+            <AnchorPane minHeight="0.0" minWidth="0.0">
+               <children>
+                  <HBox fx:id="listAddedSong" />
+               </children>
+            </AnchorPane>
+         </content>
+      </ScrollPane>
+      <ScrollPane fx:id="scrollPaneSearchAlbum" hbarPolicy="NEVER" layoutX="119.0" layoutY="123.0" prefHeight="181.0" prefWidth="294.0" visible="false">
+         <content>
+            <AnchorPane minHeight="0.0" minWidth="0.0">
+               <children>
+                  <VBox fx:id="listNotAddedAlbum" layoutY="-3.0" />
+               </children>
+            </AnchorPane>
+         </content>
+      </ScrollPane>
+      <ScrollPane layoutX="429.0" layoutY="83.0" prefHeight="45.0" prefWidth="542.0" style="-fx-background-color: none;">
+         <content>
+            <AnchorPane minHeight="0.0" minWidth="0.0">
+               <children>
+                  <HBox fx:id="listAddedAlbum" />
+               </children>
+            </AnchorPane>
+         </content>
+      </ScrollPane>
    </children>
 </AnchorPane>

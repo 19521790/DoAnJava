@@ -1,11 +1,15 @@
 package com.doan.client.Controller.AdminScreen;
 
+import com.doan.client.Model.Album;
 import com.doan.client.Model.Artist;
+import com.doan.client.Model.Object.AlbumOtd;
+import com.doan.client.Model.Object.ArtistOtd;
 import com.doan.client.Model.Song;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.google.gson.Gson;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
@@ -31,7 +35,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class ArtistEditScreenController implements Initializable {
+public class ArtistEditScreenController extends GetDataFromServerController implements Initializable {
     public ScrollPane scrollPaneSearch;
 
     public VBox listNotAddedSong;
@@ -42,132 +46,99 @@ public class ArtistEditScreenController implements Initializable {
     public TextField nameArtistField;
     public Button addNewArtistBtn;
     File fileImage;
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        scrollPaneSearch.setVisible(false);
+        addSongField.setPromptText("Search for song name");
+        addSongField.setOnKeyTyped(this::filterSong);
+        addSongField.setOnMouseClicked(this::showSearchFormSong);
+        initSong();
     }
 
-    public void initSongList() {
-        addSongToSearchFilter(AdminScreenController.listSong);
-    }
-
-    public void addSongToSearchFilter(List<Song> arrList) {
-        for (Song song : arrList) {
-            Button button = new Button();
-            button.setText(song.getName());
-            button.setId(song.getId());
-            button.getStyleClass().add("itemSearch");
-            button.setPrefWidth(280);
-            button.setAlignment(Pos.BASELINE_LEFT);
-            button.setCursor(Cursor.HAND);
-            button.setOnAction(this::clickItemSearch);
-            listNotAddedSong.getChildren().add(button);
-        }
-    }
-
-    public void clickItemSearch(ActionEvent actionEvent) {
-        Button button = (Button) actionEvent.getSource();
-        button.setPrefWidth(Region.USE_COMPUTED_SIZE);
-        FontAwesomeIconView fontAwesomeIconView = new FontAwesomeIconView();
-        fontAwesomeIconView.setGlyphName("REMOVE");
-        button.setGraphic(fontAwesomeIconView);
-        button.setContentDisplay(ContentDisplay.RIGHT);
-        listAddedSong.getChildren().add(button);
-
-        listNotAddedSong.getChildren().remove(button);
-        button.setOnAction(this::returnSongToList);
-
-    }
-
-    public void returnSongToList(ActionEvent actionEvent) {
-        Button button = (Button) actionEvent.getSource();
-        button.setPrefWidth(280);
-        button.setGraphic(null);
-        listNotAddedSong.getChildren().add(button);
-
-        listAddedSong.getChildren().remove(button);
-        button.setOnAction(this::clickItemSearch);
-    }
-
-    public void filterSong(KeyEvent keyEvent) {
-        List<Song> listFilter = songs.stream().filter(p -> p.getName().startsWith(addSongField.getText())).toList();
+    @Override
+    public void resetAllField() {
+        addArtistField.setText("");
         listNotAddedSong.getChildren().clear();
-        addSongToSearchFilter(listFilter);
-
+        listAddedSong.getChildren().clear();
+        imageDisplay.setImage(null);
+        initSong();
     }
 
-    public void closeSearch(MouseEvent mouseEvent) {
-        scrollPaneSearch.setVisible(false);
+    @Override
+    public void showSearchFormSong(MouseEvent mouseEvent) {
+        scrollPaneSongName.setVisible(true);
     }
 
-    public void showSearchForm(MouseEvent mouseEvent) {
-        scrollPaneSearch.setVisible(true);
-    }
-
-
-    public void addImageArtist(ActionEvent actionEvent) {
-        FileChooser fc = new FileChooser();
-        fc.setTitle("Select your Image");
-        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg"));
-        fileImage = fc.showOpenDialog(null);
-        if (fileImage != null) {
-            imageArtist.setImage(new Image(fileImage.toURI().toString()));
-        }
-    }
-
-
-    public void addNewArtist(ActionEvent actionEvent) {
-        if (nameArtistField.getText().equals("")) {
+    @Override
+    public void addAction(ActionEvent actionEvent) {
+        if (addArtistField.getText().equals("")) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setHeaderText("Artist's name can't be empty");
+            alert.setHeaderText("Artist name can't be empty");
             alert.show();
-        } else if (fileImage == null) {
+
+        } else if (imageDisplay.getImage() == null) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setHeaderText("Please choose image file");
+            alert.setHeaderText("Please choose Image file");
             alert.show();
-        }
-        else {
-            addNewArtistBtn.setText("Uploading...");
+        } else {
+            addBtn.setText("Adding... Please wait");
             ImageView imageView = new ImageView(new Image("http://localhost:8080/image/loading.gif"));
             imageView.setFitWidth(20);
             imageView.setFitHeight(20);
-            addNewArtistBtn.setGraphic(imageView);
+            addBtn.setGraphic(imageView);
             new Thread(() -> {
-
                 Artist artist= new Artist();
-                artist.setName(nameArtistField.getText());
+                artist.setName(addArtistField.getText());
                 ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
                 String json = null;
                 try {
                     json = ow.writeValueAsString(artist);
-                    HttpResponse<JsonNode> apiResponse=  Unirest.post("http://localhost:8080/artist/addArtist").field("file", fileImage).field("artist", json).asJson();
+                    System.out.println(json);
+                    HttpResponse<JsonNode> apiResponse = Unirest.post("http://localhost:8080/artist/addArtist").field("artist", json).field("image", currentFileImage).asJson();
 
                     if (apiResponse.getStatus() == 200) {
+                        Artist artist1 = new Gson().fromJson(apiResponse.getBody().toString(), Artist.class);
+                        ArtistOtd artistOtd = new ArtistOtd(artist1.getId(), artist1.getName(), artist1.getImage());
+                        List<String> listIdSong = getAddedSong();
+                        for (String s : listIdSong) {
+                            HttpResponse<JsonNode> songResponse = null;
+                            try {
+                                songResponse = Unirest.get("http://localhost:8080/song/findSongById/" + s + "/false").asJson();
+                                Song song = new Gson().fromJson(songResponse.getBody().getObject().get("song").toString(), Song.class);
+                                song.getArtists().add(artistOtd);
+                                String json1 = ow.writeValueAsString(song);
+                                Unirest.put("http://localhost:8080/song/updateSong").field("file", new File("src/main/resources/com/doan/client/Image/null")).field("song", json1).asJson();
+                            } catch (UnirestException e) {
+                                throw new RuntimeException(e);
+                            }
+
+                        }
+                        AdminScreenController.getArtistData();
                         Platform.runLater(new Runnable() {
                             @Override
                             public void run() {
+                                initArtist();
                                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                                alert.setHeaderText("Successful upload");
+                                alert.setHeaderText("Successful add");
                                 alert.show();
-                                addNewArtistBtn.setText("Save");
-                                addNewArtistBtn.setGraphic(null);
+                                addBtn.setText("Add Artist");
+                                addBtn.setGraphic(null);
+                                resetAllField();
                             }
                         });
-
                     } else {
                         Platform.runLater(new Runnable() {
                             @Override
                             public void run() {
                                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                                alert.setHeaderText("Song's name has been exists!");
+                                alert.setHeaderText("Can't add artist");
                                 alert.show();
-                                addNewArtistBtn.setText("Save");
-                                addNewArtistBtn.setGraphic(null);
+                                addBtn.setText("Add Artist");
+                                addBtn.setGraphic(null);
+                                resetAllField();
                             }
                         });
                     }
-                    resetField();
+
 
                 } catch (JsonProcessingException | UnirestException e) {
                     throw new RuntimeException(e);
@@ -178,12 +149,9 @@ public class ArtistEditScreenController implements Initializable {
         }
     }
 
-    public void resetArtist(ActionEvent actionEvent) {
-        resetField();
-    }
-    public void resetField(){
-        nameArtistField.setText("");
-        imageArtist.setImage(null);
-        listAddedSong.getChildren().clear();
+    @Override
+    public void closeSearchForm(MouseEvent mouseEvent) {
+
+        scrollPaneSongName.setVisible(false);
     }
 }
