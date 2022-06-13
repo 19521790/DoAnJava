@@ -6,9 +6,13 @@ package com.doan.client.Controller.UserScreen;
 
 
 import com.doan.client.Controller.Component.LoginFormController;
+import com.doan.client.Controller.PublicController;
+import com.doan.client.Model.Song;
 import com.doan.client.Model.User;
 
 import com.jfoenix.controls.JFXSlider;
+
+import com.mashape.unirest.http.exceptions.UnirestException;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import de.jensd.fx.glyphs.materialicons.MaterialIconView;
 import javafx.application.Platform;
@@ -47,8 +51,6 @@ import java.util.*;
 public class MainScreenController implements Initializable {
 
     public AnchorPane parentHomePane;
-
-
     public AnchorPane loginPaneFromHome;
     public User user = null;
     public ImageView imageUser;
@@ -77,8 +79,7 @@ public class MainScreenController implements Initializable {
     public AnchorPane musicBar;
     public File directory;
     public File[] files;
-    public ArrayList<File> songs;
-
+    public ArrayList<Song> songs;
     public int songNumber = 0;
     public Timer timer;
     public TimerTask task;
@@ -104,7 +105,6 @@ public class MainScreenController implements Initializable {
 
     public Label timePlay;
     public Label timeRemaining;
-
     public AnchorPane discoverPane;
     public DiscoverScreenController discoverController;
 
@@ -112,6 +112,11 @@ public class MainScreenController implements Initializable {
     public VBox mainVbox;
 
     public Group group3;
+    public ImageView imageCurrentPlayMusic;
+    public HomeScreenController homeScreenController;
+    public Label nameCurrentPlayMusic;
+    public Label artistCurrentPlayMusic;
+    public Button playMediaBtn;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -119,9 +124,7 @@ public class MainScreenController implements Initializable {
         FXMLLoader loginFxmlLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/Component/LoginForm.fxml"));
         FXMLLoader homeFxmlLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/UserScreen/HomeScreen.fxml"));
         FXMLLoader discoverFxmlLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/UserScreen/DiscoverScreen.fxml"));
-
-
-
+        songs = new ArrayList<Song>();
         try {
             //login
             AnchorPane newLoginPane = loginFxmlLoader.load();
@@ -130,11 +133,14 @@ public class MainScreenController implements Initializable {
             loginFormController.mainController = this;
             // home
             homePane = homeFxmlLoader.load();
+            homeScreenController = homeFxmlLoader.getController();
+            homeScreenController.mainScreenController = this;
+            homeScreenController.publicController.mainScreenController = this;
+            homeScreenController.initFirstMedia();
+
             //discover
             discoverPane = discoverFxmlLoader.load();
             discoverController = discoverFxmlLoader.getController();
-
-
 
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -146,24 +152,49 @@ public class MainScreenController implements Initializable {
         setAvatarUser();
         setSliderVolume();
 
-        initMedia();
         //set mainBoard
 
         mainBoard.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
     }
 
-    public void initMedia() {
-        songs = new ArrayList<File>();
-        directory = new File("src/main/resources/com/doan/client/Music");
-        files = directory.listFiles();
-        if (files != null) {
-            songs.addAll(Arrays.asList(files));
+    public void setMediaPlaying(Song song) {
+
+        homeScreenController.currentLastListeningList.remove(song);
+        homeScreenController.currentLastListeningList.add(0, song);
+        homeScreenController.addChildrenToLastListening(homeScreenController.currentLastListeningList);
+        convertMediaPlaying(song);
+
+        for (Song songItem : songs) {
+            if (songItem.getId().equals(song.getId())) {
+                songs.remove(songItem);
+                break;
+            }
         }
-        media = new Media(songs.get(songNumber).toURI().toString());
-        mediaPlayer = new MediaPlayer(media);
+
+        songs.add(song);
+        songNumber = songs.size() - 1;
 
     }
+
+    public void convertMediaPlaying(Song song) {
+
+        imageCurrentPlayMusic.setImage(new Image(song.getAlbum().getImage()));
+        nameCurrentPlayMusic.setText(song.getName());
+        artistCurrentPlayMusic.setText(song.getArtists().get(0).getName());
+        timeRemaining.setText(PublicController.setTimePlay(song.getDuration()));
+        timePlay.setText("00:00");
+        if (mediaPlayer != null) {
+            mediaPlayer.pause();
+            playGraphicBtn.setGlyphName("PLAY");
+        }
+
+        media = new Media(song.getFile());
+        mediaPlayer = new MediaPlayer(media);
+
+
+    }
+
 
     public void setSliderVolume() {
         jfxSlider = new JFXSlider();
@@ -198,11 +229,11 @@ public class MainScreenController implements Initializable {
         jfxProgressBar.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
-                double currentTime =jfxProgressBar.getValue() /100 * media.getDuration().toSeconds();
+                double currentTime = jfxProgressBar.getValue() / 100 * media.getDuration().toSeconds();
                 mediaPlayer.seek(Duration.seconds(currentTime));
-                timePlay.setText(setTimePlay(currentTime));
+                timePlay.setText(PublicController.setTimePlay(currentTime));
 
-                String timeRemainString =setTimePlay(media.getDuration().toSeconds() - currentTime);
+                String timeRemainString = PublicController.setTimePlay(media.getDuration().toSeconds() - currentTime);
                 timeRemaining.setText(timeRemainString);
             }
         });
@@ -225,7 +256,7 @@ public class MainScreenController implements Initializable {
         loginPaneFromHome.setVisible(false);
     }
 
-    public void setUser(User user) {
+    public void setUser(User user) throws UnirestException, IOException {
         this.user = user;
 
         Image image = new Image(user.getImage());
@@ -233,6 +264,7 @@ public class MainScreenController implements Initializable {
 
         login = true;
         logoutBtn.setDisable(false);
+
         FXMLLoader accountFxmlLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/UserScreen/AccountScreen.fxml"));
         try {
             accountAnchorPane = accountFxmlLoader.load();
@@ -242,10 +274,9 @@ public class MainScreenController implements Initializable {
         AccountSettingScreenController accountSettingController = accountFxmlLoader.getController();
         accountSettingController.setUser(user);
 
-        PlayListScreenController.image= user.getImage();
-        PlayListScreenController.name= user.getName();
-        PlayListScreenController.isSetUser= true;
-
+        PlayListScreenController.image = user.getImage();
+        PlayListScreenController.name = user.getName();
+        PlayListScreenController.isSetUser = true;
     }
 
 
@@ -264,8 +295,6 @@ public class MainScreenController implements Initializable {
         }
     }
 
-    public void testVbox(MouseEvent mouseEvent) {
-    }
 
     public void toggleBtn(ActionEvent actionEvent) {
 
@@ -280,15 +309,14 @@ public class MainScreenController implements Initializable {
             if (indexToggleButton.isSelected()) {
                 indexToggleButton.setStyle("-fx-background-color: #3b75ff; -fx-text-fill: white");
 
-                    try {
-                        FontAwesomeIconView fontAwesomeIconView = (FontAwesomeIconView) indexToggleButton.getGraphic();
-                        fontAwesomeIconView.setFill(Paint.valueOf("white"));
-                    } catch (Exception e) {
+                try {
+                    FontAwesomeIconView fontAwesomeIconView = (FontAwesomeIconView) indexToggleButton.getGraphic();
+                    fontAwesomeIconView.setFill(Paint.valueOf("white"));
+                } catch (Exception e) {
 
-                        MaterialIconView fontAwesomeIconView = (MaterialIconView) indexToggleButton.getGraphic();
-                        fontAwesomeIconView.setFill(Paint.valueOf("white"));
-                    }
-
+                    MaterialIconView fontAwesomeIconView = (MaterialIconView) indexToggleButton.getGraphic();
+                    fontAwesomeIconView.setFill(Paint.valueOf("white"));
+                }
                 pushScreen(indexToggleButton);
             } else {
                 indexToggleButton.setStyle("-fx-background-color: white; -fx-text-fill: black");
@@ -313,27 +341,62 @@ public class MainScreenController implements Initializable {
             mainBoard.setContent(discoverPane);
             discoverButtonTab.setVisible(true);
 
-        }else{
-            FXMLLoader playlistFxmlLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/UserScreen/PlaylistScreen.fxml"));
-            FXMLLoader editFxmlLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/Component/EditPlaylistForm.fxml"));
-
+        }else if  (toggleButton.getId().equals("downloadBtn")){
+            FXMLLoader loveFxmlLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/UserScreen/DownloadScreen.fxml"));
             try {
-                AnchorPane anchorPane= playlistFxmlLoader.load();
-
-                AnchorPane editPlaylistPane = editFxmlLoader.load();
-                parentHomePane.getChildren().add(editPlaylistPane);
-                editPlaylistPane.setVisible(false);
-
-                PlayListScreenController playListScreenController= playlistFxmlLoader.getController();
-                playListScreenController.editPlaylistFormController = editFxmlLoader.getController();
-                playListScreenController.editPlaylistPane= editPlaylistPane;
-                playListScreenController.setPlaylistName("Playlist # " + (count-1));
+                AnchorPane anchorPane = loveFxmlLoader.load();
                 mainBoard.setContent(anchorPane);
+
 
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+
+
+
+        }else {
+            if (!login) {
+                loginPaneFromHome.setVisible(true);
+            }
+            else {
+                if (toggleButton.getId().equals("likeBtn")) {
+                    FXMLLoader loveFxmlLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/UserScreen/LoveScreen.fxml"));
+                    try {
+                        AnchorPane anchorPane = loveFxmlLoader.load();
+                        mainBoard.setContent(anchorPane);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+
+                } else if (toggleButton.getId().equals("albumBtn")) {
+
+
+                } else if (toggleButton.getId().equals("followsBtn")) {
+
+
+                }else{
+                    FXMLLoader playlistFxmlLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/UserScreen/PlaylistScreen.fxml"));
+                    FXMLLoader editFxmlLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/Component/EditPlaylistForm.fxml"));
+                    try {
+                        AnchorPane anchorPane = playlistFxmlLoader.load();
+
+                        AnchorPane editPlaylistPane = editFxmlLoader.load();
+                        parentHomePane.getChildren().add(editPlaylistPane);
+                        editPlaylistPane.setVisible(false);
+
+                        PlayListScreenController playListScreenController = playlistFxmlLoader.getController();
+                        playListScreenController.editPlaylistFormController = editFxmlLoader.getController();
+                        playListScreenController.editPlaylistPane = editPlaylistPane;
+                        playListScreenController.setPlaylistName("Playlist # " + (count - 1));
+                        mainBoard.setContent(anchorPane);
+
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
         }
+
     }
 
     public void showAccountForm(MouseEvent mouseEvent) {
@@ -360,7 +423,7 @@ public class MainScreenController implements Initializable {
             logoutPopup.setHeaderText("Logout Success");
             logoutPopup.show();
             homeBtn.fire();
-            PlayListScreenController.isSetUser= false;
+            PlayListScreenController.isSetUser = false;
 
         }
 
@@ -398,7 +461,9 @@ public class MainScreenController implements Initializable {
 
     public void resetMedia(ActionEvent actionEvent) {
         mediaPlayer.seek(Duration.seconds(0));
-        songProgressBar.setProgress(0);
+        jfxProgressBar.setValue(0);
+        timeRemaining.setText(PublicController.setTimePlay(media.getDuration().toSeconds()));
+        timePlay.setText("00:00");
     }
 
     public void nextMedia(ActionEvent actionEvent) {
@@ -420,12 +485,10 @@ public class MainScreenController implements Initializable {
         });
         mediaPlayer.pause();
         jfxProgressBar.setValue(0);
-        media = new Media(songs.get(songNumber).toURI().toString());
-        mediaPlayer = new MediaPlayer(media);
+        convertMediaPlaying(songs.get(songNumber));
         if (playGraphicBtn.getGlyphName().equals("PAUSE")) {
             mediaPlayer.play();
         }
-
         currentSpeedMedia.setText("Speed 1.0 x");
         mediaPlayer.setVolume(jfxSlider.getValue() * 0.01);
     }
@@ -456,19 +519,23 @@ public class MainScreenController implements Initializable {
                         @Override
                         public void run() {
 
-                           String time= setTimePlay(current);
-                           timePlay.setText(time);
-                           String timeRemainString =setTimePlay(timeRemain);
-                           timeRemaining.setText(timeRemainString);
+                            String time = PublicController.setTimePlay(current);
+                            timePlay.setText(time);
+                            String timeRemainString = PublicController.setTimePlay(timeRemain);
+                            timeRemaining.setText(timeRemainString);
                         }
                     });
-
 
 
                     jfxProgressBar.setValue(current / end * 100);
                     if (current / end == 1) {
 
-                        nextMediaBtn.fire();
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                nextMediaBtn.fire();
+                            }
+                        });
                     }
                 } catch (Exception e) {
                     cancelTimer();
@@ -495,42 +562,68 @@ public class MainScreenController implements Initializable {
             }
         }
     }
-    public String setTimePlay(double current){
-        int minutePlay = (int) Math.floor(current / 60);
 
-        int secondPlay = (int) (Math.round(current) - Math.floor(current / 60) * 60);
+    int count = 1;
 
-        if (secondPlay==60){
-            secondPlay= 0;
-            minutePlay+= 1;
-        }
-        String labelMinutePlay = String.valueOf(minutePlay);
-        String labelSecondPlay = String.valueOf(secondPlay);
-        if (secondPlay < 10) {
-            labelSecondPlay = "0" + labelSecondPlay;
-        }
-        if (minutePlay < 10) {
-            labelMinutePlay = "0" + labelMinutePlay;
-        }
-        return labelMinutePlay + ":" + labelSecondPlay;
-    }
-    int count=1;
     public void addNewPlaylist(ActionEvent actionEvent) {
 
-        ToggleButton button= new ToggleButton();
+        ToggleButton button = new ToggleButton();
         button.setText("Playlist # " + count);
         FontAwesomeIconView fontAwesomeIconView = new FontAwesomeIconView();
         fontAwesomeIconView.setGlyphName("CHECK");
         button.setGraphic(fontAwesomeIconView);
         button.getStyleClass().add("playlistBtn");
-        VBox.setMargin(button, new Insets(10,0,0,0));
+        VBox.setMargin(button, new Insets(10, 0, 0, 0));
         mainVbox.getChildren().add(button);
         button.setToggleGroup(Group1);
-        count+=1;
+        count += 1;
         button.setOnAction(this::toggleBtn);
-        button.setId("Playlist"+count);
+        button.setId("Playlist" + count);
         button.fire();
 
     }
 
+    public void skipBack10Second(ActionEvent actionEvent) {
+        double current = mediaPlayer.getCurrentTime().toSeconds() - 10;
+        mediaPlayer.seek(Duration.seconds(current));
+        double end = media.getDuration().toSeconds();
+        double timeRemain = end - current;
+
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                String time = PublicController.setTimePlay(current);
+                timePlay.setText(time);
+                String timeRemainString = PublicController.setTimePlay(timeRemain);
+                timeRemaining.setText(timeRemainString);
+            }
+        });
+
+        jfxProgressBar.setValue(current / end * 100);
+        if (current / end == 1) {
+            nextMediaBtn.fire();
+        }
+    }
+
+    public void skipForward30Second(ActionEvent actionEvent) {
+        double current = mediaPlayer.getCurrentTime().toSeconds() + 30;
+        mediaPlayer.seek(Duration.seconds(current));
+        double end = media.getDuration().toSeconds();
+        double timeRemain = end - current;
+
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                String time = PublicController.setTimePlay(current);
+                timePlay.setText(time);
+                String timeRemainString = PublicController.setTimePlay(timeRemain);
+                timeRemaining.setText(timeRemainString);
+            }
+        });
+
+        jfxProgressBar.setValue(current / end * 100);
+        if (current / end == 1) {
+            nextMediaBtn.fire();
+        }
+    }
 }

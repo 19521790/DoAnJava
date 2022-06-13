@@ -233,7 +233,7 @@
    </AnchorPane>
    <AnchorPane fx:id="musicBar" layoutX="200.0" layoutY="560.0" prefHeight="90.0" prefWidth="1000.0" style="-fx-background-color: white;">
       <children>
-         <Button graphicTextGap="0.0" layoutX="479.0" layoutY="14.0" mnemonicParsing="false" onAction="#playMedia" prefHeight="40.0" prefWidth="40.0" style="-fx-background-color: #3b75ff; -fx-background-radius: 50%;">
+         <Button fx:id="playMediaBtn" graphicTextGap="0.0" layoutX="479.0" layoutY="14.0" mnemonicParsing="false" onAction="#playMedia" prefHeight="40.0" prefWidth="40.0" style="-fx-background-color: #3b75ff; -fx-background-radius: 50%;">
             <graphic>
                <FontAwesomeIconView fx:id="playGraphicBtn" fill="WHITE" glyphName="PLAY" size="20" wrappingWidth="13.0" />
             </graphic>
@@ -260,12 +260,12 @@
          </Button>
          <MenuButton layoutX="833.0" layoutY="18.0" mnemonicParsing="false" popupSide="TOP" prefHeight="28.0" prefWidth="27.0" style="-fx-background-color: white;">
            <items>
-             <MenuItem mnemonicParsing="false" text="Skip back 10 seconds">
+             <MenuItem mnemonicParsing="false" onAction="#skipBack10Second" text="Skip back 10 seconds">
                   <graphic>
                      <MaterialIconView glyphName="UNDO" size="15" wrappingWidth="27.0" />
                   </graphic>
                </MenuItem>
-             <MenuItem mnemonicParsing="false" text="Skip Forward 30 seconds">
+             <MenuItem mnemonicParsing="false" onAction="#skipForward30Second" text="Skip Forward 30 seconds">
                   <graphic>
                      <MaterialIconView glyphName="REDO" size="15" wrappingWidth="27.0" />
                   </graphic>
@@ -297,12 +297,12 @@
                <FontAwesomeIconView fill="#282828" glyphName="VOLUME_UP" size="18" text="" />
             </graphic>
          </Button>
-         <Button layoutX="403.0" layoutY="15.0" mnemonicParsing="false" prefHeight="33.0" prefWidth="0.0" style="-fx-background-color: none;">
+         <Button disable="true" layoutX="403.0" layoutY="15.0" mnemonicParsing="false" prefHeight="33.0" prefWidth="0.0" style="-fx-background-color: none;">
             <graphic>
                <FontAwesomeIconView glyphName="RANDOM" size="18" />
             </graphic>
          </Button>
-         <Button layoutX="567.0" layoutY="17.0" mnemonicParsing="false" prefHeight="33.0" prefWidth="0.0" style="-fx-background-color: none;">
+         <Button disable="true" layoutX="567.0" layoutY="17.0" mnemonicParsing="false" prefHeight="33.0" prefWidth="0.0" style="-fx-background-color: none;">
             <graphic>
                <FontAwesomeIconView glyphName="UNDO" size="18" />
             </graphic>
@@ -317,17 +317,17 @@
                <Font size="14.0" />
             </font>
          </Label>
-         <ImageView fitHeight="40.0" fitWidth="40.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+         <ImageView fx:id="imageCurrentPlayMusic" fitHeight="40.0" fitWidth="40.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true">
             <image>
                <Image url="@../../Image/download.jpg" />
             </image>
          </ImageView>
-         <Label layoutX="73.0" layoutY="18.0" text="Queen of the Japanese">
+         <Label fx:id="nameCurrentPlayMusic" layoutX="73.0" layoutY="18.0" text="Queen of the Japanese">
             <font>
                <Font name="System Bold" size="12.0" />
             </font>
          </Label>
-         <Label layoutX="73.0" layoutY="40.0" text="Queen" />
+         <Label fx:id="artistCurrentPlayMusic" layoutX="73.0" layoutY="40.0" text="Queen" />
       </children>
    </AnchorPane>
    <AnchorPane fx:id="loginPaneFromHome" prefHeight="650.0" prefWidth="1200.0" visible="false" />

@@ -62,6 +62,7 @@
 .label_card {
     -fx-font-size: 14;
     -fx-font-weight: 700;
+    -fx-max-width: 130;
 }
 
 .top_five_card:hover {

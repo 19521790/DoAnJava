@@ -2,12 +2,14 @@ package com.doan.client.Controller.UserScreen;
 
 import com.doan.client.Controller.PublicController;
 
+import com.doan.client.Model.Album;
+import com.doan.client.Model.Artist;
+import com.doan.client.Model.Genre;
 import com.doan.client.Model.Song;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
@@ -22,13 +24,12 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
+import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
-import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -42,26 +43,73 @@ public class HomeScreenController implements Initializable {
     public AnchorPane slideCard;
     public AnchorPane outsideParent;
     public ImageView testImage;
+    public VBox homeVbox;
+    public AnchorPane clipPaneBackgroundArtist;
+    public AnchorPane slideCardArtist;
+    public AnchorPane clipPaneBackgroundAlbum;
+    public AnchorPane slideCardAlbum;
+    public AnchorPane clipPaneBackgroundGenre;
+    public AnchorPane slideCardGenre;
     PublicController publicController;
-
+    public List<Song> listSongBanner;
+    public MainScreenController mainScreenController;
+    public List<Song> currentLastListeningList;
+    PublicController publicControllerArtist;
+    PublicController publicControllerAlbum; PublicController publicControllerGenre;
 
 
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
         Rectangle rectangle = new Rectangle();
         rectangle.setWidth(900);
         rectangle.setHeight(200);
         clipPane.setClip(rectangle);
-        List<Song> listSong= null;
-        try {
-            HttpResponse<JsonNode> jsonNodeHttpResponse= Unirest.get("http://localhost:8080/song/findAllSongs").asJson();
 
+        publicController = new PublicController();
+        publicControllerArtist= new PublicController();
+        publicControllerAlbum= new PublicController();
+        publicControllerGenre= new PublicController();
+
+
+        Rectangle rectangle1 = new Rectangle(clipPaneBackground.getPrefWidth() , clipPaneBackground.getPrefHeight());
+        clipPaneBackground.setClip(rectangle1);
+        Rectangle rectangle2 = new Rectangle(clipPaneBackground.getPrefWidth() , clipPaneBackground.getPrefHeight());
+        clipPaneBackgroundArtist.setClip(rectangle2);
+        Rectangle rectangle3 = new Rectangle(clipPaneBackground.getPrefWidth() , clipPaneBackground.getPrefHeight());
+        clipPaneBackgroundAlbum.setClip(rectangle3);
+        Rectangle rectangle4 = new Rectangle(clipPaneBackground.getPrefWidth() , clipPaneBackground.getPrefHeight());
+        clipPaneBackgroundGenre.setClip(rectangle4);
+
+
+//        for (int i =0 ; i < 9; i++ ){
+//            AnchorPane anchorPane = publicController.musicItem("http://localhost:8080/image/loading.gif","Born to Die", "Lana Del Rey", "PLAY", outsideParent, i);
+//            anchorPane.setLayoutX(10+ 180*i);
+//            slideCard.getChildren().add(anchorPane);
+//        }
+        currentLastListeningList = new ArrayList<>();
+        initArtist();
+        initAlbum();
+        initGenre();
+
+
+    }
+
+    private void initGenre() {
+        HttpResponse<JsonNode> jsonNodeHttpResponse= null;
+        try {
+            jsonNodeHttpResponse = Unirest.get("http://localhost:8080/genre/findAllGenres").asJson();
             ObjectMapper mapper = new ObjectMapper();
-            listSong = mapper.readValue(jsonNodeHttpResponse.getBody().toString(), new TypeReference<>() {
+            List<Genre> genres = mapper.readValue(jsonNodeHttpResponse.getBody().toString(), new TypeReference<>() {
             });
 
-
+            for (int i =0 ; i< genres.size(); i++){
+                Genre genre= genres.get(i);
+                AnchorPane anchorPane = publicController.genreItem(genre.getId(), genre.getImage() ,genre.getName());
+                anchorPane.setLayoutX(10+ 180*i);
+                slideCardGenre.getChildren().add(anchorPane);
+            }
         } catch (UnirestException e) {
             throw new RuntimeException(e);
         } catch (JsonMappingException e) {
@@ -69,8 +117,74 @@ public class HomeScreenController implements Initializable {
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void initAlbum() {
+        HttpResponse<JsonNode> jsonNodeHttpResponse= null;
+        try {
+            jsonNodeHttpResponse = Unirest.get("http://localhost:8080/album/findAllAlbums").asJson();
+            ObjectMapper mapper = new ObjectMapper();
+            List<Album> albums = mapper.readValue(jsonNodeHttpResponse.getBody().toString(), new TypeReference<>() {
+            });
+
+            for (int i =0 ; i< albums.size(); i++){
+                Album album= albums.get(i);
+                AnchorPane anchorPane = publicController.albumItem(album.getId(), album.getImage() ,album.getName());
+                anchorPane.setLayoutX(10+ 180*i);
+                slideCardAlbum.getChildren().add(anchorPane);
+            }
+        } catch (UnirestException e) {
+            throw new RuntimeException(e);
+        } catch (JsonMappingException e) {
+            throw new RuntimeException(e);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void initArtist() {
+        HttpResponse<JsonNode> jsonNodeHttpResponse= null;
+        try {
+            jsonNodeHttpResponse = Unirest.get("http://localhost:8080/artist/findAllArtists").asJson();
+            ObjectMapper mapper = new ObjectMapper();
+            List<Artist> artists = mapper.readValue(jsonNodeHttpResponse.getBody().toString(), new TypeReference<>() {
+            });
+
+            for (int i =0 ; i< artists.size(); i++){
+                Artist artist= artists.get(i);
+                AnchorPane anchorPane = publicController.artistItem(artist.getId(), artist.getImage() ,artist.getName());
+                anchorPane.setLayoutX(10+ 180*i);
+                slideCardArtist.getChildren().add(anchorPane);
+            }
+        } catch (UnirestException e) {
+            throw new RuntimeException(e);
+        } catch (JsonMappingException e) {
+            throw new RuntimeException(e);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    public void initFirstMedia(){
+        try {
+            HttpResponse<JsonNode> jsonNodeHttpResponse= Unirest.get("http://localhost:8080/song/findAllSongs").asJson();
+
+            ObjectMapper mapper = new ObjectMapper();
+            listSongBanner = mapper.readValue(jsonNodeHttpResponse.getBody().toString(), new TypeReference<>() {
+            });
+            Song curr_song= listSongBanner.get(0);
+            mainScreenController.setMediaPlaying(curr_song);
+
+            AnchorPane anchorPane = publicController.musicItem(curr_song.getId(), curr_song.getAlbum().getImage(),curr_song.getName(), curr_song.getArtists().get(0).getName(), curr_song.getFile(),"PLAY", outsideParent, 0);
+            anchorPane.setLayoutX(10+ 180*0);
+            slideCard.getChildren().add(anchorPane);
+
+        } catch (UnirestException | JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
         for (int i =0 ; i< 9; i++){
-            ImageView imageView = new ImageView(new Image("http://localhost:8080/image/loading.gif"));
+            ImageView imageView = new ImageView(new Image(listSongBanner.get(i).getAlbum().getImage()));
             imageView.setFitWidth(250);
             imageView.setFitHeight(170);
             imageView.setLayoutY(15);
@@ -83,82 +197,115 @@ public class HomeScreenController implements Initializable {
             imageView.setClip(clip);
             imageView.setCursor(Cursor.HAND);
             slidePane.getChildren().add(imageView);
-
+            imageView.setId(Integer.toString(i));
+            imageView.setOnMouseClicked(this::playMusic);
         }
 
-        publicController = new PublicController();
-        Rectangle rectangle1 = new Rectangle(clipPaneBackground.getPrefWidth() , clipPaneBackground.getPrefHeight());
-        clipPaneBackground.setClip(rectangle1);
+    }
+    public void addChildrenToLastListening(List<Song> songList){
 
-        for (int i =0 ; i < 9; i++ ){
-
-
-            AnchorPane anchorPane = publicController.musicItem("http://localhost:8080/image/small-business.jpg","Born to Die", "Lana Del Rey", "PLAY", outsideParent, i);
+        currentLastListeningList=songList;
+        slideCard.getChildren().clear();
+        for (int i =0 ; i< songList.size(); i++){
+            Song curr_song= songList.get(i);
+            AnchorPane anchorPane = publicController.musicItem(curr_song.getId(),curr_song.getAlbum().getImage(),curr_song.getName(), curr_song.getArtists().get(0).getName(), curr_song.getFile(), "PLAY", outsideParent, i);
             anchorPane.setLayoutX(10+ 180*i);
             slideCard.getChildren().add(anchorPane);
         }
+        if (mainScreenController.login){
+             new Thread(()->{
+                 try {
+                     HttpResponse<String> stringHttpResponse= Unirest.put("http://localhost:8080/user/addLastListenSong?idUser="+mainScreenController.user.getId()+"&idSong="+ songList.get(0).getId()).asString();
+                     System.out.println(stringHttpResponse);
+                 } catch (UnirestException e) {
+                     throw new RuntimeException(e);
+                 }
+             }).start();
+        }
+    }
+    private void playMusic(javafx.scene.input.MouseEvent mouseEvent){
 
-
+        ImageView imageView = (ImageView) mouseEvent.getSource();
+        int id= Integer.valueOf(imageView.getId());
+        Song curr_song= listSongBanner.get(id);
+        mainScreenController.setMediaPlaying(curr_song);
 
     }
+
+
 
     public int index= 0;
     public void goPreviousSlide(ActionEvent mouseEvent) {
         if (index> 0){
             index= index-1;
-
-
             Timeline timeline= new Timeline();
-
-
             timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(0), new KeyValue(slidePane.translateXProperty(), -300*(index+1))));
             timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(0.25), new KeyValue(slidePane.translateXProperty(), -300*(index))));
-
             timeline.play();
 
         }
-
     }
 
     public void goNextSlide(ActionEvent mouseEvent) {
-
        if (index<6){
-
            index= index+1;
            Timeline timeline= new Timeline();
-
-
            timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(0), new KeyValue(slidePane.translateXProperty(), -300*(index-1))));
            timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(0.25), new KeyValue(slidePane.translateXProperty(), -300*(index))));
-
            timeline.play();
 
        }
     }
 
     public void goNextCard(ActionEvent actionEvent) {
-        if (PublicController.currentScrollIndex <6){
+        moveSlideNext(slideCard, publicController);
+    }
 
-            PublicController.currentScrollIndex = PublicController.currentScrollIndex +1;
+    public void goPreviousCard(ActionEvent actionEvent) {
+        moveSlidePrevious(slideCard, publicController);
+    }
+
+    public void goNextCardArtist(ActionEvent actionEvent) {
+        moveSlideNext(slideCardArtist, publicControllerArtist);
+    }
+
+    public void goPreviousCardArtist(ActionEvent actionEvent) {
+        moveSlidePrevious(slideCardArtist, publicControllerArtist);
+
+    }
+    public  void moveSlidePrevious(AnchorPane anchorPane, PublicController publicController){
+        if (publicController.currentScrollIndex > 0){
+            publicController.currentScrollIndex = publicController.currentScrollIndex -1;
             Timeline timeline= new Timeline();
-
-
-            timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(0), new KeyValue(slideCard.translateXProperty(), -180*(PublicController.currentScrollIndex -1))));
-            timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(0.25), new KeyValue(slideCard.translateXProperty(), -180*(PublicController.currentScrollIndex))));
-
+            timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(0), new KeyValue(anchorPane.translateXProperty(), -180*(publicController.currentScrollIndex +1))));
+            timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(0.25), new KeyValue(anchorPane.translateXProperty(), -180*(publicController.currentScrollIndex))));
             timeline.play();
 
         }
     }
-
-    public void goPreviousCard(ActionEvent actionEvent) {
-        if (PublicController.currentScrollIndex > 0){
-            PublicController.currentScrollIndex = PublicController.currentScrollIndex -1;
+    public void moveSlideNext(AnchorPane anchorPane , PublicController publicController){
+        if (publicController.currentScrollIndex <6){
+            publicController.currentScrollIndex +=1;
             Timeline timeline= new Timeline();
-            timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(0), new KeyValue(slideCard.translateXProperty(), -180*(PublicController.currentScrollIndex +1))));
-            timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(0.25), new KeyValue(slideCard.translateXProperty(), -180*(PublicController.currentScrollIndex))));
+            timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(0), new KeyValue(anchorPane.translateXProperty(), -180*(publicController.currentScrollIndex -1))));
+            timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(0.25), new KeyValue(anchorPane.translateXProperty(), -180*(publicController.currentScrollIndex))));
             timeline.play();
-
         }
+    }
+
+    public void goNextCardAlbum(ActionEvent actionEvent) {
+        moveSlideNext(slideCardAlbum, publicControllerAlbum);
+    }
+
+    public void goPreviousCardAlbum(ActionEvent actionEvent) {
+        moveSlidePrevious(slideCardAlbum, publicControllerAlbum);
+    }
+
+    public void goNextCardGenre(ActionEvent actionEvent) {
+        moveSlideNext(slideCardGenre, publicControllerGenre);
+    }
+
+    public void goPreviousCardGenre(ActionEvent actionEvent) {
+        moveSlidePrevious(slideCardGenre, publicControllerGenre);
     }
 }

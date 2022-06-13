@@ -6,7 +6,11 @@ package com.doan.client.Controller.Component;
 
 
 import com.doan.client.Controller.UserScreen.MainScreenController;
+import com.doan.client.Model.Song;
 import com.doan.client.Model.User;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
@@ -32,9 +36,10 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.lang.reflect.Type;
 import java.net.URL;
-import java.util.Properties;
-import java.util.ResourceBundle;
+import java.util.*;
 
 
 /**
@@ -135,10 +140,21 @@ public class LoginFormController implements Initializable {
                     if (user.getName() != null) {
 
                         if (user.getRole().equals("user")) {
+                            HttpResponse<JsonNode> jsonNodeHttpResponse= Unirest.get("http://localhost:8080/user/getLastListenSong/" + user.getId()).asJson();
+
+                            List<Song> songList= new ObjectMapper().readValue(jsonNodeHttpResponse.getBody().getObject().get("lastListenSongs").toString(), new TypeReference<List<Song>>() {
+                                @Override
+                                public Type getType() {
+                                    return super.getType();
+                                }
+                            });
+                            if (songList.size()==0){
+                                songList.add(mainController.homeScreenController.listSongBanner.get(0));
+                            }
                             Platform.runLater(new Runnable() {
                                 @Override
                                 public void run() {
-
+                                    mainController.homeScreenController.addChildrenToLastListening(songList);
                                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                                     alert.setHeaderText("Login Success");
                                     alert.setContentText("Hello " + user.getDisplayName());
@@ -146,6 +162,8 @@ public class LoginFormController implements Initializable {
                                     asynchronousLogin.setVisible(false);
                                     alert.show();
                                     setVisibleLogin(false);
+
+
                                 }
                             });
                             mainController.setUser(user);
@@ -162,13 +180,13 @@ public class LoginFormController implements Initializable {
                                     FXMLLoader adminFxmlLoader= new FXMLLoader(getClass().getResource("/com/doan/client/View/AdminScreen/AdminScreen.fxml"));
                                     Parent root = null;
                                     try {
-                                        root = adminFxmlLoader.load();
+
                                         root = adminFxmlLoader.load();
                                     } catch (IOException e) {
                                         throw new RuntimeException(e);
                                     }
                                     Scene scene = new Scene(root);
-
+                                    scene.getStylesheets().add(getClass().getResource("/com/doan/client/application.css").toExternalForm());
                                     primaryStage.getIcons().add(new Image(getClass().getResource("/com/doan/client/Image/icon.jpg").toExternalForm()));
                                     primaryStage.setTitle("Zyan");
                                     primaryStage.setScene(scene);
@@ -191,6 +209,8 @@ public class LoginFormController implements Initializable {
                         });
                     }
                 } catch (UnirestException e) {
+                    throw new RuntimeException(e);
+                } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
 
@@ -380,8 +400,8 @@ public class LoginFormController implements Initializable {
                     String json = "{\"name\":\"" + newUsername.getText() + "\",\"displayName\":\"" + displayName + "\", \"email\":\"" + newEmail.getText() + "\", \"password\":\"" + newPassword.getText() + "\"}";
 
 
-                    HttpResponse<String> a = Unirest.post("http://localhost:8080/user/createUser").field("file", file).field("json", json).asString();
-                    if (a.getBody().equals("true")) {
+                    HttpResponse<String> a = Unirest.post("http://localhost:8080/user/addUser").field("image", file).field("user", json).asString();
+                    if (a.getStatus()==200) {
                         Platform.runLater(new Runnable() {
                             @Override
                             public void run() {

@@ -37,7 +37,6 @@ public class Application extends javafx.application.Application {
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
         primaryStage.show();
-
         Unirest.setObjectMapper(new ObjectMapper() {
             com.fasterxml.jackson.databind.ObjectMapper mapper
                     = new com.fasterxml.jackson.databind.ObjectMapper();

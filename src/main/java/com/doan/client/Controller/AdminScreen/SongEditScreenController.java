@@ -368,8 +368,16 @@ public class SongEditScreenController extends GetDataFromServerController implem
                 song.setName(addSongField.getText());
                 song.setDuration(currentEditSong.getDuration());
                 song.setArtists(getListAddedArtist());
+                HttpResponse<JsonNode> jsonNodeHttpResponse= null;
+                try {
+                    jsonNodeHttpResponse = Unirest.get("http://localhost:8080/album/findAlbumById/"+ getAddedAlbum().getId()).asJson();
+                } catch (UnirestException e) {
+                    throw new RuntimeException(e);
+                }
+                Album album = new Gson().fromJson(jsonNodeHttpResponse.getBody().toString(), Album.class);
+                AlbumOtd albumOtd= new AlbumOtd(album.getId(), album.getName(), album.getImage());
                 song.setGenres(getAddedGenre());
-                song.setAlbum(getAddedAlbum());
+                song.setAlbum(albumOtd);
                 ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
                 String json = null;
                 try {

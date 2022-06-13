@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="20.0" prefWidth="935.0" styleClass="top_five_card" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.doan.client.Controller.Component.DownloadCardController">
+   <children>
+      <FontAwesomeIconView fill="#117786" glyphName="USER" layoutX="54.0" layoutY="23.0" selectionFill="#456652" size="20" wrappingWidth="21.33334732055664" />
+      <Button fx:id="playSongBtn" layoutX="1.0" layoutY="4.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="29.0" styleClass="top_five_button">
+         <graphic>
+            <FontAwesomeIconView glyphName="PLAY" size="20" wrappingWidth="15.785714149475098" />
+         </graphic>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      <Label fx:id="indexSong" layoutX="10.0" layoutY="7.0" prefHeight="20.0" prefWidth="12.0" text="2">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </Label>
+      <Label fx:id="durationSong" layoutX="835.0" layoutY="5.0" prefHeight="20.0" prefWidth="39.0" text="3:13">
+         <font>
+            <Font name="Arial" size="12.0" />
+         </font>
+      </Label>
+      <Label fx:id="labelSong" layoutX="96.0" layoutY="7.0" prefHeight="20.0" prefWidth="389.0" text="Blue">
+         <font>
+            <Font name="Arial Bold" size="12.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>
