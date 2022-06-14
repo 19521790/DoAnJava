@@ -32,15 +32,37 @@ public class SongTemplateImpl implements SongTemplate {
     @Override
     public List<Song> newUpdate() {
 
-        Date date = new Date(System.currentTimeMillis() + (1000 * 60 * 60 * 24 * 7));
+        Date date = new Date(System.currentTimeMillis() + (1000 * 60 * 60 * 24 * 3));
 
         Query query = new Query(Criteria.where("createdAt").lt(date))
-            .with(Sort.by(Sort.Direction.DESC,"weekView"));
+                .with(Sort.by(Sort.Direction.DESC, "weekView"));
 
         List<Song> result = mongoTemplate.find(query, Song.class, "songs");
 
         List<Song> songs = new ArrayList<Song>();
         for (int i = 0; i < 5; i++) {
+            songs.add(result.get(i));
+        }
+        return songs;
+    }
+
+    @Override
+    public List<Song> topSongVietNam() {
+        Query query = new Query(Criteria.where("genres").is("Viet Nam")).with(Sort.by(Sort.Direction.DESC, "weekView"));
+        List<Song> result = mongoTemplate.find(query, Song.class, "songs");
+        List<Song> songs = new ArrayList<Song>();
+        for (int i = 0; i < 10; i++) {
+            songs.add(result.get(i));
+        }
+        return songs;
+    }
+
+    @Override
+    public List<Song> topSongGlobal() {
+        Query query = new Query().with(Sort.by(Sort.Direction.DESC, "weekView"));
+        List<Song> result = mongoTemplate.find(query, Song.class, "songs");
+        List<Song> songs = new ArrayList<Song>();
+        for (int i = 0; i < 10; i++) {
             songs.add(result.get(i));
         }
         return songs;

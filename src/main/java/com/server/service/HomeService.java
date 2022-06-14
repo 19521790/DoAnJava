@@ -12,7 +12,15 @@ public class HomeService {
     @Autowired
     private SongRepository songRepository;
 
-    public List<Song> newUpdate(){
+    public List<Song> newUpdate() {
         return songRepository.newUpdate();
+    }
+
+    public List<Song> topSongVietNam() {
+        return songRepository.topSongVietNam();
+    }
+
+    public List<Song> topSongGlobal() {
+        return songRepository.topSongGlobal();
     }
 }

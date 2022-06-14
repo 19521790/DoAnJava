@@ -19,4 +19,14 @@ public class HomeController {
     public ResponseEntity newUpdate(){
         return ResponseEntity.status(HttpStatus.OK).body(homeService.newUpdate());
     }
+
+    @GetMapping("/topSongVietNam")
+    public ResponseEntity topSongVietNam(){
+        return ResponseEntity.status(HttpStatus.OK).body(homeService.topSongVietNam());
+    }
+
+    @GetMapping("/topSongGlobal")
+    public ResponseEntity topSongGlobal(){
+        return ResponseEntity.status(HttpStatus.OK).body(homeService.topSongGlobal());
+    }
 }
