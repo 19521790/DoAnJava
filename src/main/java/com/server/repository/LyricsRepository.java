@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface LyricsRepository extends MongoRepository<Lyrics,String>, LyricsTemplate {
+    Lyrics findByIdSong(String idSong);
 }

@@ -22,7 +22,6 @@ import java.util.List;
 public class Song {
     @Id
     private String id;
-
     @NotNull(message = "Song name cannot be null")
     private String name;
 

@@ -13,4 +13,7 @@ public class LyricsService {
     public Lyrics addLyrics(Lyrics lyrics){
         return lyricsRepository.save(lyrics);
     }
+    public Lyrics findLyricsBySong(String idSong){
+        return lyricsRepository.findByIdSong(idSong);
+    }
 }

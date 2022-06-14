@@ -19,7 +19,6 @@ import java.util.List;
 public class GenreController {
     @Autowired
     private GenreService genreService;
-
     @PostMapping("/addGenre")
     public ResponseEntity addGenre(@RequestPart("genre") String genreString, @RequestPart("image") MultipartFile image) {
         try {

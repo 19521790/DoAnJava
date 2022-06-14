@@ -89,7 +89,11 @@ public class PlaylistController {
     }
 
     @PutMapping("/updatePlaylist")
-    public Playlist updatePlaylist(@RequestBody Playlist playlist) {
-        return playlistService.updatePlaylist(playlist);
+    public ResponseEntity updatePlaylist(@RequestPart("playlist") String playlistString,@RequestPart("image")MultipartFile image) throws FileFormatException, IOException {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(playlistService.updatePlaylist(playlistString,image));
+        } catch (PlaylistException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

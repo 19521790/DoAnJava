@@ -1,5 +1,6 @@
 package com.server.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.server.entity.Playlist;
 import com.server.entity.Song;
@@ -82,13 +83,24 @@ public class PlaylistService {
         if (playlist == null) {
             throw new PlaylistException(PlaylistException.NotFoundException(id));
         } else {
-            dataService.deleteData(id);
-            songRepository.deleteById(id);
+            dataService.deleteData(playlist.getImage());
+            playlistRepository.deleteById(id);
         }
     }
 
-    public Playlist updatePlaylist(Playlist playlist) {
-        return playlistRepository.save(playlist);
+    public Playlist updatePlaylist(String playlistString,MultipartFile image) throws IOException, FileFormatException, PlaylistException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        Playlist playlist = objectMapper.readValue(playlistString, Playlist.class);
+
+        Playlist playlistToUpdate = playlistRepository.findById(playlist.getId()).orElse(null);
+        System.out.println(playlistToUpdate);
+        if(playlistToUpdate!=null){
+            playlistToUpdate.setName(playlist.getName() != null ? playlist.getName() : playlistToUpdate.getName());
+            playlistToUpdate.setImage(dataService.storeData(image, ".jpg"));
+            return playlistRepository.save(playlistToUpdate);
+        }else{
+            throw new PlaylistException(PlaylistException.NotFoundException(playlist.getId()));
+        }
     }
 
     public void addSongToPlaylist(String idPlaylist, String idSong) throws PlaylistException, SongException {

@@ -125,6 +125,11 @@ public class SongController {
         return ResponseEntity.status(HttpStatus.OK).body(lyricsService.addLyrics(lyrics));
     }
 
+    @GetMapping("/findLyricsBySong/{idSong}")
+    public ResponseEntity findLyricsBySong(@PathVariable String idSong){
+        return ResponseEntity.status(HttpStatus.OK).body(lyricsService.findLyricsBySong(idSong));
+    }
+
     @GetMapping("/findSongByGenre/{genre}")
     public ResponseEntity findSongByGenre(@PathVariable String genre) {
         return ResponseEntity.status(HttpStatus.OK).body(songService.findSongByGenre(genre));

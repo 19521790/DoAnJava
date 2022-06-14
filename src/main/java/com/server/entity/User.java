@@ -24,7 +24,6 @@ public class User {
 
     @NotNull(message = "User name cannot be null")
     private String name;
-
     @NotNull(message = "User email cannot be null")
     private String email;
 
