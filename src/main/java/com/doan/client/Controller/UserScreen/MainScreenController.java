@@ -39,7 +39,9 @@ import javafx.util.Duration;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.*;
 
 
@@ -120,49 +122,62 @@ public class MainScreenController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        loginPaneFromHome.setVisible(true);
-        FXMLLoader loginFxmlLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/Component/LoginForm.fxml"));
-        FXMLLoader homeFxmlLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/UserScreen/HomeScreen.fxml"));
-        FXMLLoader discoverFxmlLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/UserScreen/DiscoverScreen.fxml"));
         songs = new ArrayList<Song>();
         try {
-            //login
-            AnchorPane newLoginPane = loginFxmlLoader.load();
-            LoginFormController loginFormController = loginFxmlLoader.getController();
-            loginPaneFromHome.getChildren().add(newLoginPane);
-            loginFormController.mainController = this;
-            // home
-            homePane = homeFxmlLoader.load();
-            homeScreenController = homeFxmlLoader.getController();
-            homeScreenController.mainScreenController = this;
-            homeScreenController.publicController.mainScreenController = this;
-            homeScreenController.initFirstMedia();
+            URL url1 = new URL("http://www.google.com");
+            URLConnection connection = url1.openConnection();
+            connection.connect();
+            try {
+                loginPaneFromHome.setVisible(true);
+                FXMLLoader loginFxmlLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/Component/LoginForm.fxml"));
+                FXMLLoader homeFxmlLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/UserScreen/HomeScreen.fxml"));
+                FXMLLoader discoverFxmlLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/UserScreen/DiscoverScreen.fxml"));
+                //login
+                AnchorPane newLoginPane = loginFxmlLoader.load();
+                LoginFormController loginFormController = loginFxmlLoader.getController();
+                loginPaneFromHome.getChildren().add(newLoginPane);
+                loginFormController.mainController = this;
+                // home
+                homePane = homeFxmlLoader.load();
+                homeScreenController = homeFxmlLoader.getController();
+                homeScreenController.mainScreenController = this;
+                homeScreenController.publicController.mainScreenController = this;
+                homeScreenController.initFirstMedia();
+                homeScreenController.initNewAndPopular();
+                //discover
+                discoverPane = discoverFxmlLoader.load();
+                discoverController = discoverFxmlLoader.getController();
 
-            //discover
-            discoverPane = discoverFxmlLoader.load();
-            discoverController = discoverFxmlLoader.getController();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            //avatar
+            homeBtn.fire();
+            offerBtn.fire();
+            setAvatarUser();
+            setSliderVolume();
+
+            //set mainBoard
+
 
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.out.println("Internet is not connected");
+            downloadBtn.fire();
+            setSliderVolume();
         }
-        //avatar
-        homeBtn.fire();
-        offerBtn.fire();
 
-        setAvatarUser();
-        setSliderVolume();
-
-        //set mainBoard
 
         mainBoard.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-
     }
 
     public void setMediaPlaying(Song song) {
 
-        homeScreenController.currentLastListeningList.remove(song);
-        homeScreenController.currentLastListeningList.add(0, song);
-        homeScreenController.addChildrenToLastListening(homeScreenController.currentLastListeningList);
+        try {
+            homeScreenController.currentLastListeningList.remove(song);
+            homeScreenController.currentLastListeningList.add(0, song);
+            homeScreenController.addChildrenToLastListening(homeScreenController.currentLastListeningList);
+        } catch (Exception e) {
+        }
         convertMediaPlaying(song);
 
         for (Song songItem : songs) {
@@ -170,8 +185,8 @@ public class MainScreenController implements Initializable {
                 songs.remove(songItem);
                 break;
             }
-        }
 
+        }
         songs.add(song);
         songNumber = songs.size() - 1;
 
@@ -191,7 +206,6 @@ public class MainScreenController implements Initializable {
 
         media = new Media(song.getFile());
         mediaPlayer = new MediaPlayer(media);
-
 
     }
 
@@ -341,10 +355,12 @@ public class MainScreenController implements Initializable {
             mainBoard.setContent(discoverPane);
             discoverButtonTab.setVisible(true);
 
-        }else if  (toggleButton.getId().equals("downloadBtn")){
-            FXMLLoader loveFxmlLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/UserScreen/DownloadScreen.fxml"));
+        } else if (toggleButton.getId().equals("downloadBtn")) {
+            FXMLLoader downloadFxmlLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/UserScreen/DownloadScreen.fxml"));
             try {
-                AnchorPane anchorPane = loveFxmlLoader.load();
+                AnchorPane anchorPane = downloadFxmlLoader.load();
+                DownloadScreenController downloadScreenController = downloadFxmlLoader.getController();
+                downloadScreenController.mainScreenController = this;
                 mainBoard.setContent(anchorPane);
 
 
@@ -353,12 +369,10 @@ public class MainScreenController implements Initializable {
             }
 
 
-
-        }else {
+        } else {
             if (!login) {
                 loginPaneFromHome.setVisible(true);
-            }
-            else {
+            } else {
                 if (toggleButton.getId().equals("likeBtn")) {
                     FXMLLoader loveFxmlLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/UserScreen/LoveScreen.fxml"));
                     try {
@@ -374,7 +388,7 @@ public class MainScreenController implements Initializable {
                 } else if (toggleButton.getId().equals("followsBtn")) {
 
 
-                }else{
+                } else {
                     FXMLLoader playlistFxmlLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/UserScreen/PlaylistScreen.fxml"));
                     FXMLLoader editFxmlLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/Component/EditPlaylistForm.fxml"));
                     try {

@@ -46,7 +46,7 @@ public class MoreOptionCardController {
         String newURL = file;
         try (InputStream in = new URL(newURL).openStream();
            ReadableByteChannel rbc = Channels.newChannel(in);
-           FileOutputStream fos = new FileOutputStream("src/main/resources/com/doan/client/Music/" + songName + ".mp3")) {
+           FileOutputStream fos = new FileOutputStream("src/main/resources/com/doan/client/Music/" + songName + ".m4a")) {
             fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
             more.getStyleClass().add("more_opacity");
             mainScreenController.homeScreenController.outsideParent.getChildren().remove(layer);
