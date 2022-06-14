@@ -77,4 +77,10 @@ public class SongTemplateImpl implements SongTemplate {
         }
         return songs;
     }
+
+    @Override
+    public List<Song> findByNameRegex(String word){
+        Query query = new Query(Criteria.where("name").regex(word,"i"));
+        return mongoTemplate.find(query,Song.class,"songs");
+    }
 }

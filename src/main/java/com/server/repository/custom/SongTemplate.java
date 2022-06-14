@@ -11,4 +11,5 @@ public interface SongTemplate {
     public List<Song> newUpdate();
     public List<Song> topSongVietNam();
     public List<Song> topSongGlobal();
+    public List<Song> findByNameRegex(String word);
 }
