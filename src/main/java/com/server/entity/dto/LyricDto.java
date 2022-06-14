@@ -1,6 +1,13 @@
 package com.server.entity.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class LyricDto {
-    private int second;
-    private int lyric;
+    int second;
+    String lyric;
 }

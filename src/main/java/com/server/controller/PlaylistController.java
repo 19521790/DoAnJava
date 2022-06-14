@@ -45,7 +45,7 @@ public class PlaylistController {
     }
 
     @GetMapping("/findAllPlaylists")
-    public ResponseEntity findPlaylists() {
+    public ResponseEntity findAllPlaylists() {
         List<Playlist> playlists = playlistService.findAllPlaylists();
         return ResponseEntity.status(playlists.size() > 0 ? HttpStatus.OK : HttpStatus.NOT_FOUND).body(playlists);
     }

@@ -11,6 +11,6 @@ public class LyricsService {
     private LyricsRepository lyricsRepository;
 
     public Lyrics addLyrics(Lyrics lyrics){
-        return lyricsRepository.addLyrics(lyrics);
+        return lyricsRepository.save(lyrics);
     }
 }

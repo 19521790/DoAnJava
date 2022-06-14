@@ -160,6 +160,23 @@ public class UserController {
         }
     }
 
+    @GetMapping("/findSavedAlbumFromUser")
+    public ResponseEntity findSavedAlbumFromUser(@RequestParam("idUser") String idUser) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(userService.findSavedAlbumFromUser(idUser));
+        } catch (UserException e) {
+            return ResponseEntity.status(HttpStatus.OK).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/findFollowedArtistFromUser")
+    public ResponseEntity findFollowedArtistFromUser(@RequestParam("idUser") String idUser) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(userService.findFollowedArtistFromUser(idUser));
+        } catch (UserException e) {
+            return ResponseEntity.status(HttpStatus.OK).body(e.getMessage());
+        }
+    }
 //    @PostMapping("/registration")
 //    public ModelAndView registerUserAccount(@ModelAttribute("user") @Valid UserDto userDto,
 //                                            HttpServletRequest request,

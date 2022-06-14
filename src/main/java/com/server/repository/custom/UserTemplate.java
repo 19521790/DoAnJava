@@ -1,5 +1,7 @@
 package com.server.repository.custom;
 
+import com.server.entity.Album;
+import com.server.entity.Artist;
 import com.server.entity.Song;
 import com.server.entity.User;
 
@@ -14,4 +16,6 @@ public interface UserTemplate {
     public void saveAlbum(String idUser, String idAlbum);
     public void unfollowArtist(String idUser,String idArtist);
     public void removeAlbum(String idUser,String idALbum);
+    public List<Album> findSavedAlbumFromUser(String idUser);
+    public List<Artist> findFollowedArtistFromUser(String idUser);
 }

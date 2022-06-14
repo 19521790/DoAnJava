@@ -1,7 +1,6 @@
 package com.server.repository.custom.impl;
 
-import com.server.entity.Song;
-import com.server.entity.User;
+import com.server.entity.*;
 import com.server.entity.object.SongLastListen;
 import com.server.repository.custom.UserTemplate;
 import org.bson.types.ObjectId;
@@ -83,12 +82,39 @@ public class UserTemplateImpl implements UserTemplate {
         update.pull("idArtists", new ObjectId(idArtist));
         System.out.println(mongoTemplate.updateFirst(query, update, "users"));
     }
-
     @Override
     public void removeAlbum(String idUser, String idALbum) {
         Query query = new Query(Criteria.where("_id").is(idUser));
         Update update = new Update();
         update.pull("idAlbums", new ObjectId(idALbum));
         System.out.println(mongoTemplate.updateFirst(query, update, "users"));
+    }
+
+    @Override
+    public List<Album> findSavedAlbumFromUser(String idUser){
+        Aggregation aggregation = newAggregation(
+                Aggregation.match(
+                        Criteria.where("_id").is(idUser)
+                ),
+                Aggregation.lookup("albums", "idAlbums", "_id", "albums")
+        );
+        AggregationResults<User> results = mongoTemplate.aggregate(aggregation, "users", User.class);
+        System.out.println(results);
+        System.out.println(results.getMappedResults());
+        return results.getMappedResults().get(0).getAlbums();
+    }
+
+    @Override
+    public List<Artist> findFollowedArtistFromUser(String idUser){
+        Aggregation aggregation = newAggregation(
+                Aggregation.match(
+                        Criteria.where("_id").is(idUser)
+                ),
+                Aggregation.lookup("artists", "idArtists", "_id", "artists")
+        );
+        AggregationResults<User> results = mongoTemplate.aggregate(aggregation, "users", User.class);
+        System.out.println(results);
+        System.out.println(results.getMappedResults());
+        return results.getMappedResults().get(0).getArtists();
     }
 }

@@ -41,5 +41,7 @@ public class User {
     private List<String> idLastListenSongs;
     private List<Song> lastListenSongs;
     private List<String> idAlbums;
+    private List<Album> albums;
     private List<String> idArtists;
+    private List<Artist> artists;
 }

@@ -177,6 +177,25 @@ public class UserService {
         }
     }
 
+    public List<Album> findSavedAlbumFromUser(String idUser) throws UserException {
+        User user = userRepository.findById(idUser).orElse(null);
+
+        if(user==null){
+            throw new UserException(UserException.NotFoundException(idUser));
+        }else{
+            return userRepository.findSavedAlbumFromUser(idUser);
+        }
+    }
+
+    public List<Artist> findFollowedArtistFromUser(String idUser) throws UserException {
+        User user = userRepository.findById(idUser).orElse(null);
+
+        if(user==null){
+            throw new UserException(UserException.NotFoundException(idUser));
+        }else{
+            return userRepository.findFollowedArtistFromUser(idUser);
+        }
+    }
     //    public User registerNewUserAccount(UserDto userDto) throws UserException{
 //        if (emailExist(userDto.getEmail())) {
 //            throw new UserException("There is an account with that email address: "
