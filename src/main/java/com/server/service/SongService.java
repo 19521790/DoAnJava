@@ -52,7 +52,7 @@ public class SongService {
         ObjectMapper objectMapper = new ObjectMapper();
         Song song = objectMapper.readValue(songString, Song.class);
 
-        Song songOptional = songRepository.findByName(song.getName());
+        Song songOptional = songRepository.findSongByName(song.getName());
 
         if (songOptional != null
                 && songOptional.getAlbum().getId().equals(song.getAlbum().getId())
@@ -137,7 +137,7 @@ public class SongService {
     }
 
     public Song findSongByName(String name) throws SongException {
-        Song song = songRepository.findByName(name);
+        Song song = songRepository.findSongByName(name);
 
         if (song != null) {
             return song;
