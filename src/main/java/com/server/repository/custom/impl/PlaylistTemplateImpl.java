@@ -21,4 +21,12 @@ public class PlaylistTemplateImpl implements PlaylistTemplate {
         update.addToSet("idSongs",new ObjectId(idSong));
         System.out.println(mongoTemplate.updateFirst(query,update,"playlists"));
     };
+
+    @Override
+    public void addPlaylistToUser(String idUser, String idPlaylist) {
+        Query query = new Query(Criteria.where("_id").is(idPlaylist));
+        Update update = new Update();
+        update.addToSet("idUser", new ObjectId(idUser));
+        System.out.println(mongoTemplate.updateFirst(query, update, "playlists"));
+    }
 }

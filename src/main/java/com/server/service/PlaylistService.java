@@ -7,6 +7,7 @@ import com.server.exception.FileFormatException;
 import com.server.exception.PlaylistException;
 import com.server.repository.PlaylistTemplate;
 import com.server.repository.SongRepository;
+import com.server.repository.UserRepository;
 import com.server.service.data.DataService;
 import com.server.service.drive.GoogleDriveService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,17 +32,34 @@ public class PlaylistService {
     private DataService dataService;
 
     @Autowired
-    private GoogleDriveService driveService;
+    private UserRepository userRepository;
 
-    private String playlistImgFolderId = "1V_RzyQ-L04PNkmLMrOsGVEABprMh6IqK";
-
-    public Playlist addPlaylist(String playlistString, MultipartFile image) throws ConstraintViolationException, IOException, FileFormatException {
+    public String addPlaylist(String playlistString, String idUser, MultipartFile image) throws ConstraintViolationException, IOException, FileFormatException {
         ObjectMapper objectMapper = new ObjectMapper();
         Playlist playlist = objectMapper.readValue(playlistString, Playlist.class);
 
-        playlist.setImage(dataService.storeData(image,".jpg"));
+        playlist.setImage(dataService.storeData(image, ".jpg"));
         playlist.setCreatedAt(new Date(System.currentTimeMillis()));
-        return playlistRepository.save(playlist);
+        playlist.setTotalView(0);
+
+        //add playlist to user
+        String idPlaylist = playlistRepository.save(playlist).getId();
+        playlistRepository.addPlaylistToUser(idUser, idPlaylist);
+
+        return idPlaylist;
+    }
+
+    public void addLikeAndDownloadPlaylist(String idUser) {
+        Playlist like = new Playlist();
+        Playlist download = new Playlist();
+        like.setName("Like");
+        download.setName("Download");
+
+        like.setCreatedAt(new Date(System.currentTimeMillis()));
+        playlistRepository.addPlaylistToUser(idUser, playlistRepository.save(like).getId());
+
+        download.setCreatedAt(new Date(System.currentTimeMillis()));
+        playlistRepository.addPlaylistToUser(idUser, playlistRepository.save(download).getId());
     }
 
     public Playlist findPlaylistById(String id) throws PlaylistException {

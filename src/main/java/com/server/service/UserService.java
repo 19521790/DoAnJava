@@ -3,6 +3,7 @@ package com.server.service;
 import com.server.entity.Playlist;
 import com.server.entity.Song;
 import com.server.entity.User;
+import com.server.entity.dto.UserDto;
 import com.server.entity.object.SongLastListen;
 import com.server.exception.FileFormatException;
 import com.server.exception.UserException;
@@ -34,19 +35,22 @@ public class UserService {
     private DataService dataService;
 
     @Autowired
-    private GoogleDriveService driveService;
+    private PlaylistService playlistService;
 
-    public boolean addUser(MultipartFile image, String json) throws ConstraintViolationException, IOException, FileFormatException {
+    public String addUser(MultipartFile image, String json) throws ConstraintViolationException, IOException, FileFormatException, UserException {
         ObjectMapper mapper = new ObjectMapper();
         User user = mapper.readValue(json, User.class);
         if (userRepository.existsByNameOrEmail(user.getName(), user.getEmail())) {
-            return false;
+            throw new UserException(UserException.UserAlreadyExist());
         }
 
         user.setImage(dataService.storeData(image, ".jpg"));
         user.setCreatedAt(new Date(System.currentTimeMillis()));
-        userRepository.save(user);
-        return true;
+        String idUser = userRepository.save(user).getId();
+
+        //create like and download playlist at the same time
+        playlistService.addLikeAndDownloadPlaylist(idUser);
+        return idUser;
     }
 
     public User findUserById(String id) {
@@ -70,16 +74,6 @@ public class UserService {
     public void updateUserPassword(User user) {
         userRepository.save(user);
 
-    }
-
-    public void addPlaylistToUser(String idUser, String idPlaylist) throws UserException {
-        User user = userRepository.findById(idUser).orElse(null);
-
-        if (user != null) {
-            userRepository.addPlaylistToUser(idUser, idPlaylist);
-        } else {
-            throw new UserException(UserException.NotFoundException(idUser));
-        }
     }
 
     public void deleteUser(String id) throws UserException, FileFormatException {
@@ -112,5 +106,15 @@ public class UserService {
         } else {
             throw new UserException(UserException.NotFoundException(idUser));
         }
+    }
+
+//    public User registerNewUserAccount(UserDto userDto) throws UserException{
+//        if (emailExist(userDto.getEmail())) {
+//            throw new UserException("There is an account with that email address: "
+//                    + userDto.getEmail());
+//        }
+//    }
+    private boolean emailExist(String email) {
+        return userRepository.findByEmail(email) != null;
     }
 }

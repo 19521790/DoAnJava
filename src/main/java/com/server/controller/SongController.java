@@ -88,11 +88,30 @@ public class SongController {
     public ResponseEntity deleteSong(@PathVariable String id) {
         try {
             songService.deleteSong(id);
-            return ResponseEntity.status(HttpStatus.OK).body("Successfully delete song with id: " + id);
+            return ResponseEntity.status(HttpStatus.OK).body("Successfully delete song " + id);
         } catch (SongException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (FileFormatException e) {
             return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/countPlay/{id}")
+    public ResponseEntity countPlay(@PathVariable String id) {
+        try {
+            songService.countPlay(id);
+            return ResponseEntity.status(HttpStatus.OK).body("Successfully count 1 play for song " + id);
+        } catch (SongException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/findSongByName/{name}")
+    public ResponseEntity findSongByName(@PathVariable String name) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(songService.findSongByName(name));
+        } catch (SongException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 

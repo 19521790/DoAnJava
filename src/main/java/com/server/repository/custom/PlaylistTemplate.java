@@ -5,4 +5,5 @@ import com.server.entity.Song;
 
 public interface PlaylistTemplate {
     public void addSongToPlaylist(String idPlaylist, String idSong);
+    public void addPlaylistToUser(String idUser, String idPlaylist);
 }

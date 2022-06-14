@@ -25,10 +25,9 @@ public class Playlist {
 
     @NotNull(message = "Playlist name cannot be null")
     private String name;
-    private String image;
 
-    @NotNull(message = "Playlist idUser cannot be null")
-    private Object idUser;
+    private String image;
+    private String idUser;
 
     private List<Song>songs = new ArrayList<Song>();
 

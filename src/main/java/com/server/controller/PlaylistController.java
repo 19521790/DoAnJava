@@ -23,9 +23,13 @@ public class PlaylistController {
     private PlaylistService playlistService;
 
     @PostMapping("/addPlaylist")
-    public ResponseEntity addPlaylist(@RequestPart("playlist") String playlistString, @RequestPart("image") MultipartFile image) {
+    public ResponseEntity addPlaylist(@RequestPart("playlist") String playlistString,
+                                      @RequestPart("idUser") String idUser,
+                                      @RequestPart("image") MultipartFile image) {
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(playlistService.addPlaylist(playlistString, image));
+            String idPlaylist = playlistService.addPlaylist(playlistString, idUser, image);
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body("Successfully created playlist " + idPlaylist + " in user " + idUser);
         } catch (FileFormatException | IOException e) {
             return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(e.getMessage());
         } catch (ConstraintViolationException e) {

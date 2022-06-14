@@ -112,15 +112,37 @@ public class SongService {
             songToUpdate.setGenres(song.getGenres() != null ? song.getGenres() : songToUpdate.getGenres());
             songToUpdate.setAlbum(song.getAlbum() != null ? song.getAlbum() : songToUpdate.getAlbum());
 
-            if(file.getOriginalFilename()!=null){
+            if (file.getOriginalFilename() != null) {
                 dataService.deleteData(songToUpdate.getFile());
-                songToUpdate.setFile(dataService.storeData(file,".m4a"));
+                songToUpdate.setFile(dataService.storeData(file, ".m4a"));
             }
             songToUpdate.setUpdatedAt(new Date(System.currentTimeMillis()));
 
             return songRepository.save(songToUpdate);
         } else {
             throw new SongException(SongException.NotFoundException(song.getId()));
+        }
+    }
+
+    public void countPlay(String idSong) throws SongException {
+        Song song = songRepository.findById(idSong).orElse(null);
+
+        if (song != null) {
+            song.setWeekView(song.getWeekView() + 1);
+            song.setTotalView(song.getTotalView() + 1);
+            songRepository.save(song);
+        } else {
+            throw new SongException(SongException.NotFoundException(idSong));
+        }
+    }
+
+    public Song findSongByName(String name) throws SongException {
+        Song song = songRepository.findByName(name);
+
+        if (song != null) {
+            return song;
+        } else {
+            throw new SongException(SongException.NotFoundException(name));
         }
     }
 }
