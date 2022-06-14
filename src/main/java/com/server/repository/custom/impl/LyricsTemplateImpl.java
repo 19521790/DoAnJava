@@ -11,6 +11,7 @@ public class LyricsTemplateImpl implements LyricsTemplate {
 
     @Override
     public Lyrics addLyrics(Lyrics lyrics){
+
         return new Lyrics();
     }
 }

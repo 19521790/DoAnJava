@@ -58,4 +58,12 @@ public class PlaylistTemplateImpl implements PlaylistTemplate {
         Query query = new Query(Criteria.where("idUser").is(idUser));
         return mongoTemplate.find(query, Playlist.class, "playlists");
     }
+
+    @Override
+    public void removeSongFromPlaylist(String idPlaylist, String idSong){
+        Query query = new Query(Criteria.where("_id").is(idPlaylist));
+        Update update = new Update();
+        update.pull("idSongs", new ObjectId(idSong));
+        System.out.println(mongoTemplate.updateFirst(query, update, "playlists"));
+    }
 }

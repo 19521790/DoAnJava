@@ -75,18 +75,21 @@ public class PlaylistController {
         }
     }
 
+    @PutMapping("/removeSongFromPlaylist")
+    public ResponseEntity removeSongFromPlaylist(
+            @RequestParam(name = "idPlaylist") String idPlaylist,
+            @RequestParam(name = "idSong") String idSong
+    ) {
+        try {
+            playlistService.removeSongFromPlaylist(idPlaylist, idSong);
+            return ResponseEntity.status(HttpStatus.OK).body("Successfully remove song " + idSong + " from playlist" + idPlaylist);
+        } catch (PlaylistException | SongException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
     @PutMapping("/updatePlaylist")
     public Playlist updatePlaylist(@RequestBody Playlist playlist) {
         return playlistService.updatePlaylist(playlist);
     }
-
-//    @PutMapping("/addSongToLike")
-//    public Playlist addSongToLike(@RequestParam("idPlaylist") String idPlaylist,@RequestParam("idSong") String idSong){
-//        try{
-//            playlistService.addSongToPlaylist();
-//        }catch(){
-//
-//        }
-//    }
-
 }

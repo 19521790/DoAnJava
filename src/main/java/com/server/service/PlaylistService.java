@@ -103,4 +103,17 @@ public class PlaylistService {
             playlistRepository.addSongToPlaylist(idPlaylist, idSong);
         }
     }
+
+    public void removeSongFromPlaylist(String idPlaylist,String idSong) throws PlaylistException, SongException {
+        Playlist playlist = playlistRepository.findById(idPlaylist).orElse(null);
+        Song song = songRepository.findById(idSong).orElse(null);
+
+        if (playlist == null) {
+            throw new PlaylistException(PlaylistException.NotFoundException(idPlaylist));
+        } else if (song == null) {
+            throw new SongException(SongException.NotFoundException(idSong));
+        } else {
+            playlistRepository.removeSongFromPlaylist(idPlaylist, idSong);
+        }
+    }
 }

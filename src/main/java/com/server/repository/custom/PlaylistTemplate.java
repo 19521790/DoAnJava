@@ -10,5 +10,5 @@ public interface PlaylistTemplate {
     public void addPlaylistToUser(String idUser, String idPlaylist);
     public Playlist findSongFromPlaylist(String idPlaylist);
     public List<Playlist> findPlaylistFromUser(String idUser);
-//    public void removeSongFromPlaylist (String idUser, String idSong);
+    public void removeSongFromPlaylist (String idPlaylist, String idSong);
 }
