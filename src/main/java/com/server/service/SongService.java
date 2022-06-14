@@ -142,4 +142,8 @@ public class SongService {
             throw new SongException(SongException.NotFoundException(name));
         }
     }
+
+    public List<Song> findSongByGenre(String genre) {
+        return songRepository.findSongByGenre(genre);
+    }
 }

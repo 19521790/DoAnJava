@@ -30,6 +30,12 @@ public class SongTemplateImpl implements SongTemplate {
     }
 
     @Override
+    public List<Song> findSongByGenre(String genre){
+        Query query = new Query(Criteria.where("genres").is(genre));
+        return mongoTemplate.find(query, Song.class);
+    }
+
+    @Override
     public List<Song> newUpdate() {
 
         Date date = new Date(System.currentTimeMillis() + (1000 * 60 * 60 * 24 * 3));
@@ -51,7 +57,11 @@ public class SongTemplateImpl implements SongTemplate {
         Query query = new Query(Criteria.where("genres").is("Viet Nam")).with(Sort.by(Sort.Direction.DESC, "weekView"));
         List<Song> result = mongoTemplate.find(query, Song.class, "songs");
         List<Song> songs = new ArrayList<Song>();
-        for (int i = 0; i < 10; i++) {
+        int chartSize = 10;
+        if (result.size() < 10) {
+            chartSize = result.size();
+        }
+        for (int i = 0; i < chartSize; i++) {
             songs.add(result.get(i));
         }
         return songs;

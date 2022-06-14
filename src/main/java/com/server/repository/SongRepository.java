@@ -12,4 +12,5 @@ import java.util.Optional;
 @Repository
 public interface SongRepository extends MongoRepository<Song,String>, SongTemplate {
     Song findSongByName (String name);
+    List<Song> findByNameRegex(String name);
 }

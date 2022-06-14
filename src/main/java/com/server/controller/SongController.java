@@ -121,8 +121,13 @@ public class SongController {
     }
 
     @PostMapping("/addLyrics")
-    public ResponseEntity addLyrics(@RequestBody Lyrics lyrics){
+    public ResponseEntity addLyrics(@RequestBody Lyrics lyrics) {
         return ResponseEntity.status(HttpStatus.OK).body(lyricsService.addLyrics(lyrics));
+    }
+
+    @GetMapping("/findSongByGenre/{genre}")
+    public ResponseEntity findSongByGenre(@PathVariable String genre) {
+        return ResponseEntity.status(HttpStatus.OK).body(songService.findSongByGenre(genre));
     }
 
 //    @GetMapping("/audios")
