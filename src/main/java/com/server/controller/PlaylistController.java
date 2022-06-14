@@ -69,6 +69,14 @@ public class PlaylistController {
         return playlistService.updatePlaylist(playlist);
     }
 
+//    @PutMapping("/addSongToLike")
+//    public Playlist addSongToLike(@RequestParam("idPlaylist") String idPlaylist,@RequestParam("idSong") String idSong){
+//        try{
+//            playlistService.addSongToPlaylist();
+//        }catch(){
+//
+//        }
+//    }
 //    @PutMapping("/addSongToPlaylist")
 //    public Playlist addSongToPlaylist(
 //            @RequestParam(name = "idPlaylist") String idPlaylist,

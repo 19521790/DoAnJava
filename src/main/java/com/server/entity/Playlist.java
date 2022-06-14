@@ -27,9 +27,11 @@ public class Playlist {
     private String name;
 
     private String image;
+
+    @NotNull(message = "Playlist idUser cannot be null")
     private String idUser;
 
-    private List<Song>songs = new ArrayList<Song>();
+    private List<String> idSongs = new ArrayList<String>();
 
     private int totalView;
     private Date createdAt;

@@ -1,8 +1,10 @@
 package com.server.controller;
 
+import com.server.entity.Lyrics;
 import com.server.entity.Song;
 import com.server.exception.FileFormatException;
 import com.server.exception.SongException;
+import com.server.service.LyricsService;
 import com.server.service.SongService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,6 +34,9 @@ public class SongController {
 
     @Autowired
     private SongService songService;
+
+    @Autowired
+    private LyricsService lyricsService;
 
     @PostMapping("/addSong")
     public ResponseEntity addSong(
@@ -113,6 +118,11 @@ public class SongController {
         } catch (SongException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
+    }
+
+    @PostMapping("/addLyrics")
+    public ResponseEntity addLyrics(@RequestBody Lyrics lyrics){
+        return ResponseEntity.status(HttpStatus.OK).body(lyricsService.addLyrics(lyrics));
     }
 
 //    @GetMapping("/audios")
