@@ -32,6 +32,7 @@ public class Playlist {
     private String idUser;
 
     private List<String> idSongs = new ArrayList<String>();
+    private List<Song> songs;
 
     private int totalView;
     private Date createdAt;

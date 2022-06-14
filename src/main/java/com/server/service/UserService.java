@@ -1,18 +1,18 @@
 package com.server.service;
 
-import com.server.entity.Playlist;
-import com.server.entity.Song;
+import com.server.entity.Album;
+import com.server.entity.Artist;
 import com.server.entity.User;
-import com.server.entity.dto.UserDto;
-import com.server.entity.object.SongLastListen;
+import com.server.exception.AlbumException;
+import com.server.exception.ArtistException;
 import com.server.exception.FileFormatException;
 import com.server.exception.UserException;
-import com.server.repository.PlaylistTemplate;
+import com.server.repository.AlbumRepository;
+import com.server.repository.ArtistRepository;
+import com.server.repository.PlaylistRepository;
 import com.server.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.server.service.data.DataService;
-import com.server.service.drive.GoogleDriveService;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,7 +29,13 @@ public class UserService {
     private UserRepository userRepository;
 
     @Autowired
-    private PlaylistTemplate playlistRepository;
+    private PlaylistRepository playlistRepository;
+
+    @Autowired
+    private ArtistRepository artistRepository;
+
+    @Autowired
+    private AlbumRepository albumRepository;
 
     @Autowired
     private DataService dataService;
@@ -108,7 +114,59 @@ public class UserService {
         }
     }
 
-//    public User registerNewUserAccount(UserDto userDto) throws UserException{
+    public void followArtist(String idUser, String idArtist) throws UserException, ArtistException {
+        User user = userRepository.findById(idUser).orElse(null);
+        Artist artist = artistRepository.findById(idArtist).orElse(null);
+
+        if (user == null) {
+            throw new UserException(UserException.NotFoundException(idUser));
+        } else if (artist == null) {
+            throw new ArtistException(ArtistException.NotFoundException(idArtist));
+        } else {
+            userRepository.followArtist(idUser, idArtist);
+        }
+    }
+
+    public void saveAlbum(String idUser, String idAlbum) throws UserException, AlbumException {
+        User user = userRepository.findById(idUser).orElse(null);
+        Album album = albumRepository.findById(idAlbum).orElse(null);
+
+        if (user == null) {
+            throw new UserException(UserException.NotFoundException(idUser));
+        } else if (album == null) {
+            throw new AlbumException(AlbumException.NotFoundException(idAlbum));
+        } else {
+            userRepository.saveAlbum(idUser, idAlbum);
+        }
+    }
+
+    public void unfollowArtist(String idUser, String idArtist) throws UserException, ArtistException {
+        User user = userRepository.findById(idUser).orElse(null);
+        Artist artist = artistRepository.findById(idArtist).orElse(null);
+
+        if (user == null) {
+            throw new UserException(UserException.NotFoundException(idUser));
+        } else if (artist == null) {
+            throw new ArtistException(ArtistException.NotFoundException(idArtist));
+        } else {
+            userRepository.unfollowArtist(idUser, idArtist);
+        }
+    }
+
+    public void removeAlbum(String idUser, String idAlbum) throws UserException, AlbumException {
+        User user = userRepository.findById(idUser).orElse(null);
+        Album album = albumRepository.findById(idAlbum).orElse(null);
+
+        if (user == null) {
+            throw new UserException(UserException.NotFoundException(idUser));
+        } else if (album == null) {
+            throw new AlbumException(AlbumException.NotFoundException(idAlbum));
+        } else {
+            userRepository.removeAlbum(idUser, idAlbum);
+        }
+    }
+
+    //    public User registerNewUserAccount(UserDto userDto) throws UserException{
 //        if (emailExist(userDto.getEmail())) {
 //            throw new UserException("There is an account with that email address: "
 //                    + userDto.getEmail());

@@ -5,11 +5,11 @@ import com.server.entity.Playlist;
 import com.server.entity.Song;
 import com.server.exception.FileFormatException;
 import com.server.exception.PlaylistException;
-import com.server.repository.PlaylistTemplate;
+import com.server.exception.SongException;
+import com.server.repository.PlaylistRepository;
 import com.server.repository.SongRepository;
 import com.server.repository.UserRepository;
 import com.server.service.data.DataService;
-import com.server.service.drive.GoogleDriveService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,7 +23,7 @@ import java.util.List;
 @Service
 public class PlaylistService {
     @Autowired
-    private PlaylistTemplate playlistRepository;
+    private PlaylistRepository playlistRepository;
 
     @Autowired
     private SongRepository songRepository;
@@ -34,7 +34,7 @@ public class PlaylistService {
     @Autowired
     private UserRepository userRepository;
 
-    public String addPlaylist(String playlistString, String idUser, MultipartFile image) throws ConstraintViolationException, IOException, FileFormatException {
+    public Playlist addPlaylist(String playlistString, MultipartFile image) throws ConstraintViolationException, IOException, FileFormatException {
         ObjectMapper objectMapper = new ObjectMapper();
         Playlist playlist = objectMapper.readValue(playlistString, Playlist.class);
 
@@ -42,11 +42,7 @@ public class PlaylistService {
         playlist.setCreatedAt(new Date(System.currentTimeMillis()));
         playlist.setTotalView(0);
 
-        //add playlist to user
-        String idPlaylist = playlistRepository.save(playlist).getId();
-        playlistRepository.addPlaylistToUser(idUser, idPlaylist);
-
-        return idPlaylist;
+        return playlistRepository.save(playlist);
     }
 
     public void addLikeAndDownloadPlaylist(String idUser) {
@@ -68,7 +64,7 @@ public class PlaylistService {
         if (playlist == null) {
             throw new PlaylistException(PlaylistException.NotFoundException(id));
         } else {
-            return playlist;
+            return playlistRepository.findSongByPlaylist(id);
         }
     }
 
@@ -95,17 +91,16 @@ public class PlaylistService {
         return playlistRepository.save(playlist);
     }
 
-    public void addSongToPlaylist(String idPlaylist, String idSong) {
-        Playlist playlist = playlistRepository.findById(idPlaylist).get();
-        Song song = songRepository.findById(idSong).get();
+    public void addSongToPlaylist(String idPlaylist, String idSong) throws PlaylistException, SongException {
+        Playlist playlist = playlistRepository.findById(idPlaylist).orElse(null);
+        Song song = songRepository.findById(idSong).orElse(null);
 
-        Song songToUpload = new Song();
-        songToUpload.setName(song.getName());
-        songToUpload.setArtists(song.getArtists());
-        songToUpload.setDuration(song.getDuration());
-        songToUpload.setAlbum(song.getAlbum());
-        songToUpload.setFile(song.getFile());
-
-//        playlistRepository.addSongToPlaylist(playlist, songToUpload);
+        if (playlist == null) {
+            throw new PlaylistException(PlaylistException.NotFoundException(idPlaylist));
+        } else if (song == null) {
+            throw new SongException(SongException.NotFoundException(idSong));
+        } else {
+            playlistRepository.addSongToPlaylist(idPlaylist, idSong);
+        }
     }
 }

@@ -24,12 +24,10 @@ public class PlaylistController {
 
     @PostMapping("/addPlaylist")
     public ResponseEntity addPlaylist(@RequestPart("playlist") String playlistString,
-                                      @RequestPart("idUser") String idUser,
                                       @RequestPart("image") MultipartFile image) {
         try {
-            String idPlaylist = playlistService.addPlaylist(playlistString, idUser, image);
             return ResponseEntity.status(HttpStatus.OK)
-                    .body("Successfully created playlist " + idPlaylist + " in user " + idUser);
+                    .body(playlistService.addPlaylist(playlistString, image));
         } catch (FileFormatException | IOException e) {
             return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(e.getMessage());
         } catch (ConstraintViolationException e) {
@@ -64,6 +62,19 @@ public class PlaylistController {
         }
     }
 
+    @PutMapping("/addSongToPlaylist")
+    public ResponseEntity addSongToPlaylist(
+            @RequestParam(name = "idPlaylist") String idPlaylist,
+            @RequestParam(name = "idSong") String idSong
+    ) {
+        try {
+            playlistService.addSongToPlaylist(idPlaylist, idSong);
+            return ResponseEntity.status(HttpStatus.OK).body("Successfully add song " + idSong + " to playlist" + idPlaylist);
+        } catch (PlaylistException | SongException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
     @PutMapping("/updatePlaylist")
     public Playlist updatePlaylist(@RequestBody Playlist playlist) {
         return playlistService.updatePlaylist(playlist);
@@ -77,11 +88,5 @@ public class PlaylistController {
 //
 //        }
 //    }
-//    @PutMapping("/addSongToPlaylist")
-//    public Playlist addSongToPlaylist(
-//            @RequestParam(name = "idPlaylist") String idPlaylist,
-//            @RequestParam(name = "idSong") String idSong
-//    ) {
-//        playlistService.addSongToPlaylist(idPlaylist, idSong);
-//    }
+
 }

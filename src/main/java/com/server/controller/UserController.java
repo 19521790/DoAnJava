@@ -2,6 +2,8 @@ package com.server.controller;
 
 import com.server.entity.User;
 import com.server.entity.dto.UserDto;
+import com.server.exception.AlbumException;
+import com.server.exception.ArtistException;
 import com.server.exception.FileFormatException;
 import com.server.exception.UserException;
 import com.server.service.UserService;
@@ -103,10 +105,50 @@ public class UserController {
     }
 
     @GetMapping("/registration")
-    public String showRegistrationForm(WebRequest request, Model model){
+    public String showRegistrationForm(WebRequest request, Model model) {
         UserDto userDto = new UserDto();
-        model.addAttribute("user",userDto);
+        model.addAttribute("user", userDto);
         return "registration";
+    }
+
+    @PutMapping("/followArtist")
+    public ResponseEntity unfollowArtist(@RequestParam("idUser") String idUser, @RequestParam("idArtist") String idArtist) {
+        try {
+            userService.followArtist(idUser, idArtist);
+            return ResponseEntity.status(HttpStatus.OK).body("User " + idUser + " has followed artist " + idArtist);
+        } catch (ArtistException | UserException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/saveAlbum")
+    public ResponseEntity saveAlbum(@RequestParam("idUser") String idUser, @RequestParam("idAlbum") String idAlbum) {
+        try {
+            userService.saveAlbum(idUser, idAlbum);
+            return ResponseEntity.status(HttpStatus.OK).body("User " + idUser + " has save album " + idAlbum);
+        } catch (AlbumException | UserException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/unfollowArtist")
+    public ResponseEntity followArtist(@RequestParam("idUser") String idUser, @RequestParam("idArtist") String idArtist) {
+        try {
+            userService.unfollowArtist(idUser, idArtist);
+            return ResponseEntity.status(HttpStatus.OK).body("User " + idUser + " has unfollowed artist " + idArtist);
+        } catch (ArtistException | UserException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/removeAlbum")
+    public ResponseEntity removeAlbum(@RequestParam("idUser") String idUser, @RequestParam("idAlbum") String idAlbum) {
+        try {
+            userService.removeAlbum(idUser, idAlbum);
+            return ResponseEntity.status(HttpStatus.OK).body("User " + idUser + " has remove album " + idAlbum);
+        } catch (AlbumException | UserException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 
 //    @PostMapping("/registration")

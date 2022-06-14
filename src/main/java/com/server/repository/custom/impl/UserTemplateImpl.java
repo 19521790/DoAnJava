@@ -19,6 +19,7 @@ import java.util.Date;
 import java.util.List;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.newUpdate;
 
 public class UserTemplateImpl implements UserTemplate {
     @Autowired
@@ -63,5 +64,37 @@ public class UserTemplateImpl implements UserTemplate {
     public long countNumberLastListenSong(String idUser) {
         Query query = new Query(Criteria.where("idLastListenSongs"));
         return mongoTemplate.count(query, "users");
+    }
+
+    @Override
+    public void followArtist(String idUser, String idArtist) {
+        Query query = new Query(Criteria.where("_id").is(idUser));
+        Update update = new Update();
+        update.addToSet("idArtists", new ObjectId(idArtist));
+        System.out.println(mongoTemplate.updateFirst(query, update, "users"));
+    }
+
+    @Override
+    public void saveAlbum(String idUser, String idAlbum) {
+        Query query = new Query(Criteria.where("_id").is(idUser));
+        Update update = new Update();
+        update.addToSet("idAlbums", new ObjectId(idAlbum));
+        System.out.println(mongoTemplate.updateFirst(query, update, "users"));
+    }
+
+    @Override
+    public void unfollowArtist(String idUser, String idArtist) {
+        Query query = new Query(Criteria.where("_id").is(idUser));
+        Update update = new Update();
+        update.pull("idArtists", new ObjectId(idArtist));
+        System.out.println(mongoTemplate.updateFirst(query, update, "users"));
+    }
+
+    @Override
+    public void removeAlbum(String idUser, String idALbum) {
+        Query query = new Query(Criteria.where("_id").is(idUser));
+        Update update = new Update();
+        update.pull("idAlbums", new ObjectId(idALbum));
+        System.out.println(mongoTemplate.updateFirst(query, update, "users"));
     }
 }

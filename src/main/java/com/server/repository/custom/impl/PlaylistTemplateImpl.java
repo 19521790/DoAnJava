@@ -2,13 +2,20 @@ package com.server.repository.custom.impl;
 
 import com.server.entity.Playlist;
 import com.server.entity.Song;
+import com.server.entity.User;
 import com.server.repository.custom.PlaylistTemplate;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
+
+import java.util.List;
+
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
 
 public class PlaylistTemplateImpl implements PlaylistTemplate {
     @Autowired
@@ -28,5 +35,19 @@ public class PlaylistTemplateImpl implements PlaylistTemplate {
         Update update = new Update();
         update.addToSet("idUser", new ObjectId(idUser));
         System.out.println(mongoTemplate.updateFirst(query, update, "playlists"));
+    }
+
+    @Override
+    public Playlist findSongByPlaylist(String idPlaylist){
+        Aggregation aggregation = newAggregation(
+                Aggregation.match(
+                        Criteria.where("_id").is(idPlaylist)
+                ),
+                Aggregation.lookup("songs", "idSongs", "_id", "songs")
+        );
+        AggregationResults<Playlist> results = mongoTemplate.aggregate(aggregation, "playlists", Playlist.class);
+        System.out.println(results);
+        System.out.println(results.getMappedResults());
+        return results.getMappedResults().get(0);
     }
 }

@@ -40,4 +40,6 @@ public class User {
 
     private List<String> idLastListenSongs;
     private List<Song> lastListenSongs;
+    private List<String> idAlbums;
+    private List<String> idArtists;
 }
