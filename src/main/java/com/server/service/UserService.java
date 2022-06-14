@@ -2,6 +2,7 @@ package com.server.service;
 
 import com.server.entity.Album;
 import com.server.entity.Artist;
+import com.server.entity.Playlist;
 import com.server.entity.User;
 import com.server.exception.AlbumException;
 import com.server.exception.ArtistException;
@@ -163,6 +164,16 @@ public class UserService {
             throw new AlbumException(AlbumException.NotFoundException(idAlbum));
         } else {
             userRepository.removeAlbum(idUser, idAlbum);
+        }
+    }
+
+    public List<Playlist> findPlaylistFromUser(String idUser) throws UserException {
+        User user = userRepository.findById(idUser).orElse(null);
+
+        if(user==null){
+            throw new UserException(UserException.NotFoundException(idUser));
+        }else{
+            return playlistRepository.findPlaylistFromUser(idUser);
         }
     }
 

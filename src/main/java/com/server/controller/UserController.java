@@ -151,6 +151,15 @@ public class UserController {
         }
     }
 
+    @GetMapping("/findPlaylistFromUser")
+    public ResponseEntity findPlaylistFromUser(@RequestParam("idUser") String idUser) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(userService.findPlaylistFromUser(idUser));
+        } catch (UserException e) {
+            return ResponseEntity.status(HttpStatus.OK).body(e.getMessage());
+        }
+    }
+
 //    @PostMapping("/registration")
 //    public ModelAndView registerUserAccount(@ModelAttribute("user") @Valid UserDto userDto,
 //                                            HttpServletRequest request,

@@ -7,7 +7,6 @@ import java.util.List;
 
 public interface UserTemplate {
 
-    public User findUserById(String idUser);
     public void addLastListenSong(String idUser, String idSong);
     public User getLastListenSong(String idUser);
     public long countNumberLastListenSong(String idUser);

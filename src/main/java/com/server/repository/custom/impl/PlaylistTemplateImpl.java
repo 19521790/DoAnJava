@@ -22,12 +22,14 @@ public class PlaylistTemplateImpl implements PlaylistTemplate {
     private MongoTemplate mongoTemplate;
 
     @Override
-    public void addSongToPlaylist(String idPlaylist, String idSong){
+    public void addSongToPlaylist(String idPlaylist, String idSong) {
         Query query = new Query(Criteria.where("_id").is(idPlaylist));
         Update update = new Update();
-        update.addToSet("idSongs",new ObjectId(idSong));
-        System.out.println(mongoTemplate.updateFirst(query,update,"playlists"));
-    };
+        update.addToSet("idSongs", new ObjectId(idSong));
+        System.out.println(mongoTemplate.updateFirst(query, update, "playlists"));
+    }
+
+    ;
 
     @Override
     public void addPlaylistToUser(String idUser, String idPlaylist) {
@@ -38,7 +40,7 @@ public class PlaylistTemplateImpl implements PlaylistTemplate {
     }
 
     @Override
-    public Playlist findSongByPlaylist(String idPlaylist){
+    public Playlist findSongFromPlaylist(String idPlaylist) {
         Aggregation aggregation = newAggregation(
                 Aggregation.match(
                         Criteria.where("_id").is(idPlaylist)
@@ -49,5 +51,11 @@ public class PlaylistTemplateImpl implements PlaylistTemplate {
         System.out.println(results);
         System.out.println(results.getMappedResults());
         return results.getMappedResults().get(0);
+    }
+
+    @Override
+    public List<Playlist> findPlaylistFromUser(String idUser) {
+        Query query = new Query(Criteria.where("idUser").is(idUser));
+        return mongoTemplate.find(query, Playlist.class, "playlists");
     }
 }

@@ -26,12 +26,6 @@ public class UserTemplateImpl implements UserTemplate {
     private MongoTemplate mongoTemplate;
 
     @Override
-    public User findUserById(String idUser) {
-//        LookupOperation lookupOperation = LookupOperation.newLookup().from("playlist");
-        return new User();
-    }
-
-    @Override
     public void addLastListenSong(String idUser, String idSong) {
         Query query = new Query(Criteria.where("_id").is(idUser));
         Update update = new Update();

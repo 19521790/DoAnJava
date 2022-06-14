@@ -64,7 +64,7 @@ public class PlaylistService {
         if (playlist == null) {
             throw new PlaylistException(PlaylistException.NotFoundException(id));
         } else {
-            return playlistRepository.findSongByPlaylist(id);
+            return playlistRepository.findSongFromPlaylist(id);
         }
     }
 
