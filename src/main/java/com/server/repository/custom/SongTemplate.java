@@ -7,4 +7,6 @@ import java.util.List;
 public interface SongTemplate {
     public List<Song> findSongByAlbum(String idAlbum);
     public List<Song> findSongByArtist(String idArtist);
+
+    public List<Song> newUpdate();
 }
