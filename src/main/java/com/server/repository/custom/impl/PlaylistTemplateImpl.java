@@ -64,4 +64,16 @@ public class PlaylistTemplateImpl implements PlaylistTemplate {
         update.pull("idSongs", new ObjectId(idSong));
         System.out.println(mongoTemplate.updateFirst(query, update, "playlists"));
     }
+
+//    @Override
+//    public Playlist recommendSongPlaylist(String idPlaylist) {
+//        Aggregation aggregation = newAggregation(
+//                Aggregation.match(
+//                        Criteria.where("_id").is(idPlaylist)
+//                ),
+//                Aggregation.lookup("songs", "idSongs", "_id", "songs")
+//        );
+//        AggregationResults<Playlist> results = mongoTemplate.aggregate(aggregation, "playlists", Playlist.class);
+//        return results.getMappedResults().get(0);
+//    }
 }

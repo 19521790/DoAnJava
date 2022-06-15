@@ -54,7 +54,7 @@ public class UserService {
         user.setImage(dataService.storeData(image, ".jpg"));
         user.setCreatedAt(new Date(System.currentTimeMillis()));
         String idUser = userRepository.save(user).getId();
-
+        System.out.println(idUser);
         //create like and download playlist at the same time
         playlistService.addLikeAndDownloadPlaylist(idUser);
         return idUser;
