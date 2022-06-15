@@ -48,6 +48,7 @@ public class PlaylistTemplateImpl implements PlaylistTemplate {
                 Aggregation.lookup("songs", "idSongs", "_id", "songs")
         );
         AggregationResults<Playlist> results = mongoTemplate.aggregate(aggregation, "playlists", Playlist.class);
+        System.out.println(results.getMappedResults());
         return results.getMappedResults().get(0);
     }
 
