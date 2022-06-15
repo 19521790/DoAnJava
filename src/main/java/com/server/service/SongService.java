@@ -7,7 +7,6 @@ import com.server.entity.Album;
 import com.server.entity.Artist;
 import com.server.entity.Song;
 import com.server.entity.object.AlbumOtd;
-import com.server.entity.result.SongResult;
 import com.server.exception.AlbumException;
 import com.server.exception.ArtistException;
 import com.server.exception.FileFormatException;

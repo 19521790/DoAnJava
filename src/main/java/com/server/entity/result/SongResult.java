@@ -5,11 +5,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class SongResult {
-    private Song song;
-    private String imagePath;
-    private String filePath;
+    private String name;
+    private int year;
 }
