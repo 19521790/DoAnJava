@@ -37,6 +37,7 @@ public class Song {
     @NotNull(message = "Song album cannot be null")
     private AlbumOtd album;
 
+    private int year;
     private int weekView;
     private int totalView;
     private Date createdAt;

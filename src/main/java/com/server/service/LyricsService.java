@@ -14,6 +14,6 @@ public class LyricsService {
         return lyricsRepository.save(lyrics);
     }
     public Lyrics findLyricsBySong(String idSong){
-        return lyricsRepository.findByIdSong(idSong);
+        return lyricsRepository.findLyricsBySong(idSong);
     }
 }
