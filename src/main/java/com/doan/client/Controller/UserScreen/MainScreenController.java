@@ -7,11 +7,18 @@ package com.doan.client.Controller.UserScreen;
 
 import com.doan.client.Controller.Component.LoginFormController;
 import com.doan.client.Controller.PublicController;
-import com.doan.client.Model.Song;
-import com.doan.client.Model.User;
+import com.doan.client.Model.*;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import com.jfoenix.controls.JFXSlider;
 
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.JsonNode;
+import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import de.jensd.fx.glyphs.materialicons.MaterialIconView;
@@ -23,26 +30,32 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 
 /**
@@ -109,20 +122,40 @@ public class MainScreenController implements Initializable {
     public Label timeRemaining;
     public AnchorPane discoverPane;
     public DiscoverScreenController discoverController;
-
-
     public VBox mainVbox;
-
     public Group group3;
     public ImageView imageCurrentPlayMusic;
     public HomeScreenController homeScreenController;
     public Label nameCurrentPlayMusic;
     public Label artistCurrentPlayMusic;
     public Button playMediaBtn;
+    public LoveScreenController loveScreenController;
+    public FollowPaneController followPaneController;
+    public static List<String> likedList;
+    public static String idPlaylistLike;
+    public static String idUser;
+    public static List<String> albumFollowed;
+    public static List<String> artistFollowed;
+    public static List<Playlist> playlistOfUser;
+    public ScrollPane searchBarPane;
+
+    public TextField searchBarField;
+    public ImageView loadingSearchBar;
+    public Button hideSearchPaneBtn;
+    public HBox songHbox;
+    public HBox artistHbox;
+    public HBox albumHbox;
+    public AnchorPane searchBarAnchorPane;
+    public ArrayList<Song> previousSong;
+    public AtomicBoolean enableShuffle = new AtomicBoolean(false);
+    public AtomicBoolean enableRepeat = new AtomicBoolean(false);
+    public LyricScreenController lyricScreenController;
+    public AnchorPane bannerPrice;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         songs = new ArrayList<Song>();
+        playlistOfUser = new ArrayList<>();
         try {
             URL url1 = new URL("http://www.google.com");
             URLConnection connection = url1.openConnection();
@@ -141,13 +174,15 @@ public class MainScreenController implements Initializable {
                 homePane = homeFxmlLoader.load();
                 homeScreenController = homeFxmlLoader.getController();
                 homeScreenController.mainScreenController = this;
-                homeScreenController.publicController.mainScreenController = this;
+
                 homeScreenController.initFirstMedia();
                 homeScreenController.initNewAndPopular();
                 //discover
                 discoverPane = discoverFxmlLoader.load();
                 discoverController = discoverFxmlLoader.getController();
-
+                discoverController.mainScreenController = this;
+                discoverController.initOffer();
+                PublicController.mainScreenController = this;
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -185,10 +220,18 @@ public class MainScreenController implements Initializable {
                 songs.remove(songItem);
                 break;
             }
-
         }
         songs.add(song);
         songNumber = songs.size() - 1;
+        new Thread(() -> {
+            try {
+                HttpResponse<String> httpResponse = Unirest.put("http://localhost:8080/song/countPlay/" + song.getId()).asString();
+                System.out.println(httpResponse.getBody());
+            } catch (UnirestException e) {
+                throw new RuntimeException(e);
+            }
+
+        }).start();
 
     }
 
@@ -309,39 +352,45 @@ public class MainScreenController implements Initializable {
         }
     }
 
-
     public void toggleBtn(ActionEvent actionEvent) {
 
         ToggleButton toggleButton = (ToggleButton) actionEvent.getSource();
-        if (!toggleButton.isSelected()) {
-            toggleButton.fire();
-        }
-        List<Toggle> toggleButtonList = toggleButton.getToggleGroup().getToggles();
 
-        for (Toggle toggle : toggleButtonList) {
-            ToggleButton indexToggleButton = (ToggleButton) toggle;
-            if (indexToggleButton.isSelected()) {
-                indexToggleButton.setStyle("-fx-background-color: #3b75ff; -fx-text-fill: white");
-
-                try {
-                    FontAwesomeIconView fontAwesomeIconView = (FontAwesomeIconView) indexToggleButton.getGraphic();
-                    fontAwesomeIconView.setFill(Paint.valueOf("white"));
-                } catch (Exception e) {
-
-                    MaterialIconView fontAwesomeIconView = (MaterialIconView) indexToggleButton.getGraphic();
-                    fontAwesomeIconView.setFill(Paint.valueOf("white"));
-                }
-                pushScreen(indexToggleButton);
-            } else {
-                indexToggleButton.setStyle("-fx-background-color: white; -fx-text-fill: black");
-                try {
-                    FontAwesomeIconView fontAwesomeIconView = (FontAwesomeIconView) indexToggleButton.getGraphic();
-                    fontAwesomeIconView.setFill(Paint.valueOf("black"));
-                } catch (Exception e) {
-                    MaterialIconView fontAwesomeIconView = (MaterialIconView) indexToggleButton.getGraphic();
-                    fontAwesomeIconView.setFill(Paint.valueOf("black"));
-                }
+        if (!login & (toggleButton.getId().equals("likeBtn") || toggleButton.getId().equals("albumBtn") || toggleButton.getId().equals("followsBtn"))) {
+            loginPaneFromHome.setVisible(true);
+        } else {
+            if (!toggleButton.isSelected()) {
+                toggleButton.fire();
             }
+            List<Toggle> toggleButtonList = toggleButton.getToggleGroup().getToggles();
+
+            for (Toggle toggle : toggleButtonList) {
+                ToggleButton indexToggleButton = (ToggleButton) toggle;
+                if (indexToggleButton.isSelected()) {
+                    indexToggleButton.setStyle("-fx-background-color: #3b75ff; -fx-text-fill: white");
+
+                    try {
+                        FontAwesomeIconView fontAwesomeIconView = (FontAwesomeIconView) indexToggleButton.getGraphic();
+                        fontAwesomeIconView.setFill(Paint.valueOf("white"));
+                    } catch (Exception e) {
+
+                        MaterialIconView fontAwesomeIconView = (MaterialIconView) indexToggleButton.getGraphic();
+                        fontAwesomeIconView.setFill(Paint.valueOf("white"));
+                    }
+                    pushScreen(indexToggleButton);
+                } else {
+                    indexToggleButton.setStyle("-fx-background-color: white; -fx-text-fill: black");
+                    try {
+                        FontAwesomeIconView fontAwesomeIconView = (FontAwesomeIconView) indexToggleButton.getGraphic();
+                        fontAwesomeIconView.setFill(Paint.valueOf("black"));
+                    } catch (Exception e) {
+                        MaterialIconView fontAwesomeIconView = (MaterialIconView) indexToggleButton.getGraphic();
+                        fontAwesomeIconView.setFill(Paint.valueOf("black"));
+                    }
+                }
+
+            }
+
         }
 
     }
@@ -349,68 +398,162 @@ public class MainScreenController implements Initializable {
     public void pushScreen(ToggleButton toggleButton) {
         discoverButtonTab.setVisible(false);
 
+        mainBoard.setVvalue(0);
         if (toggleButton.getId().equals("homeBtn")) {
-            mainBoard.setContent(homePane);
+            mainBoard.setContent(loadingPane());
+            new Thread(() -> {
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        homeScreenController.initArtist();
+                        homeScreenController.initAlbum();
+                        mainBoard.setContent(homePane);
+                    }
+                });
+            }).start();
+
+
         } else if (toggleButton.getId().equals("discoverBtn")) {
             mainBoard.setContent(discoverPane);
             discoverButtonTab.setVisible(true);
 
         } else if (toggleButton.getId().equals("downloadBtn")) {
+            mainBoard.setContent(loadingPane());
             FXMLLoader downloadFxmlLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/UserScreen/DownloadScreen.fxml"));
-            try {
-                AnchorPane anchorPane = downloadFxmlLoader.load();
-                DownloadScreenController downloadScreenController = downloadFxmlLoader.getController();
-                downloadScreenController.mainScreenController = this;
-                mainBoard.setContent(anchorPane);
 
+            new Thread(() -> {
 
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+                try {
+                    AnchorPane anchorPane = downloadFxmlLoader.load();
+                    DownloadScreenController downloadScreenController = downloadFxmlLoader.getController();
+                    downloadScreenController.mainScreenController = this;
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            mainBoard.setContent(anchorPane);
+                        }
+                    });
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
 
+            }).start();
 
         } else {
-            if (!login) {
-                loginPaneFromHome.setVisible(true);
-            } else {
-                if (toggleButton.getId().equals("likeBtn")) {
-                    FXMLLoader loveFxmlLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/UserScreen/LoveScreen.fxml"));
+
+            if (toggleButton.getId().equals("likeBtn")) {
+                mainBoard.setContent(loadingPane());
+                FXMLLoader loveFxmlLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/UserScreen/LoveScreen.fxml"));
+
+                new Thread(() -> {
                     try {
-                        AnchorPane anchorPane = loveFxmlLoader.load();
-                        mainBoard.setContent(anchorPane);
+                        AnchorPane lovePane = loveFxmlLoader.load();
+                        loveScreenController = loveFxmlLoader.getController();
+                        loveScreenController.mainScreenController = this;
+                        loveScreenController.initSongLiked();
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                mainBoard.setContent(lovePane);
+                            }
+                        });
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }).start();
+
+
+            } else if (toggleButton.getId().equals("albumBtn")) {
+
+                mainBoard.setContent(loadingPane());
+                FXMLLoader followPane = new FXMLLoader(getClass().getResource("/com/doan/client/View/UserScreen/FollowPane.fxml"));
+                new Thread(() -> {
+                    try {
+                        AnchorPane albumPane = followPane.load();
+                        followPaneController = followPane.getController();
+                        followPaneController.mainScreenController = this;
+
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                followPaneController.initAlbum();
+                                mainBoard.setContent(albumPane);
+                            }
+                        });
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
 
-                } else if (toggleButton.getId().equals("albumBtn")) {
+                }).start();
 
 
-                } else if (toggleButton.getId().equals("followsBtn")) {
+            } else if (toggleButton.getId().equals("followsBtn")) {
+                mainBoard.setContent(loadingPane());
 
+                FXMLLoader followPane = new FXMLLoader(getClass().getResource("/com/doan/client/View/UserScreen/FollowPane.fxml"));
+                new Thread(() -> {
 
-                } else {
-                    FXMLLoader playlistFxmlLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/UserScreen/PlaylistScreen.fxml"));
-                    FXMLLoader editFxmlLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/Component/EditPlaylistForm.fxml"));
+                    try {
+                        AnchorPane artistPane = followPane.load();
+                        FollowPaneController followPaneController = followPane.getController();
+                        followPaneController.mainScreenController = this;
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                followPaneController.initArtist();
+                                mainBoard.setContent(artistPane);
+                            }
+                        });
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+
+                }).start();
+
+            } else {
+                mainBoard.setContent(loadingPane());
+                FXMLLoader playlistFxmlLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/UserScreen/PlaylistScreen.fxml"));
+                FXMLLoader editFxmlLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/Component/EditPlaylistForm.fxml"));
+                new Thread(() -> {
+
                     try {
                         AnchorPane anchorPane = playlistFxmlLoader.load();
-
                         AnchorPane editPlaylistPane = editFxmlLoader.load();
-                        parentHomePane.getChildren().add(editPlaylistPane);
-                        editPlaylistPane.setVisible(false);
-
                         PlayListScreenController playListScreenController = playlistFxmlLoader.getController();
                         playListScreenController.editPlaylistFormController = editFxmlLoader.getController();
                         playListScreenController.editPlaylistPane = editPlaylistPane;
-                        playListScreenController.setPlaylistName("Playlist # " + (count - 1));
-                        mainBoard.setContent(anchorPane);
+                        playListScreenController.mainScreenController = this;
+                        Platform.runLater(new Runnable() {
 
+                            @Override
+                            public void run() {
+                                parentHomePane.getChildren().add(editPlaylistPane);
+                                editPlaylistPane.setVisible(false);
+                                playListScreenController.initPlaylist(toggleButton.getId());
+                                mainBoard.setContent(anchorPane);
+                            }
+                        });
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
-                }
+
+                }).start();
             }
         }
+    }
 
+
+    public AnchorPane loadingPane() {
+        AnchorPane anchorPane = new AnchorPane();
+        anchorPane.setPrefWidth(1000);
+        anchorPane.setPrefHeight(500);
+        ImageView imageView = new ImageView(new Image("http://localhost:8080/image/loading.gif"));
+        imageView.setFitWidth(100);
+        imageView.setFitHeight(100);
+        anchorPane.getChildren().add(imageView);
+        imageView.setLayoutX(450);
+        imageView.setLayoutY(200);
+        return anchorPane;
     }
 
     public void showAccountForm(MouseEvent mouseEvent) {
@@ -419,7 +562,7 @@ public class MainScreenController implements Initializable {
             loginPaneFromHome.setVisible(true);
 
         } else {
-            mainBoard.setContent(homePane);
+            mainBoard.setContent(accountAnchorPane);
         }
     }
 
@@ -438,6 +581,7 @@ public class MainScreenController implements Initializable {
             logoutPopup.show();
             homeBtn.fire();
             PlayListScreenController.isSetUser = false;
+            login = false;
 
         }
 
@@ -481,11 +625,19 @@ public class MainScreenController implements Initializable {
     }
 
     public void nextMedia(ActionEvent actionEvent) {
-        if (songNumber < songs.size() - 1) {
-            songNumber++;
+        if (!enableRepeat.get()) {
+            if (enableShuffle.get()) {
+                int randomNum = ThreadLocalRandom.current().nextInt(0, songs.size());
+                System.out.println(randomNum);
+                songNumber = randomNum;
+            } else {
+                if (songNumber < songs.size() - 1) {
+                    songNumber++;
 
-        } else {
-            songNumber = 0;
+                } else {
+                    songNumber = 0;
+                }
+            }
         }
         changMedia();
     }
@@ -514,7 +666,6 @@ public class MainScreenController implements Initializable {
         mediaPlayer.setRate(cur_speed);
         currentSpeedMedia.setText("Speed " + cur_speed + " x");
 
-
     }
 
     public void beginTimer() {
@@ -537,6 +688,11 @@ public class MainScreenController implements Initializable {
                             timePlay.setText(time);
                             String timeRemainString = PublicController.setTimePlay(timeRemain);
                             timeRemaining.setText(timeRemainString);
+
+                            if (lyricScreenController != null) {
+                                int curTimeLyrics = (int) current;
+                                lyricScreenController.changeLyrics(curTimeLyrics);
+                            }
                         }
                     });
 
@@ -580,64 +736,272 @@ public class MainScreenController implements Initializable {
     int count = 1;
 
     public void addNewPlaylist(ActionEvent actionEvent) {
+        if (login) {
+            ToggleButton button = new ToggleButton();
+            button.setText("Playlist # " + count);
+            FontAwesomeIconView fontAwesomeIconView = new FontAwesomeIconView();
+            fontAwesomeIconView.setGlyphName("CLOSE");
 
-        ToggleButton button = new ToggleButton();
-        button.setText("Playlist # " + count);
-        FontAwesomeIconView fontAwesomeIconView = new FontAwesomeIconView();
-        fontAwesomeIconView.setGlyphName("CHECK");
-        button.setGraphic(fontAwesomeIconView);
-        button.getStyleClass().add("playlistBtn");
-        VBox.setMargin(button, new Insets(10, 0, 0, 0));
-        mainVbox.getChildren().add(button);
-        button.setToggleGroup(Group1);
-        count += 1;
-        button.setOnAction(this::toggleBtn);
-        button.setId("Playlist" + count);
-        button.fire();
+            button.setGraphic(fontAwesomeIconView);
+            button.getStyleClass().add("playlistBtn");
+            VBox.setMargin(button, new Insets(10, 0, 0, 0));
+            mainVbox.getChildren().add(button);
+            button.setToggleGroup(Group1);
+            count += 1;
 
+            button.setId("Playlist" + count);
+            button.setPrefWidth(165);
+            button.setAlignment(Pos.BASELINE_LEFT);
+            Playlist playlist = new Playlist();
+            playlist.setName("Playlist # " + count);
+            playlist.setIdUser(MainScreenController.idUser);
+
+            try {
+                HttpResponse<JsonNode> jsonNodeHttpResponse = Unirest.post("http://localhost:8080/playlist/addPlaylist/").field("image", new File("src/main/resources/com/doan/client/Image/anonymous.png")).field("playlist", new Gson().toJson(playlist)).asJson();
+                Playlist playlist1 = new Gson().fromJson(jsonNodeHttpResponse.getBody().toString(), Playlist.class);
+                playlistOfUser.add(playlist1);
+                button.setId(playlist1.getId());
+                button.setOnAction(this::toggleBtn);
+                fontAwesomeIconView.setOnMouseClicked(mouseEvent -> removePlaylist(playlist1.getId(), button));
+                button.fire();
+            } catch (UnirestException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            loginPaneFromHome.setVisible(true);
+        }
+    }
+
+    public void removePlaylist(String id, ToggleButton button) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setHeaderText("Are you sure want to delete this Playlist?");
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK) {
+            mainVbox.getChildren().remove(button);
+            try {
+                HttpResponse<String> httpResponse = Unirest.delete("http://localhost:8080/playlist/deletePlaylist/" + id).asString();
+                System.out.println(httpResponse.getBody());
+                playlistOfUser.removeIf(playlist -> playlist.getId().equals(button.getId()));
+                homeBtn.fire();
+            } catch (UnirestException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+    }
+
+    public void skipFunction(double current) {
+        mediaPlayer.seek(Duration.seconds(current));
+        double end = media.getDuration().toSeconds();
+        double timeRemain = end - current;
+
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                String time = PublicController.setTimePlay(current);
+                timePlay.setText(time);
+                String timeRemainString = PublicController.setTimePlay(timeRemain);
+                timeRemaining.setText(timeRemainString);
+            }
+        });
+
+        jfxProgressBar.setValue(current / end * 100);
+        if (current / end == 1) {
+            nextMediaBtn.fire();
+        }
     }
 
     public void skipBack10Second(ActionEvent actionEvent) {
-        double current = mediaPlayer.getCurrentTime().toSeconds() - 10;
-        mediaPlayer.seek(Duration.seconds(current));
-        double end = media.getDuration().toSeconds();
-        double timeRemain = end - current;
-
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                String time = PublicController.setTimePlay(current);
-                timePlay.setText(time);
-                String timeRemainString = PublicController.setTimePlay(timeRemain);
-                timeRemaining.setText(timeRemainString);
-            }
-        });
-
-        jfxProgressBar.setValue(current / end * 100);
-        if (current / end == 1) {
-            nextMediaBtn.fire();
-        }
+        skipFunction(mediaPlayer.getCurrentTime().toSeconds() - 10);
     }
 
     public void skipForward30Second(ActionEvent actionEvent) {
-        double current = mediaPlayer.getCurrentTime().toSeconds() + 30;
-        mediaPlayer.seek(Duration.seconds(current));
-        double end = media.getDuration().toSeconds();
-        double timeRemain = end - current;
+        skipFunction(mediaPlayer.getCurrentTime().toSeconds() + 30);
+    }
 
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                String time = PublicController.setTimePlay(current);
-                timePlay.setText(time);
-                String timeRemainString = PublicController.setTimePlay(timeRemain);
-                timeRemaining.setText(timeRemainString);
-            }
-        });
 
-        jfxProgressBar.setValue(current / end * 100);
-        if (current / end == 1) {
-            nextMediaBtn.fire();
+    public void hideSearchPane(ActionEvent mouseEvent) {
+        searchBarPane.setVisible(false);
+        loadingSearchBar.setVisible(false);
+        hideSearchPaneBtn.setVisible(false);
+    }
+
+    public void setSearchPaneVisible(KeyEvent keyEvent) {
+        if (searchBarField.getText().equals("")) {
+
+            searchBarPane.setVisible(false);
+            loadingSearchBar.setVisible(false);
+            hideSearchPaneBtn.setVisible(false);
+        } else {
+            searchBarPane.setVisible(true);
+            hideSearchPaneBtn.setVisible(false);
+            loadingSearchBar.setVisible(true);
+
+
+            new Thread(() -> {
+                try {
+                    HttpResponse<JsonNode> jsonNodeHttpResponse = Unirest.get("http://localhost:8080/search/" + searchBarField.getText()).asJson();
+                    List<Song> songList = PublicController.getSongFromJson(jsonNodeHttpResponse);
+                    JSONArray artistArray = new JSONArray(jsonNodeHttpResponse.getBody().getObject().get("artists").toString());
+                    List<Artist> artistList = new ArrayList<>();
+                    for (int i = 0; i < artistArray.length(); i++) {
+                        JSONObject jsonobject = artistArray.getJSONObject(i);
+                        Artist artist = new Gson().fromJson(String.valueOf(jsonobject), Artist.class);
+                        artistList.add(artist);
+                    }
+                    JSONArray albumsArray = new JSONArray(jsonNodeHttpResponse.getBody().getObject().get("albums").toString());
+                    List<Album> albumList = new ArrayList<>();
+                    for (int i = 0; i < albumsArray.length(); i++) {
+                        JSONObject jsonobject = albumsArray.getJSONObject(i);
+                        Album album = new Gson().fromJson(String.valueOf(jsonobject), Album.class);
+                        albumList.add(album);
+                    }
+
+
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+
+
+                            addSong(songList);
+                            addArtist(artistList);
+                            addAlbum(albumList);
+                            loadingSearchBar.setVisible(false);
+                            hideSearchPaneBtn.setVisible(true);
+                        }
+                    });
+                } catch (UnirestException e) {
+                    throw new RuntimeException(e);
+                }
+            }).start();
         }
+
+
+    }
+
+    private void addAlbum(List<Album> albumList) {
+        PublicController publicController = new PublicController();
+
+        albumHbox.getChildren().clear();
+        for (int i = 0; i < albumList.size(); i++) {
+            Album album = albumList.get(i);
+            AnchorPane anchorPane = publicController.albumItem(album.getId(), album.getImage(), album.getName());
+            HBox.setMargin(anchorPane, new Insets(10, 10, 10, 10));
+            anchorPane.setPadding(new Insets(0, 0, 0, 5));
+            albumHbox.getChildren().add(anchorPane);
+            if (i == 4) {
+                break;
+            }
+        }
+    }
+
+    private void addSong(List<Song> songList) {
+        PublicController publicController = new PublicController();
+        songHbox.getChildren().clear();
+
+        for (int i = 0; i < songList.size(); i++) {
+            Song curr_song = songList.get(i);
+            AnchorPane anchorPane = publicController.musicItem(curr_song.getId(), curr_song.getAlbum().getImage(), curr_song.getName(), curr_song.getArtists().get(0).getName(), curr_song.getFile(), "PLAY", searchBarAnchorPane, i, 260.0);
+
+            HBox.setMargin(anchorPane, new Insets(10, 10, 10, 10));
+            anchorPane.setPadding(new Insets(0, 0, 0, 5));
+            songHbox.getChildren().add(anchorPane);
+            if (i == 4) {
+                break;
+            }
+        }
+
+    }
+
+    private void addArtist(List<Artist> artists) {
+        PublicController publicController = new PublicController();
+        artistHbox.getChildren().clear();
+        for (int i = 0; i < artists.size(); i++) {
+            Artist artist = artists.get(i);
+            AnchorPane anchorPane = publicController.artistItem(artist.getId(), artist.getImage(), artist.getName());
+            HBox.setMargin(anchorPane, new Insets(10, 10, 10, 10));
+            anchorPane.setPadding(new Insets(0, 0, 0, 5));
+            artistHbox.getChildren().add(anchorPane);
+            if (i == 4) {
+                break;
+            }
+        }
+    }
+
+
+    private void goToArtistPage(String id) {
+        try {
+            HttpResponse<JsonNode> jsonNodeHttpResponse = Unirest.get("http://localhost:8080/album/findAlbumById/" + id).asJson();
+            FXMLLoader albumScreenFxmlLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/UserScreen/ComponentScreen.fxml"));
+            AnchorPane anchorPane = albumScreenFxmlLoader.load();
+            ComponentScreenController albumController = albumScreenFxmlLoader.getController();
+            albumController.mainScreenController = this;
+            mainBoard.setContent(anchorPane);
+            mainBoard.setVvalue(0);
+            albumController.setImageBanner("http://localhost:8080/image/bannerAlbum.jpg");
+            albumController.bannerTitle.setText("Album");
+            albumController.setBanner(jsonNodeHttpResponse);
+
+        } catch (UnirestException | IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void shuffeSong(ActionEvent actionEvent) {
+        setEnableButton(actionEvent, enableShuffle);
+
+    }
+
+    public void repeatSong(ActionEvent actionEvent) {
+        setEnableButton(actionEvent, enableRepeat);
+    }
+
+    public void setEnableButton(ActionEvent actionEvent, AtomicBoolean enableButton) {
+        Button button = (Button) actionEvent.getSource();
+        FontAwesomeIconView fontAwesomeIconView = (FontAwesomeIconView) button.getGraphic();
+        if (!enableButton.get()) {
+            enableButton.set(true);
+            fontAwesomeIconView.setFill(Paint.valueOf("#3b75ff"));
+
+        } else {
+            enableButton.set(true);
+            fontAwesomeIconView.setFill(Paint.valueOf("black"));
+        }
+    }
+
+    public void getLyrics(ActionEvent actionEvent) {
+        try {
+            HttpResponse<JsonNode> httpResponse = Unirest.get("http://localhost:8080/song/findLyricsBySong/" + songs.get(songNumber).getId()).asJson();
+
+            if (httpResponse.getBody().toString().equals("{}")) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setHeaderText("No lyrics found for this song");
+                alert.show();
+                lyricScreenController = null;
+            } else {
+                JSONArray jsonArray = new JSONArray(httpResponse.getBody().getObject().get("lyrics").toString());
+                List<Lyrics> lyrics = new ArrayList<>();
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonobject = jsonArray.getJSONObject(i);
+                    Lyrics lyric = new Gson().fromJson(String.valueOf(jsonobject), Lyrics.class);
+                    lyrics.add(lyric);
+                }
+                FXMLLoader lyricFxmlLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/UserScreen/LyricScreen.fxml"));
+                AnchorPane anchorPane = lyricFxmlLoader.load();
+                lyricScreenController = lyricFxmlLoader.getController();
+                lyricScreenController.songTitle.setText(songs.get(songNumber).getName());
+                lyricScreenController.initLyrics(lyrics);
+                mainBoard.setContent(anchorPane);
+            }
+        } catch (UnirestException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    public void closePriceBanner(ActionEvent actionEvent) {
+        bannerPrice.setVisible(false);
     }
 }

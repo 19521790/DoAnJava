@@ -28,8 +28,11 @@ public class User {
     private String password;
     private String image;
     private String role = "user";
-    private List<String> idPlaylists = new ArrayList<String>();
     private Date createdAt;
     private Date updatedAt;
+    private List<String> idLastListenSongs;
+    private List<Song> lastListenSongs;
+    private List<String> idAlbums;
+    private List<String> idArtists;
 
 }

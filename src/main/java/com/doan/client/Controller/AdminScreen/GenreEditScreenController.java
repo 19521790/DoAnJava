@@ -1,21 +1,13 @@
 package com.doan.client.Controller.AdminScreen;
 
-import com.doan.client.Model.Album;
-import com.doan.client.Model.Artist;
 import com.doan.client.Model.Genre;
-import com.doan.client.Model.Object.AlbumOtd;
-import com.doan.client.Model.Object.ArtistOtd;
-import com.doan.client.Model.Song;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import com.google.gson.Gson;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
@@ -30,12 +22,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 
-import java.io.File;
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
 
-public class GenreEditScreenController extends GetDataFromServerController implements Initializable {
+public class GenreEditScreenController extends PublicAdminMethodController implements Initializable {
     public VBox listNotAddedSong;
     public HBox listAddedSong;
     public TextField addSongField;

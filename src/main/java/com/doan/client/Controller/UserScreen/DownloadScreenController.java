@@ -53,7 +53,6 @@ public class DownloadScreenController implements Initializable {
             File file = songs.get(i);
             arrayName += file.getName().replace(".m4a", "") + " • ";
             String curName= file.getName().replace(".m4a", "");
-
             //get data
             Song song = new Song();
             song.setId(curName);
@@ -126,6 +125,7 @@ public class DownloadScreenController implements Initializable {
             downloadVbox.getChildren().add(anchorPane);
 
         }
+
         listSongName.setText(arrayName);
         songCount.setText(songs.size() + " songs");
 

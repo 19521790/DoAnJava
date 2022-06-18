@@ -5,11 +5,8 @@ import com.doan.client.Model.Artist;
 import com.doan.client.Model.Genre;
 import com.doan.client.Model.Song;
 
-import com.mashape.unirest.http.exceptions.UnirestException;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.control.*;
@@ -17,7 +14,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
@@ -27,7 +23,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class GetDataFromServerController {
+public abstract class PublicAdminMethodController {
     public VBox listNotAddedAlbum;
     public VBox listNotAddedArtist;
     public HBox listAddedAlbum;

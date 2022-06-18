@@ -1,5 +1,6 @@
 package com.doan.client.Controller.AdminScreen;
 
+import com.doan.client.Controller.PublicController;
 import com.doan.client.Model.Album;
 import com.doan.client.Model.Artist;
 import com.doan.client.Model.Genre;
@@ -192,5 +193,9 @@ public class AdminScreenController implements Initializable {
         }
     }
 
+
+    public void backToUserScreen(ActionEvent actionEvent) {
+        PublicController.primaryStage.setScene(PublicController.userScene);
+    }
 
 }

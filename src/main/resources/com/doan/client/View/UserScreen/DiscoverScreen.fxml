@@ -2,34 +2,32 @@
 
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import de.jensd.fx.glyphs.materialicons.MaterialIconView?>
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="1000.0" style="-fx-background-color: #f5f6fc;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.doan.client.Controller.UserScreen.DiscoverScreenController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="1000.0" style="-fx-background-color: #f5f6fc;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.doan.client.Controller.UserScreen.DiscoverScreenController">
    <children>
-      <TabPane fx:id="tabPaneTop" layoutY="-30.0" prefHeight="960.0" prefWidth="1000.0" tabClosingPolicy="UNAVAILABLE">
+      <TabPane fx:id="tabPaneTop" layoutY="-30.0" prefWidth="1000.0" tabClosingPolicy="UNAVAILABLE">
          <tabs>
             <Tab fx:id="tabOffer" text="Untitled Tab 1">
                <content>
-                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: #f5f6fc;">
+                  <AnchorPane fx:id="outsideParent" minHeight="0.0" minWidth="0.0" prefHeight="793.0" prefWidth="1000.0" style="-fx-background-color: #f5f6fc;">
                      <children>
                         <AnchorPane layoutX="50.0" layoutY="33.0" prefHeight="250.0" prefWidth="900.0" style="-fx-background-color: white; -fx-background-radius: 20;">
                            <children>
-                              <ImageView fitHeight="197.0" fitWidth="219.0" layoutX="39.0" layoutY="27.0" pickOnBounds="true" preserveRatio="true">
+                              <ImageView fx:id="imagePodcast" fitHeight="197.0" fitWidth="219.0" layoutX="39.0" layoutY="27.0" onMouseClicked="#playPodcast" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@../../Image/download.jpg" />
                                  </image>
@@ -39,45 +37,51 @@
                                     <Font size="20.0" />
                                  </font>
                               </Label>
-                              <Label layoutX="271.0" layoutY="111.0" prefHeight="40.0" prefWidth="315.0" text="INTENSE STUDYING">
+                              <Label fx:id="namePodcast" layoutX="271.0" layoutY="111.0" prefHeight="40.0" prefWidth="315.0" text="INTENSE STUDYING">
                                  <font>
                                     <Font name="System Bold" size="28.0" />
                                  </font>
                               </Label>
-                              <Label layoutX="271.0" layoutY="157.0" prefHeight="40.0" prefWidth="315.0" text="Mathew Koma">
+                              <Label fx:id="artistPodcast" layoutX="271.0" layoutY="157.0" prefHeight="40.0" prefWidth="315.0" text="Mathew Koma">
                                  <font>
                                     <Font name="System Bold" size="22.0" />
                                  </font>
                               </Label>
-                              <RadioButton layoutX="813.0" layoutY="106.0" mnemonicParsing="false" selected="true">
+                              <RadioButton layoutX="813.0" layoutY="106.0" mnemonicParsing="false" onAction="#changeToPodcast1" selected="true">
                                  <toggleGroup>
                                     <ToggleGroup fx:id="Group3" />
                                  </toggleGroup>
                                  <font>
-                                    <Font size="6.0" />
+                                    <Font size="10.0" />
                                  </font>
                               </RadioButton>
-                              <RadioButton layoutX="813.0" layoutY="122.0" mnemonicParsing="false" toggleGroup="$Group3">
+                              <RadioButton layoutX="813.0" layoutY="127.0" mnemonicParsing="false" onAction="#changeToPodcast2" toggleGroup="$Group3">
                                  <font>
-                                    <Font size="6.0" />
-                                 </font>
-                              </RadioButton>
-                              <RadioButton layoutX="813.0" layoutY="139.0" mnemonicParsing="false" toggleGroup="$Group3">
-                                 <font>
-                                    <Font size="6.0" />
+                                    <Font size="10.0" />
                                  </font>
                               </RadioButton>
                            </children>
                         </AnchorPane>
+                        <Label layoutX="25.0" layoutY="332.0" prefHeight="33.0" prefWidth="299.0" text="Maybe you want to hear">
+                           <font>
+                              <Font name="Arial Bold" size="20.0" />
+                           </font>
+                        </Label>
+                        <AnchorPane fx:id="slideCardOffer" layoutX="25.0" layoutY="385.0" prefHeight="240.0" prefWidth="900.0" />
                      </children>
                   </AnchorPane>
                </content>
             </Tab>
             <Tab fx:id="tabCategory" text="Untitled Tab 2">
                <content>
-                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="827.0" prefWidth="1000.0">
                      <children>
-                        <Button layoutX="160.0" layoutY="188.0" mnemonicParsing="false" text="tab2" />
+                        <VBox fx:id="categoryPane" layoutX="55.0" layoutY="51.0" prefHeight="671.0" prefWidth="897.0">
+                           <children>
+                              <HBox fx:id="hbox1" prefHeight="232.0" prefWidth="897.0" />
+                              <HBox fx:id="hbox2" prefHeight="233.0" prefWidth="897.0" />
+                           </children>
+                        </VBox>
                      </children>
                   </AnchorPane>
                </content>
@@ -268,9 +272,9 @@
                                     </AnchorPane>
                                  </children>
                               </AnchorPane>
-                              <Button layoutX="750.0" layoutY="70.0" mnemonicParsing="false" prefHeight="89.0" prefWidth="97.0" style="-fx-background-color: none;">
+                              <Button fx:id="navigateBtn" layoutX="750.0" layoutY="70.0" mnemonicParsing="false" onAction="#navigateNextBanner" prefHeight="89.0" prefWidth="97.0" style="-fx-background-color: none;">
                                  <graphic>
-                                    <MaterialIconView fx:id="navigateBtn" fill="WHITE" glyphName="CHEVRON_RIGHT" onMouseClicked="#navigateNextBanner" size="100" wrappingWidth="94.666748046875">
+                                    <MaterialIconView fill="WHITE" glyphName="CHEVRON_RIGHT" size="100" wrappingWidth="94.666748046875">
                                        <font>
                                           <Font size="32.0" />
                                        </font>
@@ -282,26 +286,11 @@
                               </Button>
                            </children>
                         </AnchorPane>
-                        <Button graphicTextGap="0.0" layoutX="23.0" layoutY="301.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="35.0" style="-fx-background-color: #3b75ff; -fx-background-radius: 50%;">
+                        <Button graphicTextGap="0.0" layoutX="23.0" layoutY="301.0" mnemonicParsing="false" onAction="#playAllSong" prefHeight="35.0" prefWidth="35.0" style="-fx-background-color: #3b75ff; -fx-background-radius: 50%;">
                            <graphic>
                               <FontAwesomeIconView fill="WHITE" glyphName="PLAY" size="20" wrappingWidth="13.0" />
                            </graphic>
                         </Button>
-                        <Button layoutX="77.0" layoutY="302.0" mnemonicParsing="false" prefHeight="33.0" prefWidth="0.0" style="-fx-background-color: none;">
-                           <graphic>
-                              <FontAwesomeIconView glyphName="RANDOM" size="18" />
-                           </graphic>
-                        </Button>
-                        <TextField layoutX="524.0" layoutY="291.0" prefHeight="33.0" prefWidth="306.0" promptText="Search by title" style="-fx-border-width: 0;">
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                           <padding>
-                              <Insets left="30.0" />
-                           </padding>
-                        </TextField>
-                        <FontAwesomeIconView fill="#8f8f8f" glyphName="SEARCH" layoutX="537.0" layoutY="312.0" size="12" />
-                        <ChoiceBox fx:id="choiceBoxSongs" layoutX="845.0" layoutY="295.0" prefHeight="25.0" prefWidth="72.0" style="-fx-background-color: none;" />
                         <Button layoutX="44.0" layoutY="370.0" mnemonicParsing="false" style="-fx-background-color: none;" text="#">
                            <font>
                               <Font size="14.0" />
@@ -324,136 +313,7 @@
                         </Label>
                         <MaterialIconView glyphName="ALARM" layoutX="869.0" layoutY="391.0" size="16" text="" />
                         <Separator layoutX="41.0" layoutY="409.0" prefHeight="2.0" prefWidth="935.0" />
-                        <VBox fx:id="billBoardTable" layoutX="41.0" layoutY="435.0" prefHeight="278.0" prefWidth="939.0">
-                           <children>
-                              <AnchorPane prefHeight="44.0" prefWidth="915.0" styleClass="top_five_card">
-                                 <children>
-                                    <Label layoutX="10.0" layoutY="12.0" text="1">
-                                       <font>
-                                          <Font size="13.0" />
-                                       </font>
-                                    </Label>
-                                    <ImageView fitHeight="35.0" fitWidth="35.0" layoutX="51.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@../../Image/download.jpg" />
-                                       </image>
-                                    </ImageView>
-                                    <Label layoutX="111.0" layoutY="7.0" prefHeight="20.0" prefWidth="201.0" text="Blue" AnchorPane.topAnchor="7.0">
-                                       <font>
-                                          <Font name="Arial Bold" size="12.0" />
-                                       </font>
-                                    </Label>
-                                    <Label layoutX="339.0" layoutY="12.0" prefHeight="20.0" prefWidth="189.0" text="Troye Silvan, Alex hope">
-                                       <font>
-                                          <Font name="Arial" size="12.0" />
-                                       </font>
-                                    </Label>
-                                    <Label layoutX="824.0" layoutY="11.0" prefHeight="20.0" prefWidth="39.0" text="3:13">
-                                       <font>
-                                          <Font name="Arial" size="12.0" />
-                                       </font>
-                                    </Label>
-                                    <Button layoutX="2.0" layoutY="9.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="29.0" styleClass="top_five_button">
-                                       <graphic>
-                                          <FontAwesomeIconView glyphName="PLAY" size="15" />
-                                       </graphic>
-                                       <cursor>
-                                          <Cursor fx:constant="HAND" />
-                                       </cursor>
-                                    </Button>
-                                    <Button layoutX="864.0" layoutY="9.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="29.0" styleClass="top_five_button">
-                                       <graphic>
-                                          <MaterialIconView glyphName="FAVORITE_BORDER" size="15" />
-                                       </graphic>
-                                       <cursor>
-                                          <Cursor fx:constant="HAND" />
-                                       </cursor>
-                                    </Button>
-                                    <Button layoutX="895.0" layoutY="9.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="29.0" styleClass="top_five_button">
-                                       <graphic>
-                                          <MaterialIconView glyphName="MORE_HORIZ" size="15" />
-                                       </graphic>
-                                       <cursor>
-                                          <Cursor fx:constant="HAND" />
-                                       </cursor>
-                                    </Button>
-                                    <Label layoutX="112.0" layoutY="22.0" prefHeight="20.0" prefWidth="198.0" text="Vũ.">
-                                       <font>
-                                          <Font name="Arial" size="12.0" />
-                                       </font>
-                                    </Label>
-                                    <Label layoutX="701.0" layoutY="11.0" prefHeight="20.0" prefWidth="99.0" text="78.1111">
-                                       <font>
-                                          <Font name="Arial" size="12.0" />
-                                       </font>
-                                    </Label>
-                                 </children>
-                              </AnchorPane>
-                              <AnchorPane prefHeight="44.0" prefWidth="915.0" styleClass="top_five_card">
-                                 <children>
-                                    <Label layoutX="10.0" layoutY="12.0" text="2">
-                                       <font>
-                                          <Font size="13.0" />
-                                       </font>
-                                    </Label>
-                                    <ImageView fitHeight="35.0" fitWidth="35.0" layoutX="51.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@../../Image/download.jpg" />
-                                       </image>
-                                    </ImageView>
-                                    <Label layoutX="111.0" layoutY="7.0" prefHeight="20.0" prefWidth="201.0" text="Blue">
-                                       <font>
-                                          <Font name="Arial Bold" size="12.0" />
-                                       </font>
-                                    </Label>
-                                    <Label layoutX="339.0" layoutY="12.0" prefHeight="20.0" prefWidth="189.0" text="Troye Silvan, Alex hope">
-                                       <font>
-                                          <Font name="Arial" size="12.0" />
-                                       </font>
-                                    </Label>
-                                    <Label layoutX="824.0" layoutY="11.0" prefHeight="20.0" prefWidth="39.0" text="3:13">
-                                       <font>
-                                          <Font name="Arial" size="12.0" />
-                                       </font>
-                                    </Label>
-                                    <Button layoutX="2.0" layoutY="9.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="29.0" styleClass="top_five_button">
-                                       <graphic>
-                                          <FontAwesomeIconView glyphName="PLAY" size="15" />
-                                       </graphic>
-                                       <cursor>
-                                          <Cursor fx:constant="HAND" />
-                                       </cursor>
-                                    </Button>
-                                    <Button layoutX="864.0" layoutY="9.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="29.0" styleClass="top_five_button">
-                                       <graphic>
-                                          <MaterialIconView glyphName="FAVORITE_BORDER" size="15" />
-                                       </graphic>
-                                       <cursor>
-                                          <Cursor fx:constant="HAND" />
-                                       </cursor>
-                                    </Button>
-                                    <Button layoutX="895.0" layoutY="9.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="29.0" styleClass="top_five_button">
-                                       <graphic>
-                                          <MaterialIconView glyphName="MORE_HORIZ" size="15" />
-                                       </graphic>
-                                       <cursor>
-                                          <Cursor fx:constant="HAND" />
-                                       </cursor>
-                                    </Button>
-                                    <Label layoutX="112.0" layoutY="22.0" prefHeight="20.0" prefWidth="198.0" text="Vũ.">
-                                       <font>
-                                          <Font name="Arial" size="12.0" />
-                                       </font>
-                                    </Label>
-                                    <Label layoutX="701.0" layoutY="11.0" prefHeight="20.0" prefWidth="99.0" text="78.1111">
-                                       <font>
-                                          <Font name="Arial" size="12.0" />
-                                       </font>
-                                    </Label>
-                                 </children>
-                              </AnchorPane>
-                           </children>
-                        </VBox>
+                        <VBox fx:id="billBoardTable" layoutX="41.0" layoutY="435.0" prefHeight="0.0" prefWidth="939.0" />
                      </children>
                   </AnchorPane>
                </content>

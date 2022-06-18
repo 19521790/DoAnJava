@@ -130,7 +130,18 @@
 .itemSearch{
     -fx-font-size: 15;
     -fx-background-color: none;
+    -fx-text-alignment: left;
 }
 .itemSearch:hover{
     -fx-background-color: #3b75ff;
+}
+.add_opacity{
+    -fx-opacity: 1;
+}
+
+.edit_playlist_btn{
+    -fx-opacity: 0;
+}
+.hover_show_btn:hover .edit_playlist_btn{
+    -fx-opacity: 1;
 }

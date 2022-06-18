@@ -25,6 +25,7 @@ import javafx.scene.Cursor;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
@@ -117,7 +118,6 @@ public class HomeScreenController implements Initializable {
                     TopFiveCardController topFiveCardController = topFiveCardFxmlLoader.getController();
                     topFiveCardController.setSongToComponent(listSong.get(i), i + 1);
                     topFiveCardController.mainScreenController = mainScreenController;
-
                     newPopularVbox.getChildren().add(anchorPane);
 
                 } catch (IOException ex) {
@@ -132,7 +132,7 @@ public class HomeScreenController implements Initializable {
 
     }
 
-    private void initGenre() {
+    public void initGenre() {
         HttpResponse<JsonNode> jsonNodeHttpResponse = null;
         try {
             jsonNodeHttpResponse = Unirest.get("http://localhost:8080/genre/findAllGenres").asJson();
@@ -146,16 +146,11 @@ public class HomeScreenController implements Initializable {
                 anchorPane.setLayoutX(10 + 180 * i);
                 slideCardGenre.getChildren().add(anchorPane);
             }
-        } catch (UnirestException e) {
-            throw new RuntimeException(e);
-        } catch (JsonMappingException e) {
-            throw new RuntimeException(e);
-        } catch (JsonProcessingException e) {
+        } catch (UnirestException | JsonProcessingException e) {
             throw new RuntimeException(e);
         }
     }
-
-    private void initAlbum() {
+    public void initAlbum() {
         HttpResponse<JsonNode> jsonNodeHttpResponse = null;
         try {
             jsonNodeHttpResponse = Unirest.get("http://localhost:8080/album/findAllAlbums").asJson();
@@ -169,16 +164,13 @@ public class HomeScreenController implements Initializable {
                 anchorPane.setLayoutX(10 + 180 * i);
                 slideCardAlbum.getChildren().add(anchorPane);
             }
-        } catch (UnirestException e) {
-            throw new RuntimeException(e);
-        } catch (JsonMappingException e) {
-            throw new RuntimeException(e);
-        } catch (JsonProcessingException e) {
+
+        } catch (UnirestException | JsonProcessingException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private void initArtist() {
+    public void initArtist() {
         HttpResponse<JsonNode> jsonNodeHttpResponse = null;
         try {
             jsonNodeHttpResponse = Unirest.get("http://localhost:8080/artist/findAllArtists").asJson();
@@ -205,14 +197,13 @@ public class HomeScreenController implements Initializable {
     public void initFirstMedia() {
         try {
             HttpResponse<JsonNode> jsonNodeHttpResponse = Unirest.get("http://localhost:8080/song/findAllSongs").asJson();
-
             ObjectMapper mapper = new ObjectMapper();
             listSongBanner = mapper.readValue(jsonNodeHttpResponse.getBody().toString(), new TypeReference<>() {
             });
             Song curr_song = listSongBanner.get(0);
             mainScreenController.setMediaPlaying(curr_song);
 
-            AnchorPane anchorPane = publicController.musicItem(curr_song.getId(), curr_song.getAlbum().getImage(), curr_song.getName(), curr_song.getArtists().get(0).getName(), curr_song.getFile(), "PLAY", outsideParent, 0);
+            AnchorPane anchorPane = publicController.musicItem(curr_song.getId(), curr_song.getAlbum().getImage(), curr_song.getName(), curr_song.getArtists().get(0).getName(), curr_song.getFile(), "PLAY", outsideParent, 0, 520.0);
             anchorPane.setLayoutX(10 + 180 * 0);
             slideCard.getChildren().add(anchorPane);
 
@@ -240,18 +231,16 @@ public class HomeScreenController implements Initializable {
     }
 
     public void addChildrenToLastListening(List<Song> songList) {
-
         currentLastListeningList = songList;
         slideCard.getChildren().clear();
         for (int i = 0; i < songList.size(); i++) {
             Song curr_song = songList.get(i);
-            AnchorPane anchorPane = publicController.musicItem(curr_song.getId(), curr_song.getAlbum().getImage(), curr_song.getName(), curr_song.getArtists().get(0).getName(), curr_song.getFile(), "PLAY", outsideParent, i);
+            AnchorPane anchorPane = publicController.musicItem(curr_song.getId(), curr_song.getAlbum().getImage(), curr_song.getName(), curr_song.getArtists().get(0).getName(), curr_song.getFile(), "PLAY", outsideParent, i, 520.0);
             anchorPane.setLayoutX(10 + 180 * i);
             slideCard.getChildren().add(anchorPane);
         }
         if (mainScreenController.login) {
             new Thread(() -> {
-
                 try {
                     HttpResponse<String> stringHttpResponse = Unirest.put("http://localhost:8080/user/addLastListenSong?idUser=" + mainScreenController.user.getId() + "&idSong=" + songList.get(0).getId()).asString();
                     System.out.println(stringHttpResponse);
@@ -265,7 +254,7 @@ public class HomeScreenController implements Initializable {
     private void playMusic(javafx.scene.input.MouseEvent mouseEvent) {
 
         ImageView imageView = (ImageView) mouseEvent.getSource();
-        int id = Integer.valueOf(imageView.getId());
+        int id = Integer.parseInt(imageView.getId());
         Song curr_song = listSongBanner.get(id);
         mainScreenController.setMediaPlaying(curr_song);
 
@@ -348,5 +337,19 @@ public class HomeScreenController implements Initializable {
 
     public void goPreviousCardGenre(ActionEvent actionEvent) {
         moveSlidePrevious(slideCardGenre, publicControllerGenre);
+    }
+
+    public void goToTopVietNam(MouseEvent mouseEvent) {
+        mainScreenController.discoverBtn.fire();
+        mainScreenController.discoverController.tabPaneTop.getSelectionModel().select(2);
+
+
+    }
+
+    public void goToTopGlobal(MouseEvent mouseEvent) {
+        mainScreenController.discoverBtn.fire();
+        mainScreenController.discoverController.tabPaneTop.getSelectionModel().select(2);
+        mainScreenController.discoverController.navigateBtn.fire();
+
     }
 }

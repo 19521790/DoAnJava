@@ -29,6 +29,7 @@ public class TopFiveCardController implements Initializable {
     public MainScreenController mainScreenController;
 
     public Button moreBtn;
+    public int currentIndex;
     Song curSong;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -41,6 +42,7 @@ public class TopFiveCardController implements Initializable {
         songImage.setImage(new Image(song.getAlbum().getImage()));
         songIndex.setText(Integer.toString(i));
         curSong= song;
+        currentIndex= i;
     }
 
     public void playSong(ActionEvent actionEvent) {
@@ -49,15 +51,13 @@ public class TopFiveCardController implements Initializable {
     public void showMoreCard(ActionEvent actionEvent) {
        if (mainScreenController.login){
            AnchorPane parentAnchorPane= mainScreenController.homeScreenController.outsideParent;
-           moreBtn.getStyleClass().remove("more_opacity");
+           moreBtn.getStyleClass().add("add_opacity");
            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/Component/MoreOptionCard.fxml"));
            try {
                AnchorPane card = fxmlLoader.load();
-               MoreOptionCardController moreOptionCardController = fxmlLoader.getController();
-               moreOptionCardController.idSong = curSong.getId();
-               moreOptionCardController.mainScreenController = mainScreenController;
-//               card.setLayoutY(520);
-//               card.setLayoutX(180 * (position - currentScrollIndex));
+
+               card.setLayoutY(710 + (currentIndex-1)*44);
+               card.setLayoutX(710);
 
                AnchorPane layer = new AnchorPane();
 
@@ -70,13 +70,10 @@ public class TopFiveCardController implements Initializable {
                    @Override
                    public void handle(MouseEvent mouseEvent) {
                        parentAnchorPane.getChildren().remove(layer);
-                       moreBtn.getStyleClass().add("more_opacity");
+                       moreBtn.getStyleClass().remove("add_opacity");
                    }
                });
-               moreOptionCardController.layer = layer;
-               moreOptionCardController.more = moreBtn;
-               moreOptionCardController.file= curSong.getFile();
-               moreOptionCardController.songName= curSong.getName();
+               MoreOptionCardController moreOptionCardController = PublicController.createMoreOptionCard(fxmlLoader, layer, curSong);
            } catch (IOException e) {
                throw new RuntimeException(e);
            }

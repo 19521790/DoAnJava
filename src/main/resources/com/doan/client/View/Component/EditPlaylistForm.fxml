@@ -9,7 +9,6 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-
 <AnchorPane fx:id="editContainer" prefHeight="650.0" prefWidth="1200.0" style="-fx-background-color: rgba(0, 0, 0, 0.5);" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.doan.client.Controller.Component.EditPlaylistFormController">
    <children>
       <AnchorPane layoutX="402.0" layoutY="171.0" prefHeight="308.0" prefWidth="395.0" style="-fx-background-color: white; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.75), 5, 0, 0, 0);">
@@ -22,7 +21,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Button layoutX="261.0" layoutY="258.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="86.0" style="-fx-background-color: #0574ff;" text="Save" textFill="WHITE">
+            <Button layoutX="261.0" layoutY="258.0" mnemonicParsing="false" onAction="#savePlaylist" prefHeight="36.0" prefWidth="86.0" style="-fx-background-color: #0574ff;" text="Save" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="15.0" />
                </font>

@@ -119,7 +119,7 @@
       </Label>
       <AnchorPane layoutX="41.0" layoutY="1941.0" prefHeight="223.0" prefWidth="900.0">
          <children>
-            <AnchorPane layoutX="14.0" layoutY="14.0" prefHeight="177.0" prefWidth="170.0" style="-fx-background-color: white; -fx-background-radius: 10;">
+            <AnchorPane layoutX="14.0" layoutY="14.0" onMouseClicked="#goToTopVietNam" prefHeight="177.0" prefWidth="170.0" style="-fx-background-color: white; -fx-background-radius: 10;">
                <children>
                   <AnchorPane layoutX="14.0" layoutY="14.0" prefHeight="149.0" prefWidth="141.0" style="-fx-background-color: linear-gradient(to bottom, #e37531 50%, #ff3301 100%); -fx-background-radius: 20;">
                      <children>
@@ -137,8 +137,11 @@
                      </children>
                   </AnchorPane>
                </children>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
             </AnchorPane>
-            <AnchorPane layoutX="216.0" layoutY="14.0" prefHeight="177.0" prefWidth="170.0" style="-fx-background-color: white; -fx-background-radius: 10;">
+            <AnchorPane layoutX="216.0" layoutY="14.0" onMouseClicked="#goToTopGlobal" prefHeight="177.0" prefWidth="170.0" style="-fx-background-color: white; -fx-background-radius: 10;">
                <children>
                   <AnchorPane layoutX="14.0" layoutY="14.0" prefHeight="149.0" prefWidth="141.0" style="-fx-background-color: linear-gradient(to bottom, #35a7c8 50%, #0c617e 100%); -fx-background-radius: 20;">
                      <children>
@@ -156,6 +159,9 @@
                      </children>
                   </AnchorPane>
                </children>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
             </AnchorPane>
          </children>
       </AnchorPane>

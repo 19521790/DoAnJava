@@ -9,17 +9,19 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="playlistCover" prefHeight="800.0" prefWidth="1000.0" style="-fx-background-color: #f5f6fc;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.doan.client.Controller.UserScreen.PlayListScreenController">
+<AnchorPane fx:id="playlistCover" onMouseClicked="#hidePane" prefHeight="800.0" prefWidth="1000.0" style="-fx-background-color: #f5f6fc;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.doan.client.Controller.UserScreen.PlayListScreenController">
    <children>
       <AnchorPane prefHeight="280.0" prefWidth="1000.0" style="-fx-background-color: linear-gradient(to bottom, #767274 50%, #433f41 100%);">
          <children>
-            <AnchorPane layoutX="38.0" layoutY="30.0" prefHeight="220.0" prefWidth="220.0" style="-fx-background-color: #989798; -fx-background-radius: 20;">
+            <AnchorPane layoutX="38.0" layoutY="30.0" prefHeight="220.0" prefWidth="220.0" style="-fx-background-color: #989798; -fx-background-radius: 20;" styleClass="hover_show_btn">
                <children>
-                  <Button layoutX="52.0" layoutY="56.0" mnemonicParsing="false" onAction="#setEditPaneVisible" style="-fx-background-color: NONE;">
+                  <ImageView fx:id="imagePlaylist" fitHeight="220.0" fitWidth="221.0" layoutY="-1.0" pickOnBounds="true" />
+                  <Button layoutX="52.0" layoutY="56.0" mnemonicParsing="false" onAction="#setEditPaneVisible" style="-fx-background-color: NONE;" styleClass="edit_playlist_btn">
                      <graphic>
-                        <MaterialIconView fill="WHITE" glyphName="QUEUE_MUSIC" size="100" />
+                        <MaterialIconView fill="#161616" glyphName="QUEUE_MUSIC" size="100" />
                      </graphic>
                   </Button>
                </children>
@@ -38,11 +40,11 @@
                   </Label>
                </graphic>
             </Button>
-            <ImageView fx:id="avatarUser" fitHeight="30.0" fitWidth="30.0" layoutX="292.0" layoutY="192.0" pickOnBounds="true" preserveRatio="true" />
-            <Label fx:id="username" layoutX="337.0" layoutY="198.0" text="Label" textFill="WHITE" />
+            <ImageView fx:id="avatarUser" fitHeight="35.0" fitWidth="40.0" layoutX="292.0" layoutY="204.0" pickOnBounds="true" preserveRatio="true" />
+            <Label fx:id="username" layoutX="341.0" layoutY="213.0" text="User name" textFill="WHITE" />
          </children>
       </AnchorPane>
-      <TextField layoutX="20.0" layoutY="383.0" prefHeight="33.0" prefWidth="415.0" promptText="Search for song" style="-fx-border-width: 0;">
+      <TextField fx:id="addSongField" layoutX="20.0" layoutY="383.0" onKeyTyped="#setVisiblePane" prefHeight="33.0" prefWidth="328.0" promptText="Search for song" style="-fx-border-width: 0;">
          <font>
             <Font size="14.0" />
          </font>
@@ -51,11 +53,44 @@
          </padding>
       </TextField>
       <FontAwesomeIconView fill="#8f8f8f" glyphName="SEARCH" layoutX="33.0" layoutY="404.0" size="12" />
-      <Separator layoutY="322.0" prefHeight="3.0" prefWidth="1000.0" />
+      <Separator layoutY="330.0" prefHeight="3.0" prefWidth="1000.0" />
       <Label layoutX="25.0" layoutY="335.0" text="Add song to your Playlist">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
+      <Button layoutX="42.0" layoutY="436.0" mnemonicParsing="false" style="-fx-background-color: none;" text="#">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Button>
+      <Label layoutX="92.0" layoutY="440.0" text="Title">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="379.0" layoutY="441.0" text="Album">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="739.0" layoutY="440.0" text="Views">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <MaterialIconView glyphName="ALARM" layoutX="867.0" layoutY="457.0" size="16" text="" />
+      <Separator layoutX="39.0" layoutY="475.0" prefHeight="2.0" prefWidth="935.0" />
+      <VBox fx:id="playlistTable" layoutX="39.0" layoutY="501.0" prefHeight="0.0" prefWidth="939.0" />
+      <AnchorPane fx:id="searchPane" layoutX="19.0" layoutY="416.0" prefHeight="234.0" prefWidth="328.0" style="-fx-background-color: white;" visible="false">
+         <children>
+            <VBox fx:id="searchVboxPane" prefWidth="328.0" />
+         </children>
+      </AnchorPane>
+      <Button graphicTextGap="0.0" layoutX="15.0" layoutY="286.0" mnemonicParsing="false" onAction="#playAllSong" prefHeight="35.0" prefWidth="35.0" style="-fx-background-color: #3b75ff; -fx-background-radius: 50%;">
+         <graphic>
+            <FontAwesomeIconView fill="WHITE" glyphName="PLAY" size="20" wrappingWidth="13.0" />
+         </graphic>
+      </Button>
    </children>
 </AnchorPane>

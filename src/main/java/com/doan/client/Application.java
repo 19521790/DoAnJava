@@ -5,6 +5,7 @@
 package com.doan.client;
 
 
+import com.doan.client.Controller.PublicController;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import com.mashape.unirest.http.ObjectMapper;
@@ -37,6 +38,8 @@ public class Application extends javafx.application.Application {
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
         primaryStage.show();
+        PublicController.primaryStage= primaryStage;
+        PublicController.userScene= scene;
         Unirest.setObjectMapper(new ObjectMapper() {
             com.fasterxml.jackson.databind.ObjectMapper mapper
                     = new com.fasterxml.jackson.databind.ObjectMapper();

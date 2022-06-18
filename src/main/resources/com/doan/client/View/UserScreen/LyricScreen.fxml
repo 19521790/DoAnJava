@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane prefWidth="1000.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.doan.client.Controller.UserScreen.LyricScreenController">
+   <children>
+      <VBox fx:id="vboxLyric" layoutX="2.0" layoutY="75.0" prefHeight="125.0" prefWidth="1000.0" />
+      <Label fx:id="songTitle" alignment="CENTER" contentDisplay="CENTER" layoutX="-9.0" layoutY="10.0" prefHeight="50.0" prefWidth="1000.0" text="Lyrics of song ABC">
+         <font>
+            <Font name="System Bold" size="24.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>

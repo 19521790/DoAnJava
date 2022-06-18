@@ -12,7 +12,6 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import com.sun.mail.iap.Literal;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
@@ -31,7 +30,7 @@ import java.util.List;
 
 import java.util.ResourceBundle;
 
-public class AlbumEditScreenController extends GetDataFromServerController implements Initializable {
+public class AlbumEditScreenController extends PublicAdminMethodController implements Initializable {
 
 
     public TextField addSongField;

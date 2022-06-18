@@ -1,32 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import de.jensd.fx.glyphs.materialicons.MaterialIconView?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane prefHeight="800.0" prefWidth="1000.0" style="-fx-background-color: #f0f2f9;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.doan.client.Controller.UserScreen.LoveScreenController">
+<AnchorPane fx:id="parentAnchorPane" prefHeight="800.0" prefWidth="1000.0" style="-fx-background-color: #f0f2f9;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.doan.client.Controller.UserScreen.LoveScreenController">
    <children>
-      <AnchorPane layoutX="48.0" layoutY="41.0" prefHeight="225.0" prefWidth="365.0" style="-fx-background-color: linear-gradient(to bottom, #fcd8eb 20%, #f73dbb 100%); -fx-background-radius: 20;">
+      <AnchorPane layoutX="48.0" layoutY="41.0" prefHeight="225.0" prefWidth="908.0" style="-fx-background-color: linear-gradient(to bottom, #fcd8eb 20%, #f73dbb 100%); -fx-background-radius: 20;">
          <children>
             <Button layoutX="22.0" layoutY="9.0" mnemonicParsing="false" style="-fx-background-color: none; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);">
                <graphic>
                   <FontAwesomeIconView fill="#fbfbfb" glyphName="HEART" size="40" />
                </graphic>
             </Button>
-            <Label layoutX="34.0" layoutY="60.0" prefHeight="30.0" prefWidth="297.0" text="Heize You • Cloud  • Rain " textFill="WHITE">
-               <font>
-                  <Font name="System Bold" size="20.0" />
-               </font>
-            </Label>
-            <Label layoutX="34.0" layoutY="90.0" prefHeight="30.0" prefWidth="297.0" text="Heize You • Cloud  • Rain " textFill="#6e2323">
-               <font>
-                  <Font name="System Bold" size="16.0" />
-               </font>
-            </Label>
-            <Label layoutX="34.0" layoutY="120.0" prefHeight="30.0" prefWidth="297.0" text="Heize You • Cloud  • Rain " textFill="#fffbfb">
+            <Label fx:id="listSongName" layoutX="34.0" layoutY="90.0" prefHeight="30.0" prefWidth="849.0" text="Heize You • Cloud  • Rain " textFill="#6e2323">
                <font>
                   <Font name="System Bold" size="16.0" />
                </font>
@@ -36,12 +28,35 @@
                   <Font name="System Bold" size="25.0" />
                </font>
             </Label>
-            <Label layoutX="34.0" layoutY="186.0" prefHeight="30.0" prefWidth="297.0" text="219 songs" textFill="#fffbfb">
+            <Label fx:id="songCount" layoutX="34.0" layoutY="186.0" prefHeight="30.0" prefWidth="297.0" text="219 songs" textFill="#fffbfb">
                <font>
                   <Font name="System Bold" size="16.0" />
                </font>
             </Label>
          </children>
       </AnchorPane>
+      <Button layoutX="54.0" layoutY="318.0" mnemonicParsing="false" style="-fx-background-color: none;" text="#">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Button>
+      <Label layoutX="104.0" layoutY="322.0" text="Title">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="391.0" layoutY="323.0" text="Album">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="751.0" layoutY="322.0" text="Views">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <MaterialIconView glyphName="ALARM" layoutX="879.0" layoutY="339.0" size="16" text="" />
+      <Separator layoutX="51.0" layoutY="357.0" prefHeight="2.0" prefWidth="935.0" />
+      <VBox fx:id="likeTable" layoutX="51.0" layoutY="383.0" prefHeight="0.0" prefWidth="939.0" />
    </children>
 </AnchorPane>

@@ -5,7 +5,9 @@
 package com.doan.client.Controller.Component;
 
 
+import com.doan.client.Controller.PublicController;
 import com.doan.client.Controller.UserScreen.MainScreenController;
+import com.doan.client.Model.Playlist;
 import com.doan.client.Model.Song;
 import com.doan.client.Model.User;
 import com.fasterxml.jackson.core.JsonParser;
@@ -16,11 +18,14 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -28,6 +33,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -109,13 +115,14 @@ public class LoginFormController implements Initializable {
     @FXML
     private void guestLogin(MouseEvent event) {
         setVisibleLogin(false);
+
+        mainController.bannerPrice.setVisible(true);
     }
 
     public void setVisibleLogin(boolean x) {
 
         mainController.setLoginPaneVisible();
     }
-
     @FXML
     private void userLogin(MouseEvent event) throws IOException, UnirestException {
         if ("".equals(userName.getText()) && "".equals(passWord.getText())) {
@@ -124,7 +131,6 @@ public class LoginFormController implements Initializable {
         } else if ("".equals(userName.getText())) {
             errorLogin.setStyle("-fx-text-fill: red");
             errorLogin.setText("Username can't be empty");
-
         } else if ("".equals(passWord.getText())) {
             errorLogin.setStyle("-fx-text-fill: red");
             errorLogin.setText("Password can't be empty");
@@ -138,7 +144,6 @@ public class LoginFormController implements Initializable {
                     apiResponse = Unirest.get("http://localhost:8080/user/findUserByNameAndPassword/" + userName.getText() + "/" + passWord.getText()).asJson();
                     User user = new Gson().fromJson(apiResponse.getBody().toString(), User.class);
                     if (user.getName() != null) {
-
                         if (user.getRole().equals("user")) {
                             HttpResponse<JsonNode> jsonNodeHttpResponse= Unirest.get("http://localhost:8080/user/getLastListenSong/" + user.getId()).asJson();
 
@@ -151,9 +156,58 @@ public class LoginFormController implements Initializable {
                             if (songList.size()==0){
                                 songList.add(mainController.homeScreenController.listSongBanner.get(0));
                             }
+                            HttpResponse<JsonNode> playlistHttpResponse= Unirest.get("http://localhost:8080/user/findPlaylistFromUser?idUser=" + user.getId()).asJson();
+
+                            ObjectMapper mapper = new ObjectMapper();
+                            List<Playlist> playlistList = mapper.readValue(playlistHttpResponse.getBody().toString(), new TypeReference<>() {
+                            });
+
+                            for (int i = 0 ; i< playlistList.size(); i++){
+
+                                if (playlistList.get(i).getName().equals("Like")){
+                                    MainScreenController.likedList = playlistList.get(i).getIdSongs();
+                                    MainScreenController.idPlaylistLike= playlistList.get(i).getId();
+                                }else{
+
+                                    MainScreenController.playlistOfUser.add(playlistList.get(i));
+
+                                    ToggleButton button = new ToggleButton();
+                                    button.setText(playlistList.get(i).getName());
+                                    FontAwesomeIconView fontAwesomeIconView = new FontAwesomeIconView();
+                                    fontAwesomeIconView.setGlyphName("CLOSE");
+                                    button.setGraphic(fontAwesomeIconView);
+                                    button.getStyleClass().add("playlistBtn");
+                                    VBox.setMargin(button, new Insets(10, 0, 0, 0));
+                                    button.setToggleGroup(mainController.Group1);
+                                    button.setId(playlistList.get(i).getId());
+                                    button.setOnAction(mainController::toggleBtn);
+                                    button.setPrefWidth(165);
+                                    button.setAlignment(Pos.BASELINE_LEFT);
+                                    fontAwesomeIconView.setOnMouseClicked(mouseEvent -> mainController.removePlaylist(button.getId(), button));
+                                    Platform.runLater(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            mainController.mainVbox.getChildren().add(button);
+                                        }
+                                    });
+
+                                }
+                            }
+
+                            MainScreenController.idUser= user.getId();
+                            MainScreenController.albumFollowed= user.getIdAlbums();
+                            MainScreenController.artistFollowed= user.getIdArtists();
+
+
+                            if (songList.size()==0){
+                                songList.add(mainController.homeScreenController.listSongBanner.get(0));
+                            }
+
                             Platform.runLater(new Runnable() {
                                 @Override
                                 public void run() {
+                                    mainController.homeScreenController.initAlbum();
+                                    mainController.homeScreenController.initArtist();
                                     mainController.homeScreenController.addChildrenToLastListening(songList);
                                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                                     alert.setHeaderText("Login Success");
@@ -172,11 +226,8 @@ public class LoginFormController implements Initializable {
                             Platform.runLater(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Node source = (Node) event.getSource();
-                                    Stage stage = (Stage) source.getScene().getWindow();
-                                    stage.close();
 
-                                    Stage primaryStage= new Stage();
+
                                     FXMLLoader adminFxmlLoader= new FXMLLoader(getClass().getResource("/com/doan/client/View/AdminScreen/AdminScreen.fxml"));
                                     Parent root = null;
                                     try {
@@ -185,13 +236,19 @@ public class LoginFormController implements Initializable {
                                     } catch (IOException e) {
                                         throw new RuntimeException(e);
                                     }
+
+                                    loginPanel.setVisible(true);
+                                    asynchronousLogin.setVisible(false);
+                                    setVisibleLogin(false);
                                     Scene scene = new Scene(root);
-                                    scene.getStylesheets().add(getClass().getResource("/com/doan/client/application.css").toExternalForm());
-                                    primaryStage.getIcons().add(new Image(getClass().getResource("/com/doan/client/Image/icon.jpg").toExternalForm()));
-                                    primaryStage.setTitle("Zyan");
-                                    primaryStage.setScene(scene);
-                                    primaryStage.setResizable(false);
-                                    primaryStage.show();
+
+                                    PublicController.primaryStage.setScene(scene);
+
+
+                                    Alert alert= new Alert(Alert.AlertType.INFORMATION);
+                                    alert.setHeaderText("Welcome Admin");
+                                    alert.show();
+
                                 }
                             });
 
@@ -344,6 +401,7 @@ public class LoginFormController implements Initializable {
                 userGlobal.setPassword(firstPassword.getText());
                 HttpResponse<JsonNode> jsonResponse
                         = null;
+
                 try {
                     jsonResponse = Unirest.post("http://localhost:8080/user/updatePassword").header("Content-Type", "application/json")
                             .body(userGlobal)
@@ -408,6 +466,8 @@ public class LoginFormController implements Initializable {
                                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                                 alert.setHeaderText("Your account has been created!");
                                 alert.show();
+                                loginForm.setVisible(true);
+                                createNewAccountForm.setVisible(false);
                             }
 
                         });
@@ -423,10 +483,7 @@ public class LoginFormController implements Initializable {
                     }
                     asynchronousAddUser.setVisible(false);
                     createNewAccountBtn.setVisible(true);
-                    if (a.getBody().equals("true")) {
-                        loginForm.setVisible(true);
-                        createNewAccountForm.setVisible(false);
-                    }
+
                 } catch (UnirestException e) {
                     throw new RuntimeException(e);
                 }

@@ -1,12 +1,9 @@
 package com.doan.client.Controller.AdminScreen;
 
-import com.doan.client.Model.Album;
 import com.doan.client.Model.Artist;
-import com.doan.client.Model.Object.AlbumOtd;
 import com.doan.client.Model.Object.ArtistOtd;
 import com.doan.client.Model.Song;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.google.gson.Gson;
@@ -14,28 +11,22 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
-import javafx.scene.Cursor;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import javafx.stage.FileChooser;
 
 import java.io.File;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class ArtistEditScreenController extends GetDataFromServerController implements Initializable {
+public class ArtistEditScreenController extends PublicAdminMethodController implements Initializable {
     public ScrollPane scrollPaneSearch;
 
     public VBox listNotAddedSong;

@@ -2,6 +2,7 @@
 
 <?import de.jensd.fx.glyphs.materialicons.MaterialIconView?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.control.ToggleGroup?>
@@ -37,6 +38,11 @@
                   </LinearGradient>
                </textFill>
             </Label>
+            <Button layoutX="8.0" layoutY="523.0" mnemonicParsing="false" onAction="#backToUserScreen" prefHeight="33.0" prefWidth="179.0" style="-fx-background-color: #3b75ff;" text="Go back to User Screen-&gt;" textFill="WHITE">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Button>
             <VBox layoutY="83.0" prefHeight="372.0" prefWidth="196.0">
                <children>
                   <ToggleButton fx:id="songTabBtn" alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" onAction="#addMusicTab" prefHeight="33.0" prefWidth="181.0" selected="true" style="-fx-background-color: white;" text="Song">

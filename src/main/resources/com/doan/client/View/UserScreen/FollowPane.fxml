@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="827.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.doan.client.Controller.UserScreen.FollowPaneController">
+   <children>
+      <VBox fx:id="bigPane" layoutX="55.0" layoutY="51.0" prefHeight="671.0" prefWidth="897.0">
+         <children>
+            <HBox fx:id="hbox1" prefHeight="265.0" prefWidth="897.0" />
+            <HBox fx:id="hbox2" prefHeight="265.0" prefWidth="897.0" />
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>
