@@ -227,28 +227,21 @@ public class LoginFormController implements Initializable {
                                 @Override
                                 public void run() {
 
-
                                     FXMLLoader adminFxmlLoader= new FXMLLoader(getClass().getResource("/com/doan/client/View/AdminScreen/AdminScreen.fxml"));
                                     Parent root = null;
                                     try {
-
                                         root = adminFxmlLoader.load();
                                     } catch (IOException e) {
                                         throw new RuntimeException(e);
                                     }
-
                                     loginPanel.setVisible(true);
                                     asynchronousLogin.setVisible(false);
                                     setVisibleLogin(false);
                                     Scene scene = new Scene(root);
-
                                     PublicController.primaryStage.setScene(scene);
-
-
                                     Alert alert= new Alert(Alert.AlertType.INFORMATION);
                                     alert.setHeaderText("Welcome Admin");
                                     alert.show();
-
                                 }
                             });
 
