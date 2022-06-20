@@ -1,7 +1,7 @@
 package com.server.repository;
 
 
-import com.server.entity.Genre;
+import com.server.model.Genre;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

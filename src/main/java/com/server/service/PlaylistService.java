@@ -1,9 +1,8 @@
 package com.server.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.server.entity.Playlist;
-import com.server.entity.Song;
+import com.server.model.Playlist;
+import com.server.model.Song;
 import com.server.exception.FileFormatException;
 import com.server.exception.PlaylistException;
 import com.server.exception.SongException;

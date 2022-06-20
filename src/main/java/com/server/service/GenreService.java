@@ -1,15 +1,12 @@
 package com.server.service;
 
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.server.entity.Album;
-import com.server.entity.Genre;
+import com.server.model.Genre;
 import com.server.exception.FileFormatException;
 import com.server.exception.GenreException;
 import com.server.repository.GenreRepository;
 import com.server.service.data.DataService;
-import com.server.service.drive.GoogleDriveService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;

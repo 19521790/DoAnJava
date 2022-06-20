@@ -1,7 +1,7 @@
 package com.server.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.server.entity.Artist;
+import com.server.model.Artist;
 import com.server.exception.ArtistException;
 import com.server.exception.FileFormatException;
 import com.server.service.ArtistService;

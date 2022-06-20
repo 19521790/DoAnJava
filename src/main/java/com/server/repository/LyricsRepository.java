@@ -1,7 +1,7 @@
 package com.server.repository;
 
-import com.server.entity.Lyrics;
-import com.server.repository.custom.LyricsTemplate;
+import com.server.model.Lyrics;
+import com.server.repository.template.LyricsTemplate;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

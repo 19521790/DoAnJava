@@ -1,18 +1,12 @@
 package com.server.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.server.entity.Song;
-import com.server.entity.result.SongResult;
+import com.server.model.result.SongResult;
 import com.server.service.RecommendSystemService;
-import com.server.service.SongService;
-import org.json.JSONObject;
-import org.json.JSONString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -43,7 +37,7 @@ public class RecommendSystemController {
         return getRecommendSongs(recommendSystemService.getSongForPlaylistRecommend(idPlaylist));
     }
 
-    @PostMapping("/recommendUser/{id}")
+    @PostMapping("/recommendUser/{idUser}")
     public ResponseEntity recommendUser(@PathVariable String idUser){
         return getRecommendSongs(recommendSystemService.recommendUser(idUser));
     }

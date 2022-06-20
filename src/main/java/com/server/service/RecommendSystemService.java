@@ -1,12 +1,11 @@
 package com.server.service;
 
-import com.server.entity.Playlist;
-import com.server.entity.Song;
-import com.server.entity.User;
-import com.server.entity.result.SongResult;
+import com.server.model.Playlist;
+import com.server.model.Song;
+import com.server.model.User;
+import com.server.model.result.SongResult;
 import com.server.repository.PlaylistRepository;
 import com.server.repository.UserRepository;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

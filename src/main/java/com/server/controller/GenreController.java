@@ -1,7 +1,6 @@
 package com.server.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.server.entity.Genre;
+import com.server.model.Genre;
 import com.server.exception.FileFormatException;
 import com.server.exception.GenreException;
 import com.server.service.GenreService;

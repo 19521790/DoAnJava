@@ -1,6 +1,6 @@
 package com.server.validation;
 
-import com.server.entity.dto.UserDto;
+import com.server.model.dto.UserDto;
 
 import javax.validation.Constraint;
 import javax.validation.ConstraintValidator;

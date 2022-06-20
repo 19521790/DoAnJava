@@ -1,7 +1,7 @@
 package com.server.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.server.entity.Album;
+import com.server.model.Album;
 import com.server.exception.AlbumException;
 import com.server.exception.FileFormatException;
 import com.server.service.AlbumService;

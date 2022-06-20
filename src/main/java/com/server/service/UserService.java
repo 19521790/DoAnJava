@@ -1,9 +1,9 @@
 package com.server.service;
 
-import com.server.entity.Album;
-import com.server.entity.Artist;
-import com.server.entity.Playlist;
-import com.server.entity.User;
+import com.server.model.Album;
+import com.server.model.Artist;
+import com.server.model.Playlist;
+import com.server.model.User;
 import com.server.exception.AlbumException;
 import com.server.exception.ArtistException;
 import com.server.exception.FileFormatException;

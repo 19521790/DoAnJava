@@ -2,11 +2,9 @@ package com.server.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.server.entity.Album;
-import com.server.entity.Song;
+import com.server.model.Album;
 import com.server.exception.AlbumException;
 import com.server.exception.FileFormatException;
-import com.server.exception.SongException;
 import com.server.repository.AlbumRepository;
 import com.server.repository.SongRepository;
 import com.server.service.data.DataService;
@@ -104,16 +102,4 @@ public class AlbumService {
             songRepository.deleteById(id);
         }
     }
-
-//    public Album addSongToAlbum(List<String> idSongs, String idAlbum) throws AlbumException {
-//        Album album = albumRepository.findById(idAlbum).get();
-//        if (album == null) {
-//            throw new AlbumException(AlbumException.NotFoundException(idAlbum));
-//        } else {
-//            for (String idSong : idSongs) {
-//                album.addSongToAlbum(idSong);
-//            }
-//            return albumRepository.save(album);
-//        }
-//    }
 }

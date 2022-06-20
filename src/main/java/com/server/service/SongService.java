@@ -1,29 +1,22 @@
 package com.server.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.api.client.http.FileContent;
-import com.server.entity.Album;
-import com.server.entity.Artist;
-import com.server.entity.Song;
-import com.server.entity.object.AlbumOtd;
-import com.server.exception.AlbumException;
-import com.server.exception.ArtistException;
+import com.server.model.Album;
+import com.server.model.dto.SongDto;
+import com.server.model.Song;
+import com.server.model.object.AlbumOtd;
 import com.server.exception.FileFormatException;
 import com.server.exception.SongException;
 import com.server.repository.AlbumRepository;
 import com.server.repository.ArtistRepository;
 import com.server.repository.SongRepository;
 import com.server.service.data.DataService;
-import com.server.service.drive.GoogleDriveService;
-import org.bson.types.ObjectId;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.ConstraintViolationException;
-import javax.validation.Path;
 import java.io.*;
 import java.util.*;
 
@@ -41,10 +34,19 @@ public class SongService {
     @Autowired
     private DataService dataService;
 
-    @Autowired
-    private GoogleDriveService driveService;
+    private ModelMapper modelMapper;
 
-    public Song addSong(String songString, MultipartFile file) throws ConstraintViolationException, SongException, IOException, FileFormatException {
+    private Song convertToEntity(SongDto songDto) {
+        Song song = modelMapper.map(songDto, Song.class);
+        return song;
+    }
+
+    private SongDto convertToDto(Song song) {
+        SongDto songDto = modelMapper.map(song, SongDto.class);
+        return songDto;
+    }
+
+    public SongDto addSong(String songString, MultipartFile file) throws ConstraintViolationException, SongException, IOException, FileFormatException {
         ObjectMapper objectMapper = new ObjectMapper();
         Song song = objectMapper.readValue(songString, Song.class);
 
@@ -55,22 +57,22 @@ public class SongService {
                 && songOptional.getName().equals(song.getName())) {
             throw new SongException(SongException.SongAlreadyExist(song.getName()));
         } else {
-            AlbumOtd album = new AlbumOtd().albumToAlbumOtd(albumRepository.findById(song.getAlbum().getId()).get());
+            Album album = albumRepository.findById(song.getAlbum().getId()).get();
             song.setFile(dataService.storeData(file, ".m4a"));
             song.setAlbum(album);
             song.setWeekView(0);
             song.setTotalView(0);
             song.setCreatedAt(new Date(System.currentTimeMillis()));
 
-            return songRepository.save(song);
+            return convertToDto(songRepository.save(song));
         }
     }
 
-    public Song findSongById(String id) throws SongException, IOException, FileFormatException {
+    public SongDto findSongById(String id) throws SongException, IOException, FileFormatException {
         Song song = songRepository.findById(id).orElse(null);
 
         if (song != null) {
-            return song;
+            return convertToDto(song);
         } else {
             throw new SongException(SongException.NotFoundException(id));
         }

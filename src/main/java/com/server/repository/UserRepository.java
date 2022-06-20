@@ -1,7 +1,7 @@
 package com.server.repository;
 
-import com.server.entity.User;
-import com.server.repository.custom.UserTemplate;
+import com.server.model.User;
+import com.server.repository.template.UserTemplate;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

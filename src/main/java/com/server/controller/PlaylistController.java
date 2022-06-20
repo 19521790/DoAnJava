@@ -1,7 +1,6 @@
 package com.server.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.server.entity.Playlist;
+import com.server.model.Playlist;
 import com.server.exception.FileFormatException;
 import com.server.exception.PlaylistException;
 import com.server.exception.SongException;

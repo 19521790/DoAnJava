@@ -1,13 +1,12 @@
 package com.server.controller;
 
-import com.server.entity.User;
-import com.server.entity.dto.UserDto;
+import com.server.model.User;
+import com.server.model.dto.UserDto;
 import com.server.exception.AlbumException;
 import com.server.exception.ArtistException;
 import com.server.exception.FileFormatException;
 import com.server.exception.UserException;
 import com.server.service.UserService;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,11 +14,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolationException;
-import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 
