@@ -52,6 +52,10 @@ public class SongService {
         return songDto;
     }
 
+    private List<SongDto> convertToListDto(List<Song> songs) {
+        return songs.stream().map(song -> modelMapper.map(song, SongDto.class)).collect(Collectors.toList());
+    }
+
     public SongDto addSong(String songString, MultipartFile file) throws ConstraintViolationException, SongException, IOException, FileFormatException {
         ObjectMapper objectMapper = new ObjectMapper();
         Song song = objectMapper.readValue(songString, Song.class);
@@ -87,7 +91,7 @@ public class SongService {
     public List<SongDto> findAllSongs() {
         List<Song> songs = songRepository.findAll();
         if (songs.size() > 0) {
-            return songs.stream().map(song -> modelMapper.map(song, SongDto.class)).collect(Collectors.toList());
+            return convertToListDto(songs);
         } else {
             return new ArrayList<SongDto>();
         }
@@ -150,7 +154,7 @@ public class SongService {
         }
     }
 
-    public List<Song> findSongByGenre(String genre) {
-        return songRepository.findSongByGenre(genre);
+    public List<SongDto> findSongByGenre(String genre) {
+        return convertToListDto(songRepository.findSongByGenre(genre));
     }
 }
