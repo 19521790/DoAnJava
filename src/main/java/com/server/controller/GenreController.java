@@ -18,6 +18,7 @@ import java.util.List;
 public class GenreController {
     @Autowired
     private GenreService genreService;
+
     @PostMapping("/addGenre")
     public ResponseEntity addGenre(@RequestPart("genre") String genreString, @RequestPart("image") MultipartFile image) {
         try {
@@ -52,7 +53,7 @@ public class GenreController {
     }
 
     @PutMapping("/updateGenre")
-    public Genre updateGenre(@RequestBody Genre genre) {
-        return genreService.updateGenre(genre);
+    public ResponseEntity updateGenre(@RequestBody Genre genre) {
+        return ResponseEntity.status(HttpStatus.OK).body(genreService.updateGenre(genre));
     }
 }

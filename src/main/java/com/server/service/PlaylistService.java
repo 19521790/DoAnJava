@@ -1,15 +1,19 @@
 package com.server.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.server.model.Genre;
 import com.server.model.Playlist;
 import com.server.model.Song;
 import com.server.exception.FileFormatException;
 import com.server.exception.PlaylistException;
 import com.server.exception.SongException;
+import com.server.model.dto.GenreDto;
+import com.server.model.dto.PlaylistDto;
 import com.server.repository.PlaylistRepository;
 import com.server.repository.SongRepository;
 import com.server.repository.UserRepository;
 import com.server.service.data.DataService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,14 +38,32 @@ public class PlaylistService {
     @Autowired
     private UserRepository userRepository;
 
-    public Playlist addPlaylist(String playlistString, MultipartFile image) throws ConstraintViolationException, IOException, FileFormatException {
+    private ModelMapper modelMapper = new ModelMapper();
+
+    private Playlist convertToEntity(PlaylistDto playlistDto) {
+        Playlist playlist = modelMapper.map(playlistDto, Playlist.class);
+
+        if (playlistDto.getId() != null) {
+            return playlistRepository.findById(playlistDto.getId()).orElse(playlist);
+        } else {
+            return playlist;
+        }
+    }
+
+    private PlaylistDto convertToDto(Playlist playlist) {
+        PlaylistDto playlistDto = modelMapper.map(playlist, PlaylistDto.class);
+
+        return playlistDto;
+    }
+
+    public PlaylistDto addPlaylist(String playlistString, MultipartFile image) throws ConstraintViolationException, IOException, FileFormatException {
         ObjectMapper objectMapper = new ObjectMapper();
         Playlist playlist = objectMapper.readValue(playlistString, Playlist.class);
         playlist.setImage(dataService.storeData(image, ".jpg"));
         playlist.setCreatedAt(new Date(System.currentTimeMillis()));
         playlist.setTotalView(0);
 
-        return playlistRepository.save(playlist);
+        return convertToDto(playlistRepository.save(playlist));
     }
 
     public void addLikeAndDownloadPlaylist(String idUser) {
@@ -52,13 +74,13 @@ public class PlaylistService {
         playlistRepository.save(like);
     }
 
-    public Playlist findPlaylistById(String id) throws PlaylistException {
+    public PlaylistDto findPlaylistById(String id) throws PlaylistException {
         Playlist playlist = playlistRepository.findById(id).orElse(null);
 
         if (playlist == null) {
             throw new PlaylistException(PlaylistException.NotFoundException(id));
         } else {
-            return playlistRepository.findSongFromPlaylist(id);
+            return convertToDto(playlistRepository.findSongFromPlaylist(id));
         }
     }
 
@@ -81,17 +103,17 @@ public class PlaylistService {
         }
     }
 
-    public Playlist updatePlaylist(String playlistString,MultipartFile image) throws IOException, FileFormatException, PlaylistException {
+    public PlaylistDto updatePlaylist(String playlistString, MultipartFile image) throws IOException, FileFormatException, PlaylistException {
         ObjectMapper objectMapper = new ObjectMapper();
         Playlist playlist = objectMapper.readValue(playlistString, Playlist.class);
 
         Playlist playlistToUpdate = playlistRepository.findById(playlist.getId()).orElse(null);
         System.out.println(playlistToUpdate);
-        if(playlistToUpdate!=null){
+        if (playlistToUpdate != null) {
             playlistToUpdate.setName(playlist.getName() != null ? playlist.getName() : playlistToUpdate.getName());
             playlistToUpdate.setImage(dataService.storeData(image, ".jpg"));
-            return playlistRepository.save(playlistToUpdate);
-        }else{
+            return convertToDto(playlistRepository.save(playlistToUpdate));
+        } else {
             throw new PlaylistException(PlaylistException.NotFoundException(playlist.getId()));
         }
     }
@@ -109,7 +131,7 @@ public class PlaylistService {
         }
     }
 
-    public void removeSongFromPlaylist(String idPlaylist,String idSong) throws PlaylistException, SongException {
+    public void removeSongFromPlaylist(String idPlaylist, String idSong) throws PlaylistException, SongException {
         Playlist playlist = playlistRepository.findById(idPlaylist).orElse(null);
         Song song = songRepository.findById(idSong).orElse(null);
 

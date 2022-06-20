@@ -65,7 +65,7 @@ public class ArtistController {
                                        @RequestPart(value = "image", required = false) MultipartFile image) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(artistService.updateArtist(artistString, image));
-        } catch (JsonProcessingException e) {
+        } catch (IOException | FileFormatException e) {
             return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(e.getMessage());
         } catch (ArtistException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());

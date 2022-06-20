@@ -2,11 +2,15 @@ package com.server.service;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.server.model.Artist;
 import com.server.model.Genre;
 import com.server.exception.FileFormatException;
 import com.server.exception.GenreException;
+import com.server.model.dto.ArtistDto;
+import com.server.model.dto.GenreDto;
 import com.server.repository.GenreRepository;
 import com.server.service.data.DataService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,7 +27,25 @@ public class GenreService {
     @Autowired
     private DataService dataService;
 
-    public Genre addGenre(String genreString, MultipartFile image) throws IOException, GenreException, FileFormatException {
+    private ModelMapper modelMapper = new ModelMapper();
+
+    private Genre convertToEntity(GenreDto genreDto) {
+        Genre genre = modelMapper.map(genreDto, Genre.class);
+
+        if (genreDto.getId() != null) {
+            return genreRepository.findById(genreDto.getId()).orElse(genre);
+        } else {
+            return genre;
+        }
+    }
+
+    private GenreDto convertToDto(Genre genre) {
+        GenreDto genreDto = modelMapper.map(genre, GenreDto.class);
+
+        return genreDto;
+    }
+
+    public GenreDto addGenre(String genreString, MultipartFile image) throws IOException, GenreException, FileFormatException {
         ObjectMapper objectMapper = new ObjectMapper();
         Genre genre = objectMapper.readValue(genreString, Genre.class);
 
@@ -35,7 +57,7 @@ public class GenreService {
             genre.setImage(dataService.storeData(image, ".jpg"));
             genre.setCreatedAt(new Date(System.currentTimeMillis()));
 
-            return genreRepository.save(genre);
+            return convertToDto(genreRepository.save(genre));
         }
     }
 
@@ -58,7 +80,7 @@ public class GenreService {
         }
     }
 
-    public Genre updateGenre(Genre genre) {
-        return genreRepository.save(genre);
+    public GenreDto updateGenre(Genre genre) {
+        return convertToDto(genreRepository.save(genre));
     }
 }

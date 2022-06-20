@@ -34,11 +34,16 @@ public class SongService {
     @Autowired
     private DataService dataService;
 
-    private ModelMapper modelMapper;
+    private ModelMapper modelMapper = new ModelMapper();
 
     private Song convertToEntity(SongDto songDto) {
         Song song = modelMapper.map(songDto, Song.class);
-        return song;
+
+        if (songDto.getId() != null) {
+            return songRepository.findById(song.getId()).orElse(song);
+        } else {
+            return song;
+        }
     }
 
     private SongDto convertToDto(Song song) {

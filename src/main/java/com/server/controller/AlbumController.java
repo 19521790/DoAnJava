@@ -53,7 +53,7 @@ public class AlbumController {
                                       @RequestPart(value = "image", required = false) MultipartFile image) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(albumService.updateAlbum(albumString, image));
-        } catch (JsonProcessingException e) {
+        } catch (FileFormatException | IOException e) {
             return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(e.getMessage());
         } catch (AlbumException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());

@@ -1,30 +1,14 @@
 package com.server.model.dto;
 
-import com.server.validation.EmailValidation;
-import com.server.validation.PasswordValidation;
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-@PasswordValidation.PasswordMatches
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserDto {
-    @NotNull(message = "User name cannot be null")
-    @NotEmpty
+    private String id;
     private String name;
-
-    @EmailValidation.ValidEmail
-    @NotNull(message = "User email cannot be null")
-    @NotEmpty
     private String email;
-
-    @NotNull(message = "User password cannot be null")
-    @NotEmpty
     private String password;
     private String matchingPassword;
 }

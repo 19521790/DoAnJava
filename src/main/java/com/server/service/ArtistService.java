@@ -3,13 +3,17 @@ package com.server.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.server.model.Album;
 import com.server.model.Artist;
 import com.server.exception.ArtistException;
 import com.server.exception.FileFormatException;
+import com.server.model.dto.AlbumDto;
+import com.server.model.dto.ArtistDto;
 import com.server.repository.ArtistRepository;
 import com.server.repository.SongRepository;
 import com.server.service.data.DataService;
 import com.server.service.drive.GoogleDriveService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,7 +39,25 @@ public class ArtistService {
 
     private String artistImgFolderId = "1AZozXXRklkIhhNf9I6C0GVb4czPl8X_C";
 
-    public Artist addArtist(String artistString, MultipartFile image) throws ConstraintViolationException, IOException, ArtistException, FileFormatException {
+    private ModelMapper modelMapper = new ModelMapper();
+
+    private Artist convertToEntity(ArtistDto artistDto) {
+        Artist artist = modelMapper.map(artistDto, Artist.class);
+
+        if (artistDto.getId() != null) {
+            return artistRepository.findById(artistDto.getId()).orElse(artist);
+        } else {
+            return artist;
+        }
+    }
+
+    private ArtistDto convertToDto(Artist artist) {
+        ArtistDto artistDto = modelMapper.map(artist, ArtistDto.class);
+
+        return artistDto;
+    }
+
+    public ArtistDto addArtist(String artistString, MultipartFile image) throws ConstraintViolationException, IOException, ArtistException, FileFormatException {
         ObjectMapper objectMapper = new ObjectMapper();
         Artist artist = objectMapper.readValue(artistString, Artist.class);
 
@@ -48,16 +70,16 @@ public class ArtistService {
             artist.setTotalView(0);
             artist.setCreatedAt(new Date(System.currentTimeMillis()));
 
-            return artistRepository.save(artist);
+            return convertToDto(artistRepository.save(artist));
         }
     }
 
-    public Artist findArtistById(String id) throws ArtistException {
+    public ArtistDto findArtistById(String id) throws ArtistException {
         Artist artist = artistRepository.findById(id).orElse(null);
 
         if (artist != null) {
             artist.setSongs(songRepository.findSongByArtist(id));
-            return artist;
+            return convertToDto(artist);
         } else {
             throw new ArtistException(ArtistException.NotFoundException(id));
         }
@@ -67,7 +89,7 @@ public class ArtistService {
         return artistRepository.findAll();
     }
 
-    public Artist updateArtist(String artistString, MultipartFile image) throws ArtistException, JsonProcessingException {
+    public ArtistDto updateArtist(String artistString, MultipartFile image) throws ArtistException, IOException, FileFormatException {
         ObjectMapper objectMapper = new ObjectMapper();
         Artist artist = objectMapper.readValue(artistString, Artist.class);
 
@@ -75,20 +97,13 @@ public class ArtistService {
 
         if (artistToUpdate != null) {
             artistToUpdate.setName(artist.getName() != null ? artist.getName() : artistToUpdate.getName());
-//            artistToUpdate.setIdAlbums(artist.getIdAlbums() != null ? artist.getIdAlbums() : artistToUpdate.getIdAlbums());
-//            artistToUpdate.setIdSongs(artist.getIdSongs() != null ? artist.getIdSongs() : artistToUpdate.getIdSongs());
             artistToUpdate.setImage(artist.getImage() != null ? artist.getImage() : artistToUpdate.getImage());
-            artistToUpdate.setUpdatedAt(new Date(System.currentTimeMillis()));
-
             if (image != null) {
-                com.google.api.services.drive.model.File fileToUpdate = driveService.uploadFile(artist.getName(), image, "image/jpeg", artistImgFolderId);
-                artistToUpdate.setImage(fileToUpdate.getId());
-
-                driveService.deleteLocalFile(image.getOriginalFilename());
-                driveService.deleteFile(artist.getImage());
+                dataService.deleteData(artistToUpdate.getImage());
+                artistToUpdate.setImage(dataService.storeData(image, ".jpg"));
             }
-
-            return artistRepository.save(artistToUpdate);
+            artistToUpdate.setUpdatedAt(new Date(System.currentTimeMillis()));
+            return convertToDto(artistRepository.save(artistToUpdate));
         } else {
             throw new ArtistException(ArtistException.NotFoundException(artist.getId()));
         }
@@ -101,8 +116,8 @@ public class ArtistService {
         if (artist == null) {
             throw new ArtistException(ArtistException.NotFoundException(id));
         } else {
-            dataService.deleteData(id);
-            driveService.deleteFile(artist.getImage());
+            dataService.deleteData(artist.getImage());
+            artistRepository.deleteById(id);
         }
     }
 }

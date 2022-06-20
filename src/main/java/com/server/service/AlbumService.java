@@ -5,10 +5,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.server.model.Album;
 import com.server.exception.AlbumException;
 import com.server.exception.FileFormatException;
+import com.server.model.User;
+import com.server.model.dto.AlbumDto;
+import com.server.model.dto.UserDto;
 import com.server.repository.AlbumRepository;
 import com.server.repository.SongRepository;
 import com.server.service.data.DataService;
 import com.server.service.drive.GoogleDriveService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,7 +38,25 @@ public class AlbumService {
 
     private String albumImgFolderId = "1RPmGzNV-xQ1n3F53tYAlq1P4_40hBxZ7";
 
-    public Album addAlbum(String albumString, MultipartFile image) throws ConstraintViolationException, AlbumException, IOException, FileFormatException {
+    private ModelMapper modelMapper = new ModelMapper();
+
+    private Album convertToEntity(AlbumDto albumDto) {
+        Album album = modelMapper.map(albumDto, Album.class);
+
+        if (albumDto.getId() != null) {
+            return albumRepository.findById(albumDto.getId()).orElse(album);
+        } else {
+            return album;
+        }
+    }
+
+    private AlbumDto convertToDto(Album album) {
+        AlbumDto albumDto = modelMapper.map(album, AlbumDto.class);
+
+        return albumDto;
+    }
+
+    public AlbumDto addAlbum(String albumString, MultipartFile image) throws ConstraintViolationException, AlbumException, IOException, FileFormatException {
         ObjectMapper objectMapper = new ObjectMapper();
         Album album = objectMapper.readValue(albumString, Album.class);
 
@@ -43,20 +65,20 @@ public class AlbumService {
         if (albumOptional != null && albumOptional.getName().equals(album.getName())) {
             throw new AlbumException(AlbumException.AlbumAlreadyExist(album.getName()));
         } else {
-            album.setImage(dataService.storeData(image,".jpg"));
+            album.setImage(dataService.storeData(image, ".jpg"));
             album.setTotalView(0);
             album.setCreatedAt(new Date(System.currentTimeMillis()));
 
-            return albumRepository.save(album);
+            return convertToDto(albumRepository.save(album));
         }
     }
 
-    public Album findAlbumById(String id) throws AlbumException {
+    public AlbumDto findAlbumById(String id) throws AlbumException {
         Album album = albumRepository.findById(id).orElse(null);
 
         if (album != null) {
             album.setSongs(songRepository.findSongByAlbum(id));
-            return album;
+            return convertToDto(album);
         } else {
             throw new AlbumException(AlbumException.NotFoundException(id));
         }
@@ -66,7 +88,7 @@ public class AlbumService {
         return albumRepository.findAll();
     }
 
-    public Album updateAlbum(String albumString, MultipartFile image) throws JsonProcessingException, AlbumException {
+    public AlbumDto updateAlbum(String albumString, MultipartFile image) throws IOException, AlbumException, FileFormatException {
         ObjectMapper objectMapper = new ObjectMapper();
         Album album = objectMapper.readValue(albumString, Album.class);
 
@@ -76,24 +98,18 @@ public class AlbumService {
             albumToUpdate.setName(album.getName() != null ? album.getName() : albumToUpdate.getName());
             albumToUpdate.setArtist(album.getArtist() != null ? album.getArtist() : albumToUpdate.getArtist());
             albumToUpdate.setImage(album.getImage() != null ? album.getImage() : albumToUpdate.getImage());
-//            albumToUpdate.setIdSongs(album.getIdSongs() != null ? album.getIdSongs() : albumToUpdate.getIdSongs());
-            albumToUpdate.setUpdatedAt(new Date(System.currentTimeMillis()));
-
             if (image != null) {
-                com.google.api.services.drive.model.File fileToUpdate = driveService.uploadFile(album.getName(), image, "image/jpeg", albumImgFolderId);
-                albumToUpdate.setImage(fileToUpdate.getId());
-
-                driveService.deleteLocalFile(image.getOriginalFilename());
-                driveService.deleteFile(album.getImage());
+                dataService.deleteData(albumToUpdate.getImage());
+                albumToUpdate.setImage(dataService.storeData(image, ".jpg"));
             }
-
-            return albumRepository.save(albumToUpdate);
+            albumToUpdate.setUpdatedAt(new Date(System.currentTimeMillis()));
+            return convertToDto(albumRepository.save(albumToUpdate));
         } else {
             throw new AlbumException(AlbumException.NotFoundException(album.getId()));
         }
     }
 
-    public void deleteAlbum(String id)throws AlbumException, FileFormatException{
+    public void deleteAlbum(String id) throws AlbumException, FileFormatException {
         Album album = albumRepository.findById(id).orElse(null);
         if (album == null) {
             throw new AlbumException(AlbumException.NotFoundException(id));

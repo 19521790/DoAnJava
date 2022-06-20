@@ -1,19 +1,21 @@
 package com.server.service;
 
-import com.server.model.Album;
-import com.server.model.Artist;
-import com.server.model.Playlist;
-import com.server.model.User;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.server.exception.AlbumException;
 import com.server.exception.ArtistException;
 import com.server.exception.FileFormatException;
 import com.server.exception.UserException;
+import com.server.model.Album;
+import com.server.model.Artist;
+import com.server.model.Playlist;
+import com.server.model.User;
+import com.server.model.dto.UserDto;
 import com.server.repository.AlbumRepository;
 import com.server.repository.ArtistRepository;
 import com.server.repository.PlaylistRepository;
 import com.server.repository.UserRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.server.service.data.DataService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -43,6 +45,24 @@ public class UserService {
 
     @Autowired
     private PlaylistService playlistService;
+
+    private ModelMapper modelMapper = new ModelMapper();
+
+    private User convertToEntity(UserDto userDto) {
+        User user = modelMapper.map(userDto, User.class);
+
+        if (userDto.getId() != null) {
+            return userRepository.findById(user.getId()).orElse(user);
+        }else{
+            return user;
+        }
+    }
+
+    private UserDto convertToDto(User user) {
+        UserDto userDto = modelMapper.map(user, UserDto.class);
+
+        return userDto;
+    }
 
     public String addUser(MultipartFile image, String json) throws ConstraintViolationException, IOException, FileFormatException, UserException {
         ObjectMapper mapper = new ObjectMapper();
@@ -170,9 +190,9 @@ public class UserService {
     public List<Playlist> findPlaylistFromUser(String idUser) throws UserException {
         User user = userRepository.findById(idUser).orElse(null);
 
-        if(user==null){
+        if (user == null) {
             throw new UserException(UserException.NotFoundException(idUser));
-        }else{
+        } else {
             return playlistRepository.findPlaylistFromUser(idUser);
         }
     }
@@ -180,9 +200,9 @@ public class UserService {
     public List<Album> findSavedAlbumFromUser(String idUser) throws UserException {
         User user = userRepository.findById(idUser).orElse(null);
 
-        if(user==null){
+        if (user == null) {
             throw new UserException(UserException.NotFoundException(idUser));
-        }else{
+        } else {
             return userRepository.findSavedAlbumFromUser(idUser);
         }
     }
@@ -190,12 +210,13 @@ public class UserService {
     public List<Artist> findFollowedArtistFromUser(String idUser) throws UserException {
         User user = userRepository.findById(idUser).orElse(null);
 
-        if(user==null){
+        if (user == null) {
             throw new UserException(UserException.NotFoundException(idUser));
-        }else{
+        } else {
             return userRepository.findFollowedArtistFromUser(idUser);
         }
     }
+
     //    public User registerNewUserAccount(UserDto userDto) throws UserException{
 //        if (emailExist(userDto.getEmail())) {
 //            throw new UserException("There is an account with that email address: "
