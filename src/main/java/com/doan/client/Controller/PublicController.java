@@ -547,14 +547,14 @@ public class PublicController {
         moreOptionCardController.initMenu();
         return moreOptionCardController;
     }
-    public static void initOfferPane(AnchorPane offerPane, AnchorPane outsideParent, String link) {
+    public static void initOfferPane(AnchorPane offerPane, AnchorPane outsideParent, String link, Label label) {
         try {
 
             HttpResponse<JsonNode> jsonNodeHttpResponse = Unirest.post(link).asJson();
             try
             {
                 JSONArray artistArray = new JSONArray(jsonNodeHttpResponse.getBody().toString());
-
+                label.setVisible(true);
                 List<RecommendItem> recommendItems = new ArrayList<>();
                 for (int i = 0; i < artistArray.length(); i++) {
                     JSONObject jsonobject = artistArray.getJSONObject(i);
@@ -578,6 +578,7 @@ public class PublicController {
                     offerPane.getChildren().add(0,anchorPane);
                 }
             }catch (Exception e){
+                label.setVisible(false);
                 System.out.println("No recommend for this playlist or user");
             }
         } catch (UnirestException e) {

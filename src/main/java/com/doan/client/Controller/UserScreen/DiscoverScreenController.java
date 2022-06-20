@@ -58,6 +58,7 @@ public class DiscoverScreenController implements Initializable {
     public AnchorPane slideCardOffer;
     public AnchorPane outsideParent;
     public AnchorPane recommend;
+    public Label labelRecommend;
     private SingleSelectionModel<Tab> selectionModel;
     public List<Song> curPodcast;
     public MainScreenController mainScreenController;
@@ -83,7 +84,7 @@ public class DiscoverScreenController implements Initializable {
     }
 
     public void initOffer() {
-        PublicController.initOfferPane(slideCardOffer, outsideParent, "http://localhost:8080/recommend/recommendUser/" + MainScreenController.idUser);
+        PublicController.initOfferPane(slideCardOffer, outsideParent, "http://localhost:8080/recommend/recommendUser/" + MainScreenController.idUser, labelRecommend);
     }
 
 

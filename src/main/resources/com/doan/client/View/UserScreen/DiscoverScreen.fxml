@@ -62,7 +62,7 @@
                               </RadioButton>
                            </children>
                         </AnchorPane>
-                        <Label layoutX="25.0" layoutY="332.0" prefHeight="33.0" prefWidth="299.0" text="Maybe you want to hear">
+                        <Label fx:id="labelRecommend" layoutX="25.0" layoutY="332.0" prefHeight="33.0" prefWidth="299.0" text="Maybe you want to hear">
                            <font>
                               <Font name="Arial Bold" size="20.0" />
                            </font>

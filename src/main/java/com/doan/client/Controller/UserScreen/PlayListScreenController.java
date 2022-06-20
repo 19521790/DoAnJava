@@ -55,6 +55,7 @@ public class PlayListScreenController implements Initializable {
     public List<Song> songs;
     public TextField addSongField;
     public AnchorPane slideCardOffer;
+    public Label lableRecommend;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -105,7 +106,7 @@ public class PlayListScreenController implements Initializable {
             topCardController.setCard(song, curSongs.size());
             topCardController.playListScreenController= this;
             topCardController.moreBtn.setOnAction(actionEvent -> topCardController.showMoreCardPlaylist());
-            playlistTable.getChildren().add(playlistTable.getChildren().size()-1,anchorPane);
+            playlistTable.getChildren().add(playlistTable.getChildren().size()-2,anchorPane);
             searchPane.setVisible(false);
             new Thread(()->{
                 try {
@@ -143,7 +144,7 @@ public class PlayListScreenController implements Initializable {
             imagePlaylist.setImage(new Image(playlist.getImage()));
             playlistName.setText(playlist.getName());
             curSongs= playlist.getSongs();
-            playlistTable.getChildren().remove(0, playlistTable.getChildren().size()-1);
+            playlistTable.getChildren().remove(0, playlistTable.getChildren().size()-2);
             for (int i = 0; i < curSongs.size(); i++) {
                 FXMLLoader cardFxmlLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/Component/TopCard.fxml"));
                 AnchorPane anchorPane = null;
@@ -154,7 +155,7 @@ public class PlayListScreenController implements Initializable {
                     topCardController.setCard(curSongs.get(i), i + 1);
                     topCardController.playListScreenController= this;
                     topCardController.moreBtn.setOnAction(actionEvent -> topCardController.showMoreCardPlaylist());
-                    playlistTable.getChildren().add(playlistTable.getChildren().size()-1,anchorPane);
+                    playlistTable.getChildren().add(playlistTable.getChildren().size()-2,anchorPane);
 
                 } catch (IOException e) {
 
@@ -193,6 +194,6 @@ public class PlayListScreenController implements Initializable {
     }
 
     public void initRecommend(String id) {
-        PublicController.initOfferPane(slideCardOffer, null, "http://localhost:8080/recommend/getSongForPlaylistRecommend/" + id);
+        PublicController.initOfferPane(slideCardOffer, null, "http://localhost:8080/recommend/getSongForPlaylistRecommend/" + id, lableRecommend);
     }
 }
