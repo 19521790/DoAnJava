@@ -4,6 +4,7 @@ import com.server.model.Lyrics;
 import com.server.model.Song;
 import com.server.exception.FileFormatException;
 import com.server.exception.SongException;
+import com.server.model.dto.SongDto;
 import com.server.service.LyricsService;
 import com.server.service.SongService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +59,7 @@ public class SongController {
 
     @GetMapping("/findAllSongs")
     public ResponseEntity findAllSongs() {
-        List<Song> songs = songService.findAllSongs();
+        List<SongDto> songs = songService.findAllSongs();
         return ResponseEntity.status(songs.size() > 0 ? HttpStatus.OK : HttpStatus.NOT_FOUND).body(songs);
     }
 

@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.ConstraintViolationException;
 import java.io.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class SongService {
@@ -83,12 +84,12 @@ public class SongService {
         }
     }
 
-    public List<Song> findAllSongs() {
+    public List<SongDto> findAllSongs() {
         List<Song> songs = songRepository.findAll();
         if (songs.size() > 0) {
-            return songs;
+            return songs.stream().map(song -> modelMapper.map(song, SongDto.class)).collect(Collectors.toList());
         } else {
-            return new ArrayList<Song>();
+            return new ArrayList<SongDto>();
         }
     }
 
