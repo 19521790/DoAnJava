@@ -37,7 +37,6 @@ public class PlaylistService {
     public Playlist addPlaylist(String playlistString, MultipartFile image) throws ConstraintViolationException, IOException, FileFormatException {
         ObjectMapper objectMapper = new ObjectMapper();
         Playlist playlist = objectMapper.readValue(playlistString, Playlist.class);
-
         playlist.setImage(dataService.storeData(image, ".jpg"));
         playlist.setCreatedAt(new Date(System.currentTimeMillis()));
         playlist.setTotalView(0);
@@ -47,15 +46,10 @@ public class PlaylistService {
 
     public void addLikeAndDownloadPlaylist(String idUser) {
         Playlist like = new Playlist();
-        Playlist download = new Playlist();
         like.setName("Like");
-        download.setName("Download");
-
+        like.setIdUser(idUser);
         like.setCreatedAt(new Date(System.currentTimeMillis()));
-        playlistRepository.addPlaylistToUser(idUser, playlistRepository.save(like).getId());
-
-        download.setCreatedAt(new Date(System.currentTimeMillis()));
-        playlistRepository.addPlaylistToUser(idUser, playlistRepository.save(download).getId());
+        playlistRepository.save(like);
     }
 
     public Playlist findPlaylistById(String id) throws PlaylistException {
