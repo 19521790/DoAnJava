@@ -238,6 +238,7 @@ public class LoginFormController implements Initializable {
                                     asynchronousLogin.setVisible(false);
                                     setVisibleLogin(false);
                                     Scene scene = new Scene(root);
+                                    scene.getStylesheets().add(getClass().getResource("/com/doan/client/application.css").toExternalForm());
                                     PublicController.primaryStage.setScene(scene);
                                     Alert alert= new Alert(Alert.AlertType.INFORMATION);
                                     alert.setHeaderText("Welcome Admin");
