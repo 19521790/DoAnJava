@@ -14,4 +14,5 @@ public class AlbumOtd {
     private String id;
     private String name;
     private String image;
+    private double totalView;
 }

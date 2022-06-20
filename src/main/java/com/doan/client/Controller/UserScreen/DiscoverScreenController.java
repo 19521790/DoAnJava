@@ -3,6 +3,7 @@ package com.doan.client.Controller.UserScreen;
 import com.doan.client.Controller.Component.TopCardController;
 import com.doan.client.Controller.PublicController;
 import com.doan.client.Model.Genre;
+import com.doan.client.Model.RecommendItem;
 import com.doan.client.Model.Song;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -56,11 +57,12 @@ public class DiscoverScreenController implements Initializable {
     public HBox hbox2;
     public AnchorPane slideCardOffer;
     public AnchorPane outsideParent;
+    public AnchorPane recommend;
     private SingleSelectionModel<Tab> selectionModel;
     public List<Song> curPodcast;
     public MainScreenController mainScreenController;
     public ArrayList<Song> curListSong;
-
+    public AnchorPane recommendHide;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -81,24 +83,10 @@ public class DiscoverScreenController implements Initializable {
     }
 
     public void initOffer() {
-        try {
-            PublicController publicController = new PublicController();
-            HttpResponse<JsonNode> jsonNodeHttpResponse = Unirest.get("http://localhost:8080/song/findAllSongs").asJson();
-            ObjectMapper mapper = new ObjectMapper();
-            List<Song> songs = null;
-            songs = mapper.readValue(jsonNodeHttpResponse.getBody().toString(), new TypeReference<>() {
-            });
-            for (int i = 0; i < 5; i++) {
-                Song curr_song = songs.get(i);
-                AnchorPane anchorPane = publicController.musicItem(curr_song.getId(), curr_song.getAlbum().getImage(), curr_song.getName(), curr_song.getArtists().get(0).getName(), curr_song.getFile(), "PLAY", outsideParent, i, 590.0);
-                anchorPane.setLayoutX(10 + 180 * i);
-                slideCardOffer.getChildren().add(anchorPane);
-            }
-        } catch (JsonProcessingException | UnirestException e) {
-            throw new RuntimeException(e);
-        }
-
+        PublicController.initOfferPane(slideCardOffer, outsideParent, "http://localhost:8080/recommend/recommendUser/" + MainScreenController.idUser);
     }
+
+
 
     private void initPodcast() {
         try {
@@ -221,5 +209,9 @@ public class DiscoverScreenController implements Initializable {
     public void playAllSong(ActionEvent actionEvent) {
         mainScreenController.songs = curListSong;
         mainScreenController.setMediaPlaying(curListSong.get(0));
+    }
+
+    public void login(ActionEvent actionEvent) {
+        mainScreenController.loginPaneFromHome.setVisible(true);
     }
 }

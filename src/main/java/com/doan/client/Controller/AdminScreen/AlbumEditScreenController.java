@@ -87,12 +87,12 @@ public class AlbumEditScreenController extends PublicAdminMethodController imple
                 String json = null;
                 try {
                     json = ow.writeValueAsString(album);
-                    System.out.println(json);
+
                     HttpResponse<JsonNode> apiResponse = Unirest.post("http://localhost:8080/album/addAlbum").field("album", json).field("image", currentFileImage).asJson();
 
                     if (apiResponse.getStatus() == 200) {
                         Album album1 = new Gson().fromJson(apiResponse.getBody().toString(), Album.class);
-                        AlbumOtd albumOtd = new AlbumOtd(album1.getId(), album1.getName(), album1.getImage());
+                        AlbumOtd albumOtd = new AlbumOtd(album1.getId(), album1.getName(), album1.getImage(), 0.0);
                         List<String> listIdSong = getAddedSong();
                         for (String s : listIdSong) {
                             HttpResponse<JsonNode> songResponse = null;

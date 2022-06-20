@@ -60,7 +60,7 @@ public class EditPlaylistFormController implements Initializable {
         HttpResponse<JsonNode> httpResponse = null;
         try {
             httpResponse = Unirest.put("http://localhost:8080/playlist/updatePlaylist").field("image", file).field("playlist",new Gson().toJson(playlist)).asJson();
-            System.out.println(httpResponse.getBody());
+
             editContainer.setVisible(false);
         } catch (UnirestException e) {
             throw new RuntimeException(e);

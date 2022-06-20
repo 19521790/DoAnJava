@@ -87,7 +87,7 @@ public class MoreOptionCardController implements Initializable {
                 try {
                     HttpResponse<String> stringHttpResponse= null;
                     stringHttpResponse = Unirest.put("http://localhost:8080/playlist/removeSongFromPlaylist?idPlaylist="+ MainScreenController.idPlaylistLike+"&idSong=" + idSong).asString();
-                    System.out.println(stringHttpResponse.getBody());
+
                 } catch (UnirestException e) {
                     throw new RuntimeException(e);
                 }
@@ -152,7 +152,7 @@ public class MoreOptionCardController implements Initializable {
     private void addData(String id) {
         try {
             HttpResponse<String> jsonNodeHttpResponse= Unirest.put("http://localhost:8080/playlist/addSongToPlaylist?idPlaylist="+id+"&idSong=" + idSong).asString();
-            System.out.println(jsonNodeHttpResponse.getBody());
+
         } catch (UnirestException e) {
             throw new RuntimeException(e);
         }

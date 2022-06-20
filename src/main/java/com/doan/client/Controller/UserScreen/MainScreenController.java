@@ -181,7 +181,7 @@ public class MainScreenController implements Initializable {
                 discoverPane = discoverFxmlLoader.load();
                 discoverController = discoverFxmlLoader.getController();
                 discoverController.mainScreenController = this;
-                discoverController.initOffer();
+
                 PublicController.mainScreenController = this;
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -226,7 +226,6 @@ public class MainScreenController implements Initializable {
         new Thread(() -> {
             try {
                 HttpResponse<String> httpResponse = Unirest.put("http://localhost:8080/song/countPlay/" + song.getId()).asString();
-                System.out.println(httpResponse.getBody());
             } catch (UnirestException e) {
                 throw new RuntimeException(e);
             }
@@ -397,7 +396,7 @@ public class MainScreenController implements Initializable {
 
     public void pushScreen(ToggleButton toggleButton) {
         discoverButtonTab.setVisible(false);
-
+        double temp = mainBoard.getVvalue();
         mainBoard.setVvalue(0);
         if (toggleButton.getId().equals("homeBtn")) {
             mainBoard.setContent(loadingPane());
@@ -416,6 +415,7 @@ public class MainScreenController implements Initializable {
         } else if (toggleButton.getId().equals("discoverBtn")) {
             mainBoard.setContent(discoverPane);
             discoverButtonTab.setVisible(true);
+
 
         } else if (toggleButton.getId().equals("downloadBtn")) {
             mainBoard.setContent(loadingPane());
@@ -511,6 +511,7 @@ public class MainScreenController implements Initializable {
                 }).start();
 
             } else {
+                mainBoard.setVvalue(temp);
                 mainBoard.setContent(loadingPane());
                 FXMLLoader playlistFxmlLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/UserScreen/PlaylistScreen.fxml"));
                 FXMLLoader editFxmlLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/Component/EditPlaylistForm.fxml"));
@@ -530,6 +531,7 @@ public class MainScreenController implements Initializable {
                                 parentHomePane.getChildren().add(editPlaylistPane);
                                 editPlaylistPane.setVisible(false);
                                 playListScreenController.initPlaylist(toggleButton.getId());
+                                playListScreenController.initRecommend(toggleButton.getId());
                                 mainBoard.setContent(anchorPane);
                             }
                         });
@@ -628,7 +630,6 @@ public class MainScreenController implements Initializable {
         if (!enableRepeat.get()) {
             if (enableShuffle.get()) {
                 int randomNum = ThreadLocalRandom.current().nextInt(0, songs.size());
-                System.out.println(randomNum);
                 songNumber = randomNum;
             } else {
                 if (songNumber < songs.size() - 1) {
@@ -780,7 +781,6 @@ public class MainScreenController implements Initializable {
             mainVbox.getChildren().remove(button);
             try {
                 HttpResponse<String> httpResponse = Unirest.delete("http://localhost:8080/playlist/deletePlaylist/" + id).asString();
-                System.out.println(httpResponse.getBody());
                 playlistOfUser.removeIf(playlist -> playlist.getId().equals(button.getId()));
                 homeBtn.fire();
             } catch (UnirestException e) {

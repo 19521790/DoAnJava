@@ -112,7 +112,7 @@ public class SongEditScreenController extends PublicAdminMethodController implem
 
                     duration.setText(convertTimePlay(media.getDuration().toSeconds()));
                     currentDuration = media.getDuration().toSeconds();
-                    System.out.println(currentDuration);
+
                 }
             });
 
@@ -168,7 +168,7 @@ public class SongEditScreenController extends PublicAdminMethodController implem
                 String json = null;
                 try {
                     json = ow.writeValueAsString(song);
-                    System.out.println(json);
+
                     HttpResponse<JsonNode> apiResponse = Unirest.post("http://localhost:8080/song/addSong").field("file", fileMusic).field("song", json).asJson();
 
                     if (apiResponse.getStatus() == 200) {
@@ -374,14 +374,14 @@ public class SongEditScreenController extends PublicAdminMethodController implem
                     throw new RuntimeException(e);
                 }
                 Album album = new Gson().fromJson(jsonNodeHttpResponse.getBody().toString(), Album.class);
-                AlbumOtd albumOtd= new AlbumOtd(album.getId(), album.getName(), album.getImage());
+                AlbumOtd albumOtd= new AlbumOtd(album.getId(), album.getName(), album.getImage(),0);
                 song.setGenres(getAddedGenre());
                 song.setAlbum(albumOtd);
                 ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
                 String json = null;
                 try {
                     json = ow.writeValueAsString(song);
-                    System.out.println(json);
+
                     HttpResponse<JsonNode> apiResponse;
                     if (currentEditSong.getFile().equals(fileSongName.getText())) {
 

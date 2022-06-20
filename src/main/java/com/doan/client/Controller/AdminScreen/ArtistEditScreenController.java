@@ -44,7 +44,6 @@ public class ArtistEditScreenController extends PublicAdminMethodController impl
         addSongField.setOnMouseClicked(this::showSearchFormSong);
         initSong();
     }
-
     @Override
     public void resetAllField() {
         addArtistField.setText("");

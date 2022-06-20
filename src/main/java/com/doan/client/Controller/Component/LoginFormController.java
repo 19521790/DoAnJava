@@ -212,6 +212,9 @@ public class LoginFormController implements Initializable {
                                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                                     alert.setHeaderText("Login Success");
                                     alert.setContentText("Hello " + user.getDisplayName());
+                                    mainController.discoverController.initOffer();
+                                    mainController.discoverController.recommend.setVisible(false);
+
                                     loginPanel.setVisible(true);
                                     asynchronousLogin.setVisible(false);
                                     alert.show();

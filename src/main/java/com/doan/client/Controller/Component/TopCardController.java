@@ -16,6 +16,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -119,12 +120,13 @@ public class TopCardController {
                     playListScreenController.playlistTable.getChildren().remove(currentIndex -1);
                     parentAnchorPane.getChildren().remove(layer);
                     moreBtn.getStyleClass().remove("add_opacity");
+                    ToggleButton toggleButton = (ToggleButton)mainScreenController.Group1.getSelectedToggle();
+                    toggleButton.fire();
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setHeaderText("Successful remove");
                     alert.show();
                     try {
                         HttpResponse<String> httpResponse= Unirest.put("http://localhost:8080/playlist/removeSongFromPlaylist?idPlaylist="+playListScreenController.curId+"&idSong=" + curSong.getId()).asString();
-                        System.out.println(httpResponse.getBody().toString());
                     } catch (UnirestException e) {
                     }
                 });

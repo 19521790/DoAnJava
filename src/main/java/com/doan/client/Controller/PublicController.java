@@ -4,6 +4,7 @@ import com.doan.client.Controller.Component.MoreOptionCardController;
 import com.doan.client.Controller.Component.TopCardController;
 import com.doan.client.Controller.UserScreen.ComponentScreenController;
 import com.doan.client.Controller.UserScreen.MainScreenController;
+import com.doan.client.Model.RecommendItem;
 import com.doan.client.Model.Song;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -48,7 +49,7 @@ public class PublicController {
     public static Scene userScene;
     public static Stage primaryStage;
 
-    public ImageView setImageView(double arcWidth, double arcHeight, String imgUrl){
+    public ImageView setImageView(double arcWidth, double arcHeight, String imgUrl) {
         ImageView imageView = new ImageView(new Image(imgUrl));
         imageView.setFitWidth(130);
         imageView.setFitHeight(135);
@@ -66,9 +67,10 @@ public class PublicController {
         imageView.setClip(null);
         imageView.getStyleClass().add("image_shadow");
         imageView.setImage(image);
-        return  imageView;
+        return imageView;
     }
-    public AnchorPane setAnchorPane(double width, double height){
+
+    public AnchorPane setAnchorPane(double width, double height) {
 
         AnchorPane anchorPane = new AnchorPane();
         anchorPane.setPrefWidth(width);
@@ -76,7 +78,8 @@ public class PublicController {
         anchorPane.getStyleClass().add("background_shadow");
         return anchorPane;
     }
-    public Button createButton(FontAwesomeIconView fontAwesomeIconView, String idArtist){
+
+    public Button createButton(FontAwesomeIconView fontAwesomeIconView, String idArtist) {
         fontAwesomeIconView.setSize("20");
         fontAwesomeIconView.setFill(Paint.valueOf("white"));
         Button button = new Button();
@@ -88,26 +91,30 @@ public class PublicController {
         button.getStyleClass().add("button_opacity");
         button.setCursor(Cursor.HAND);
         button.setId(idArtist);
-        return  button;
+        return button;
     }
-    public  Label createLabel(String name){
+
+    public Label createLabel(String name) {
         Label titleLabel = new Label();
         titleLabel.setText(name);
         titleLabel.setLayoutX(22);
         titleLabel.setLayoutY(160);
         titleLabel.getStyleClass().add("label_card");
-        return  titleLabel;
+        return titleLabel;
     }
-    public Label createDescription(String name){
+
+    public Label createDescription(String name) {
         Label descriptionLabel = new Label();
         descriptionLabel.setText(name);
         descriptionLabel.setLayoutX(22);
         descriptionLabel.setLayoutY(181);
+        descriptionLabel.setMaxWidth(100);
         return descriptionLabel;
     }
+
     public AnchorPane musicItem(String idSong, String imgUrl, String title, String description, String file, String type, AnchorPane parentAnchorPane, int position, Double layoutY) {
 
-        AnchorPane anchorPane = setAnchorPane(160,220);
+        AnchorPane anchorPane = setAnchorPane(160, 220);
 
         ImageView imageView = setImageView(10, 10, imgUrl);
         Label titleLabel = createLabel(title);
@@ -140,8 +147,11 @@ public class PublicController {
         more.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-
-                if (mainScreenController.login) {
+                if (idSong == null) {
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setHeaderText("Can't find song!!");
+                    alert.show();
+                } else if (mainScreenController.login) {
                     more.getStyleClass().remove("more_opacity");
                     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/Component/MoreOptionCard.fxml"));
                     try {
@@ -194,16 +204,21 @@ public class PublicController {
 
     private void playMusic(ActionEvent actionEvent) {
         Button button = (Button) actionEvent.getSource();
-        try {
-            HttpResponse<JsonNode> jsonNodeHttpResponse = Unirest.get("http://localhost:8080/song/findSongById/" + button.getId()).asJson();
-            Song song = new Gson().fromJson(jsonNodeHttpResponse.getBody().toString(), Song.class);
-            mainScreenController.setMediaPlaying(song);
-            mainScreenController.playMediaBtn.fire();
-        } catch (UnirestException e) {
-            throw new RuntimeException(e);
+        if (button.getId() == null) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setHeaderText("Can't find song!!");
+            alert.show();
+        } else {
+            try {
+                HttpResponse<JsonNode> jsonNodeHttpResponse = Unirest.get("http://localhost:8080/song/findSongById/" + button.getId()).asJson();
+                Song song = new Gson().fromJson(jsonNodeHttpResponse.getBody().toString(), Song.class);
+                mainScreenController.setMediaPlaying(song);
+                mainScreenController.playMediaBtn.fire();
+            } catch (UnirestException e) {
+                throw new RuntimeException(e);
+            }
+
         }
-
-
     }
 
     public static String setTimePlay(double current) {
@@ -228,7 +243,7 @@ public class PublicController {
 
     public AnchorPane artistItem(String idArtist, String imgUrl, String name) {
         AnchorPane anchorPane = setAnchorPane(160, 220);
-        ImageView imageView= setImageView(130, 130, imgUrl);
+        ImageView imageView = setImageView(130, 130, imgUrl);
         Label titleLabel = createLabel(name);
 
         Label descriptionLabel = createDescription("Artist");
@@ -237,15 +252,15 @@ public class PublicController {
         FontAwesomeIconView fontAwesomeIconView = new FontAwesomeIconView();
         Button button = createButton(fontAwesomeIconView, idArtist);
 
-        if (MainScreenController.artistFollowed!= null){
-            if (MainScreenController.artistFollowed.contains(idArtist)){
+        if (MainScreenController.artistFollowed != null) {
+            if (MainScreenController.artistFollowed.contains(idArtist)) {
                 fontAwesomeIconView.setGlyphName("CHECK");
                 button.setOnAction(actionEvent -> unFollowArtist(idArtist, button, fontAwesomeIconView));
-            }else{
+            } else {
                 fontAwesomeIconView.setGlyphName("PLUS");
                 button.setOnAction(actionEvent -> followArtist(idArtist, button, fontAwesomeIconView));
             }
-        }else{
+        } else {
             fontAwesomeIconView.setGlyphName("PLUS");
             button.setOnAction(actionEvent -> followArtist(idArtist, button, fontAwesomeIconView));
         }
@@ -274,7 +289,7 @@ public class PublicController {
                 } catch (UnirestException e) {
                     throw new RuntimeException(e);
                 }
-                System.out.println(stringHttpResponse.getBody());
+
             }).start();
 
         } else {
@@ -296,11 +311,11 @@ public class PublicController {
             new Thread(() -> {
                 HttpResponse<String> stringHttpResponse = null;
                 try {
-                    stringHttpResponse = Unirest.put("http://localhost:8080/user/unfollowArtist?idUser=" + MainScreenController.idUser + "&idArtist=" +idArtist).asString();
+                    stringHttpResponse = Unirest.put("http://localhost:8080/user/unfollowArtist?idUser=" + MainScreenController.idUser + "&idArtist=" + idArtist).asString();
                     Platform.runLater(new Runnable() {
                         @Override
                         public void run() {
-                            if (mainScreenController.followsBtn.isSelected()){
+                            if (mainScreenController.followsBtn.isSelected()) {
                                 mainScreenController.followsBtn.fire();
                             }
                         }
@@ -309,7 +324,7 @@ public class PublicController {
                 } catch (UnirestException e) {
                     throw new RuntimeException(e);
                 }
-                System.out.println(stringHttpResponse.getBody());
+
             }).start();
         } else {
             mainScreenController.loginPaneFromHome.setVisible(true);
@@ -350,19 +365,19 @@ public class PublicController {
 
 
         FontAwesomeIconView fontAwesomeIconView = new FontAwesomeIconView();
-        Button button =  createButton(fontAwesomeIconView, idAlbum);
+        Button button = createButton(fontAwesomeIconView, idAlbum);
 
-        if (MainScreenController.albumFollowed!= null){
-            if (MainScreenController.albumFollowed.contains(idAlbum)){
-                System.out.println("hello");
+        if (MainScreenController.albumFollowed != null) {
+            if (MainScreenController.albumFollowed.contains(idAlbum)) {
+
                 fontAwesomeIconView.setGlyphName("CHECK");
                 button.setOnAction(actionEvent -> unFollowAlbum(idAlbum, button, fontAwesomeIconView));
-            }else{
+            } else {
 
                 fontAwesomeIconView.setGlyphName("SHARE");
                 button.setOnAction(actionEvent -> followAlbum(idAlbum, button, fontAwesomeIconView));
             }
-        }else{
+        } else {
             fontAwesomeIconView.setGlyphName("SHARE");
             button.setOnAction(actionEvent -> followAlbum(idAlbum, button, fontAwesomeIconView));
         }
@@ -391,7 +406,7 @@ public class PublicController {
                 } catch (UnirestException e) {
                     throw new RuntimeException(e);
                 }
-                System.out.println(stringHttpResponse.getBody());
+
             }).start();
 
         } else {
@@ -418,7 +433,7 @@ public class PublicController {
                     Platform.runLater(new Runnable() {
                         @Override
                         public void run() {
-                            if (mainScreenController.albumBtn.isSelected()){
+                            if (mainScreenController.albumBtn.isSelected()) {
                                 mainScreenController.albumBtn.fire();
                             }
                         }
@@ -426,7 +441,7 @@ public class PublicController {
                 } catch (UnirestException e) {
                     throw new RuntimeException(e);
                 }
-                System.out.println(stringHttpResponse.getBody());
+
             }).start();
         } else {
             mainScreenController.loginPaneFromHome.setVisible(true);
@@ -492,7 +507,7 @@ public class PublicController {
         }
     }
 
-    public  static void addDataToTable(VBox table, List<Song> songs){
+    public static void addDataToTable(VBox table, List<Song> songs) {
         table.getChildren().clear();
         for (int i = 0; i < songs.size(); i++) {
             FXMLLoader cardFxmlLoader = new FXMLLoader(PublicController.class.getResource("/com/doan/client/View/Component/TopCard.fxml"));
@@ -509,7 +524,8 @@ public class PublicController {
             }
         }
     }
-    public static   List<Song> getSongFromJson(HttpResponse<JsonNode> jsonNodeHttpResponse){
+
+    public static List<Song> getSongFromJson(HttpResponse<JsonNode> jsonNodeHttpResponse) {
         JSONArray jsonArray = new JSONArray(jsonNodeHttpResponse.getBody().getObject().get("songs").toString());
         List<Song> songs = new ArrayList<>();
         for (int i = 0; i < jsonArray.length(); i++) {
@@ -519,15 +535,53 @@ public class PublicController {
         }
         return songs;
     }
-    public static MoreOptionCardController createMoreOptionCard(FXMLLoader fxmlLoader, AnchorPane layer, Song curSong){
+
+    public static MoreOptionCardController createMoreOptionCard(FXMLLoader fxmlLoader, AnchorPane layer, Song curSong) {
         MoreOptionCardController moreOptionCardController = fxmlLoader.getController();
         moreOptionCardController.idSong = curSong.getId();
         moreOptionCardController.mainScreenController = mainScreenController;
         moreOptionCardController.layer = layer;
-        moreOptionCardController.file= curSong.getFile();
-        moreOptionCardController.songName= curSong.getName();
+        moreOptionCardController.file = curSong.getFile();
+        moreOptionCardController.songName = curSong.getName();
         moreOptionCardController.setThumpLikeBtn();
         moreOptionCardController.initMenu();
         return moreOptionCardController;
+    }
+    public static void initOfferPane(AnchorPane offerPane, AnchorPane outsideParent, String link) {
+        try {
+
+            HttpResponse<JsonNode> jsonNodeHttpResponse = Unirest.post(link).asJson();
+            try
+            {
+                JSONArray artistArray = new JSONArray(jsonNodeHttpResponse.getBody().toString());
+
+                List<RecommendItem> recommendItems = new ArrayList<>();
+                for (int i = 0; i < artistArray.length(); i++) {
+                    JSONObject jsonobject = artistArray.getJSONObject(i);
+                    RecommendItem recommendItem = new Gson().fromJson(String.valueOf(jsonobject), RecommendItem.class);
+                    recommendItems.add(recommendItem);
+                }
+
+                PublicController publicController = new PublicController();
+
+                for (int i = 0; i < 5; i++) {
+                    RecommendItem recommendItem= recommendItems.get(i);
+                    String[] arrArtist = recommendItem.getArtists().substring(2, recommendItem.getArtists().length() - 2).split("', '");
+                    String finalArtist="";
+                    for (int j = 0; j < arrArtist.length -1; j++){
+                        finalArtist= finalArtist + arrArtist[j] + ", ";
+                    }
+                    finalArtist += arrArtist[arrArtist.length-1];
+
+                    AnchorPane anchorPane = publicController.musicItem(null, "http://localhost:8080/image/unknown.jpg", recommendItem.getName(), finalArtist, null, "PLAY", outsideParent, i, 590.0);
+                    anchorPane.setLayoutX(10 + 180 * i);
+                    offerPane.getChildren().add(0,anchorPane);
+                }
+            }catch (Exception e){
+                System.out.println("No recommend for this playlist or user");
+            }
+        } catch (UnirestException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

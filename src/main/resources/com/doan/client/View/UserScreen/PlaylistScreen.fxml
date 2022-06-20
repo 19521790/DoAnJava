@@ -81,7 +81,14 @@
       </Label>
       <MaterialIconView glyphName="ALARM" layoutX="867.0" layoutY="457.0" size="16" text="" />
       <Separator layoutX="39.0" layoutY="475.0" prefHeight="2.0" prefWidth="935.0" />
-      <VBox fx:id="playlistTable" layoutX="39.0" layoutY="501.0" prefHeight="0.0" prefWidth="939.0" />
+      <VBox fx:id="playlistTable" layoutX="39.0" layoutY="501.0" prefHeight="0.0" prefWidth="939.0">
+         <children>
+            <AnchorPane fx:id="slideCardOffer" prefHeight="240.0" prefWidth="900.0">
+               <VBox.margin>
+                  <Insets bottom="40.0" top="50.0" />
+               </VBox.margin>
+            </AnchorPane>
+         </children></VBox>
       <AnchorPane fx:id="searchPane" layoutX="19.0" layoutY="416.0" prefHeight="234.0" prefWidth="328.0" style="-fx-background-color: white;" visible="false">
          <children>
             <VBox fx:id="searchVboxPane" prefWidth="328.0" />

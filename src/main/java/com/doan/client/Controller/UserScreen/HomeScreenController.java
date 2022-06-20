@@ -243,7 +243,6 @@ public class HomeScreenController implements Initializable {
             new Thread(() -> {
                 try {
                     HttpResponse<String> stringHttpResponse = Unirest.put("http://localhost:8080/user/addLastListenSong?idUser=" + mainScreenController.user.getId() + "&idSong=" + songList.get(0).getId()).asString();
-                    System.out.println(stringHttpResponse);
                 } catch (UnirestException e) {
                     System.out.println("Not found id");
                 }

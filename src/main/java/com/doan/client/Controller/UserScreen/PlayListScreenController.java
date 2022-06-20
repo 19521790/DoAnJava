@@ -3,6 +3,7 @@ package com.doan.client.Controller.UserScreen;
 import com.doan.client.Controller.AdminScreen.AdminScreenController;
 import com.doan.client.Controller.Component.EditPlaylistFormController;
 import com.doan.client.Controller.Component.TopCardController;
+import com.doan.client.Controller.PublicController;
 import com.doan.client.Model.Playlist;
 import com.doan.client.Model.Song;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -53,6 +54,7 @@ public class PlayListScreenController implements Initializable {
     public VBox searchVboxPane;
     public List<Song> songs;
     public TextField addSongField;
+    public AnchorPane slideCardOffer;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -103,12 +105,11 @@ public class PlayListScreenController implements Initializable {
             topCardController.setCard(song, curSongs.size());
             topCardController.playListScreenController= this;
             topCardController.moreBtn.setOnAction(actionEvent -> topCardController.showMoreCardPlaylist());
-            playlistTable.getChildren().add(anchorPane);
+            playlistTable.getChildren().add(playlistTable.getChildren().size()-1,anchorPane);
             searchPane.setVisible(false);
             new Thread(()->{
                 try {
                     HttpResponse<String> jsonNodeHttpResponse= Unirest.put("http://localhost:8080/playlist/addSongToPlaylist?idPlaylist="+ curId +"&idSong=" + song.getId()).asString();
-                    System.out.println(jsonNodeHttpResponse.getBody());
                 } catch (UnirestException e) {
                     throw new RuntimeException(e);
                 }
@@ -142,7 +143,7 @@ public class PlayListScreenController implements Initializable {
             imagePlaylist.setImage(new Image(playlist.getImage()));
             playlistName.setText(playlist.getName());
             curSongs= playlist.getSongs();
-            playlistTable.getChildren().clear();
+            playlistTable.getChildren().remove(0, playlistTable.getChildren().size()-1);
             for (int i = 0; i < curSongs.size(); i++) {
                 FXMLLoader cardFxmlLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/Component/TopCard.fxml"));
                 AnchorPane anchorPane = null;
@@ -153,7 +154,7 @@ public class PlayListScreenController implements Initializable {
                     topCardController.setCard(curSongs.get(i), i + 1);
                     topCardController.playListScreenController= this;
                     topCardController.moreBtn.setOnAction(actionEvent -> topCardController.showMoreCardPlaylist());
-                    playlistTable.getChildren().add(anchorPane);
+                    playlistTable.getChildren().add(playlistTable.getChildren().size()-1,anchorPane);
 
                 } catch (IOException e) {
 
@@ -189,5 +190,9 @@ public class PlayListScreenController implements Initializable {
     public void playAllSong(ActionEvent actionEvent) {
         mainScreenController.songs= (ArrayList<Song>) curSongs;
         mainScreenController.setMediaPlaying(curSongs.get(0));
+    }
+
+    public void initRecommend(String id) {
+        PublicController.initOfferPane(slideCardOffer, null, "http://localhost:8080/recommend/getSongForPlaylistRecommend/" + id);
     }
 }
