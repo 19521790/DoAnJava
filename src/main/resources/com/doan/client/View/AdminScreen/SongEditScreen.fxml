@@ -39,52 +39,62 @@
             <Font size="14.0" />
          </font>
       </Label>
-      <Label layoutX="55.0" layoutY="331.0" maxWidth="100.0" text="Album:">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </Label>
-      <Button layoutX="135.0" layoutY="393.0" mnemonicParsing="false" onAction="#resetSong" style="-fx-background-color: #3b75ff;" text="Reset" textFill="WHITE">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </Button>
-      <Label layoutX="54.0" layoutY="212.0" maxWidth="100.0" text="Artist:">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </Label>
-      <TextField fx:id="addSongArtistField" focusTraversable="false" layoutX="136.0" layoutY="204.0" onKeyTyped="#filterArtist" onMouseClicked="#showSearchFormArtist" prefHeight="36.0" prefWidth="294.0" promptText="Search for artist">
+      <TextField fx:id="yearField" focusTraversable="false" layoutX="135.0" layoutY="205.0" prefHeight="36.0" prefWidth="294.0">
          <font>
             <Font size="15.0" />
          </font>
       </TextField>
-      <TextField fx:id="addGenreField" focusTraversable="false" layoutX="138.0" layoutY="260.0" onKeyTyped="#filterGenre" onMouseClicked="#showSearchFormGenre" prefHeight="36.0" prefWidth="294.0" promptText="Search for Genre">
-         <font>
-            <Font size="15.0" />
-         </font>
-      </TextField>
-      <Label layoutX="54.0" layoutY="268.0" maxWidth="100.0" text="Genre:">
+      <Label layoutX="54.0" layoutY="213.0" maxWidth="100.0" text="Year:">
          <font>
             <Font size="14.0" />
          </font>
       </Label>
-      <Button fx:id="editBtn" layoutX="210.0" layoutY="393.0" mnemonicParsing="false" onAction="#updateAction" style="-fx-background-color: #3b75ff;" text="Save Song" textFill="WHITE" visible="false">
+      <Label layoutX="55.0" layoutY="390.0" maxWidth="100.0" text="Album:">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Button layoutX="135.0" layoutY="452.0" mnemonicParsing="false" onAction="#resetSong" style="-fx-background-color: #3b75ff;" text="Reset" textFill="WHITE">
          <font>
             <Font size="14.0" />
          </font>
       </Button>
-      <Button fx:id="addBtn" layoutX="212.0" layoutY="393.0" mnemonicParsing="false" onAction="#addAction" style="-fx-background-color: #3b75ff;" text="Add Song" textFill="WHITE">
+      <Label layoutX="54.0" layoutY="271.0" maxWidth="100.0" text="Artist:">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <TextField fx:id="addSongArtistField" focusTraversable="false" layoutX="136.0" layoutY="263.0" onKeyTyped="#filterArtist" onMouseClicked="#showSearchFormArtist" prefHeight="36.0" prefWidth="294.0" promptText="Search for artist">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </TextField>
+      <TextField fx:id="addGenreField" focusTraversable="false" layoutX="138.0" layoutY="319.0" onKeyTyped="#filterGenre" onMouseClicked="#showSearchFormGenre" prefHeight="36.0" prefWidth="294.0" promptText="Search for Genre">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </TextField>
+      <Label layoutX="54.0" layoutY="327.0" maxWidth="100.0" text="Genre:">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Button fx:id="editBtn" layoutX="210.0" layoutY="452.0" mnemonicParsing="false" onAction="#updateAction" style="-fx-background-color: #3b75ff;" text="Save Song" textFill="WHITE" visible="false">
          <font>
             <Font size="14.0" />
          </font>
       </Button>
-      <Button fx:id="deleteBtn" layoutX="135.0" layoutY="450.0" mnemonicParsing="false" onAction="#deleteAction" style="-fx-background-color: #3b75ff;" text="Remove Song" textFill="WHITE" visible="false">
+      <Button fx:id="addBtn" layoutX="212.0" layoutY="452.0" mnemonicParsing="false" onAction="#addAction" style="-fx-background-color: #3b75ff;" text="Add Song" textFill="WHITE">
          <font>
             <Font size="14.0" />
          </font>
       </Button>
-      <ScrollPane layoutX="446.0" layoutY="204.0" prefHeight="36.0" prefWidth="542.0" style="-fx-background-color: none;">
+      <Button fx:id="deleteBtn" layoutX="135.0" layoutY="509.0" mnemonicParsing="false" onAction="#deleteAction" style="-fx-background-color: #3b75ff;" text="Remove Song" textFill="WHITE" visible="false">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Button>
+      <ScrollPane layoutX="446.0" layoutY="263.0" prefHeight="36.0" prefWidth="542.0" style="-fx-background-color: none;">
          <content>
             <AnchorPane minHeight="0.0" minWidth="0.0">
                <children>
@@ -93,7 +103,7 @@
             </AnchorPane>
          </content>
       </ScrollPane>
-      <ScrollPane layoutX="448.0" layoutY="260.0" prefHeight="36.0" prefWidth="542.0" style="-fx-background-color: none;">
+      <ScrollPane layoutX="448.0" layoutY="319.0" prefHeight="36.0" prefWidth="542.0" style="-fx-background-color: none;">
          <content>
             <AnchorPane minHeight="0.0" minWidth="0.0">
                <children>
@@ -102,12 +112,12 @@
             </AnchorPane>
          </content>
       </ScrollPane>
-      <TextField fx:id="addAlbumField" focusTraversable="false" layoutX="138.0" layoutY="323.0" onKeyTyped="#filterAlbum" onMouseClicked="#showSearchFormAlbum" prefHeight="36.0" prefWidth="294.0" promptText="Search for Album">
+      <TextField fx:id="addAlbumField" focusTraversable="false" layoutX="138.0" layoutY="382.0" onKeyTyped="#filterAlbum" onMouseClicked="#showSearchFormAlbum" prefHeight="36.0" prefWidth="294.0" promptText="Search for Album">
          <font>
             <Font size="15.0" />
          </font>
       </TextField>
-      <ScrollPane fx:id="scrollPaneSearchGenre" hbarPolicy="NEVER" layoutX="138.0" layoutY="296.0" prefHeight="181.0" prefWidth="294.0" visible="false">
+      <ScrollPane fx:id="scrollPaneSearchGenre" hbarPolicy="NEVER" layoutX="138.0" layoutY="355.0" prefHeight="181.0" prefWidth="294.0" visible="false">
          <content>
             <AnchorPane minHeight="0.0" minWidth="0.0">
                <children>
@@ -116,7 +126,7 @@
             </AnchorPane>
          </content>
       </ScrollPane>
-      <ScrollPane fx:id="scrollPaneSearchArtist" hbarPolicy="NEVER" layoutX="136.0" layoutY="238.0" prefHeight="205.0" prefWidth="293.0" visible="false">
+      <ScrollPane fx:id="scrollPaneSearchArtist" hbarPolicy="NEVER" layoutX="136.0" layoutY="297.0" prefHeight="205.0" prefWidth="293.0" visible="false">
          <content>
             <AnchorPane minHeight="0.0" minWidth="0.0">
                <children>
@@ -125,7 +135,7 @@
             </AnchorPane>
          </content>
       </ScrollPane>
-      <ScrollPane fx:id="scrollPaneSearchAlbum" hbarPolicy="NEVER" layoutX="138.0" layoutY="359.0" prefHeight="181.0" prefWidth="294.0" visible="false">
+      <ScrollPane fx:id="scrollPaneSearchAlbum" hbarPolicy="NEVER" layoutX="138.0" layoutY="418.0" prefHeight="181.0" prefWidth="294.0" visible="false">
          <content>
             <AnchorPane minHeight="0.0" minWidth="0.0">
                <children>
@@ -134,7 +144,7 @@
             </AnchorPane>
          </content>
       </ScrollPane>
-      <ScrollPane layoutX="446.0" layoutY="323.0" prefHeight="36.0" prefWidth="542.0" style="-fx-background-color: none;">
+      <ScrollPane layoutX="446.0" layoutY="382.0" prefHeight="36.0" prefWidth="542.0" style="-fx-background-color: none;">
          <content>
             <AnchorPane minHeight="0.0" minWidth="0.0">
                <children>

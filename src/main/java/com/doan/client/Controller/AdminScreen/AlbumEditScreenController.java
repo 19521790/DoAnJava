@@ -92,7 +92,7 @@ public class AlbumEditScreenController extends PublicAdminMethodController imple
 
                     if (apiResponse.getStatus() == 200) {
                         Album album1 = new Gson().fromJson(apiResponse.getBody().toString(), Album.class);
-                        AlbumOtd albumOtd = new AlbumOtd(album1.getId(), album1.getName(), album1.getImage(), 0.0);
+                        AlbumOtd albumOtd = new AlbumOtd(album1.getId(), album1.getName(), album1.getImage());
                         List<String> listIdSong = getAddedSong();
                         for (String s : listIdSong) {
                             HttpResponse<JsonNode> songResponse = null;

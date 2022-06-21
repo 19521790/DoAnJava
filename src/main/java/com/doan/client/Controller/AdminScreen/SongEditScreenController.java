@@ -30,6 +30,7 @@ import javafx.stage.FileChooser;
 
 import java.io.File;
 import java.net.URL;
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -47,6 +48,7 @@ public class SongEditScreenController extends PublicAdminMethodController implem
     public Button chooseFile;
     public ScrollPane scrollPaneSongName;
     public Double currentDuration;
+    public TextField yearField;
     File fileMusic;
     public Song currentEditSong;
 
@@ -71,7 +73,9 @@ public class SongEditScreenController extends PublicAdminMethodController implem
             Song song = new Gson().fromJson(response.getBody().toString(), Song.class);
             fileSongName.setText(song.getFile());
             duration.setText(convertTimePlay(song.getDuration()));
+            yearField.setText(String.valueOf(song.getYear()));
             currentEditSong= song;
+
             for (int i = listNotAddedArtist.getChildren().size() - 1; i > -1; i--) {
                 Button button1 = (Button) listNotAddedArtist.getChildren().get(i);
                 song.getArtists().forEach(e -> {
@@ -164,6 +168,11 @@ public class SongEditScreenController extends PublicAdminMethodController implem
                 song.setArtists(getListAddedArtist());
                 song.setGenres(getAddedGenre());
                 song.setAlbum(getAddedAlbum());
+                if (yearField.getText().equals("")){
+                    song.setYear(0);
+                }else{
+                    song.setYear(Integer.valueOf(yearField.getText()));
+                }
                 ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
                 String json = null;
                 try {
@@ -331,6 +340,7 @@ public class SongEditScreenController extends PublicAdminMethodController implem
         addSongField.setText("");
         fileSongName.setText("");
         duration.setText("");
+        yearField.setText("");
         listAddedAlbum.getChildren().clear();
         listAddedGenre.getChildren().clear();
         listAddedArtist.getChildren().clear();
@@ -338,6 +348,7 @@ public class SongEditScreenController extends PublicAdminMethodController implem
         listNotAddedGenre.getChildren().clear();
         listNotAddedArtist.getChildren().clear();
         listNotAddedSong.getChildren().clear();
+
         initAlbum();
         initArtist();
         initGenre();
@@ -367,6 +378,12 @@ public class SongEditScreenController extends PublicAdminMethodController implem
                 song.setName(addSongField.getText());
                 song.setDuration(currentEditSong.getDuration());
                 song.setArtists(getListAddedArtist());
+                if (yearField.getText().equals("")){
+                    song.setYear(0);
+                }else{
+                    song.setYear(Integer.parseInt(yearField.getText()));
+
+                }
                 HttpResponse<JsonNode> jsonNodeHttpResponse= null;
                 try {
                     jsonNodeHttpResponse = Unirest.get("http://localhost:8080/album/findAlbumById/"+ getAddedAlbum().getId()).asJson();
@@ -374,14 +391,14 @@ public class SongEditScreenController extends PublicAdminMethodController implem
                     throw new RuntimeException(e);
                 }
                 Album album = new Gson().fromJson(jsonNodeHttpResponse.getBody().toString(), Album.class);
-                AlbumOtd albumOtd= new AlbumOtd(album.getId(), album.getName(), album.getImage(),0);
+                AlbumOtd albumOtd= new AlbumOtd(album.getId(), album.getName(), album.getImage());
                 song.setGenres(getAddedGenre());
                 song.setAlbum(albumOtd);
                 ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
                 String json = null;
                 try {
                     json = ow.writeValueAsString(song);
-
+                    System.out.println(json);
                     HttpResponse<JsonNode> apiResponse;
                     if (currentEditSong.getFile().equals(fileSongName.getText())) {
 

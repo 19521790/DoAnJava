@@ -584,6 +584,10 @@ public class MainScreenController implements Initializable {
             homeBtn.fire();
             PlayListScreenController.isSetUser = false;
             login = false;
+            if (mainVbox.getChildren().size()> 10){
+                mainVbox.getChildren().remove(11, mainVbox.getChildren().size()-1);
+            }
+            homeBtn.fire();
 
         }
 
@@ -929,23 +933,7 @@ public class MainScreenController implements Initializable {
     }
 
 
-    private void goToArtistPage(String id) {
-        try {
-            HttpResponse<JsonNode> jsonNodeHttpResponse = Unirest.get("http://localhost:8080/album/findAlbumById/" + id).asJson();
-            FXMLLoader albumScreenFxmlLoader = new FXMLLoader(getClass().getResource("/com/doan/client/View/UserScreen/ComponentScreen.fxml"));
-            AnchorPane anchorPane = albumScreenFxmlLoader.load();
-            ComponentScreenController albumController = albumScreenFxmlLoader.getController();
-            albumController.mainScreenController = this;
-            mainBoard.setContent(anchorPane);
-            mainBoard.setVvalue(0);
-            albumController.setImageBanner("http://localhost:8080/image/bannerAlbum.jpg");
-            albumController.bannerTitle.setText("Album");
-            albumController.setBanner(jsonNodeHttpResponse);
 
-        } catch (UnirestException | IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     public void shuffeSong(ActionEvent actionEvent) {
         setEnableButton(actionEvent, enableShuffle);

@@ -319,10 +319,11 @@ public class LoginFormController implements Initializable {
                     properties.put("mail.smtp.port", "465");
                     properties.put("mail.smtp.ssl.enable", "true");
                     properties.put("mail.smtp.auth", "true");
+
                     // Get the Session object.// and pass username and password
                     Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
                         protected PasswordAuthentication getPasswordAuthentication() {
-                            return new PasswordAuthentication("TesterSendingMessage@gmail.com", "tester7890@.");
+                            return new PasswordAuthentication("19521790@gm.uit.edu.vn", "long7890");
                         }
                     });
                     // Used to debug SMTP issues
@@ -344,7 +345,6 @@ public class LoginFormController implements Initializable {
                         privateCodeMail = String.format("%.0f", privateCode);
 
                         message.setText("This is your code: " + privateCodeMail);
-
 
                         Transport.send(message);
                         getPasswordBtn.setVisible(true);
