@@ -1,8 +1,8 @@
 package com.doan.client.Controller.UserScreen;
 
 import com.doan.client.Controller.PublicController;
-import com.doan.client.Model.Object.AlbumOtd;
-import com.doan.client.Model.Object.ArtistOtd;
+import com.doan.client.Model.Album;
+import com.doan.client.Model.Artist;
 import com.doan.client.Model.Song;
 import com.google.gson.Gson;
 import com.mashape.unirest.http.HttpResponse;
@@ -23,7 +23,6 @@ import javafx.scene.layout.VBox;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -59,14 +58,14 @@ public class DownloadScreenController implements Initializable {
             song.setName(curName);
             song.setDuration(0);
             song.setFile(file.toURI().toString());
-            AlbumOtd albumOtd = new AlbumOtd();
-            albumOtd.setImage("http://localhost:8080/image/unknown.jpg");
-            ArtistOtd artist = new ArtistOtd();
+            Album album = new Album();
+            album.setImage("http://localhost:8080/image/unknown.jpg");
+            Artist artist = new Artist();
             artist.setName("UNKNOWN");
-            List<ArtistOtd> artists = new ArrayList<>();
+            List<Artist> artists = new ArrayList<>();
             artists.add(artist);
             song.setArtists(artists);
-            song.setAlbum(albumOtd);
+            song.setAlbum(album);
             URL url1 = null;
             try {
                 url1 = new URL("http://www.google.com");

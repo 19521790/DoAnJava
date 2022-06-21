@@ -1,9 +1,7 @@
 package com.doan.client.Controller.AdminScreen;
 
 import com.doan.client.Model.Album;
-
-import com.doan.client.Model.Object.AlbumOtd;
-import com.doan.client.Model.Object.ArtistOtd;
+import com.doan.client.Model.Artist;
 import com.doan.client.Model.Song;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,24 +11,19 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
-
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
-
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-
 import javafx.scene.input.MouseEvent;
-
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.FileChooser;
 
 import java.io.File;
 import java.net.URL;
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -221,16 +214,16 @@ public class SongEditScreenController extends PublicAdminMethodController implem
         }
     }
 
-    public List<ArtistOtd> getListAddedArtist() {
-        List<ArtistOtd> artistOtdList = new ArrayList<>();
+    public List<Artist> getListAddedArtist() {
+        List<Artist> artistList = new ArrayList<>();
         listAddedArtist.getChildren().forEach(e -> {
             Button button = (Button) e;
-            ArtistOtd artistOtd = new ArtistOtd();
-            artistOtd.setName(button.getText());
-            artistOtd.setId(button.getId());
-            artistOtdList.add(artistOtd);
+            Artist artist = new Artist();
+            artist.setName(button.getText());
+            artist.setId(button.getId());
+            artistList.add(artist);
         });
-        return artistOtdList;
+        return artistList;
     }
 
     public List<String> getAddedGenre() {
@@ -242,8 +235,8 @@ public class SongEditScreenController extends PublicAdminMethodController implem
         return genreArrayList;
     }
 
-    public AlbumOtd getAddedAlbum() {
-        AlbumOtd album = new AlbumOtd();
+    public Album getAddedAlbum() {
+        Album album = new Album();
         listAddedAlbum.getChildren().forEach(e -> {
             Button button = (Button) e;
             album.setId(button.getId());
@@ -391,9 +384,9 @@ public class SongEditScreenController extends PublicAdminMethodController implem
                     throw new RuntimeException(e);
                 }
                 Album album = new Gson().fromJson(jsonNodeHttpResponse.getBody().toString(), Album.class);
-                AlbumOtd albumOtd= new AlbumOtd(album.getId(), album.getName(), album.getImage());
+//                AlbumOtd albumOtd= new AlbumOtd(album.getId(), album.getName(), album.getImage());
                 song.setGenres(getAddedGenre());
-                song.setAlbum(albumOtd);
+                song.setAlbum(album);
                 ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
                 String json = null;
                 try {

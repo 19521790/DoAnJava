@@ -2,7 +2,6 @@ package com.doan.client.Controller.AdminScreen;
 
 
 import com.doan.client.Model.Album;
-import com.doan.client.Model.Object.AlbumOtd;
 import com.doan.client.Model.Song;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,19 +14,16 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
-
-import javafx.scene.control.*;
-
+import javafx.scene.control.Alert;
+import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 
-
 import java.io.File;
 import java.net.URL;
-
 import java.util.List;
-
 import java.util.ResourceBundle;
 
 public class AlbumEditScreenController extends PublicAdminMethodController implements Initializable {
@@ -92,7 +88,7 @@ public class AlbumEditScreenController extends PublicAdminMethodController imple
 
                     if (apiResponse.getStatus() == 200) {
                         Album album1 = new Gson().fromJson(apiResponse.getBody().toString(), Album.class);
-                        AlbumOtd albumOtd = new AlbumOtd(album1.getId(), album1.getName(), album1.getImage());
+//                        AlbumOtd albumOtd = new AlbumOtd(album1.getId(), album1.getName(), album1.getImage());
                         List<String> listIdSong = getAddedSong();
                         for (String s : listIdSong) {
                             HttpResponse<JsonNode> songResponse = null;
@@ -100,7 +96,7 @@ public class AlbumEditScreenController extends PublicAdminMethodController imple
                             try {
                                 songResponse = Unirest.get("http://localhost:8080/song/findSongById/" + s + "/false").asJson();
                                 Song song = new Gson().fromJson(songResponse.getBody().getObject().get("song").toString(), Song.class);
-                                song.setAlbum(albumOtd);
+                                song.setAlbum(album1);
                                 String json1 = ow.writeValueAsString(song);
                                 Unirest.put("http://localhost:8080/song/updateSong").field("file", new File("src/main/resources/com/doan/client/Image/null")).field("song", json1).asJson();
                             } catch (UnirestException e) {

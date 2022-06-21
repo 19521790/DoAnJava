@@ -1,8 +1,6 @@
 package com.doan.client.Model;
 
 
-import com.doan.client.Model.Object.AlbumOtd;
-import com.doan.client.Model.Object.ArtistOtd;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,8 +19,8 @@ public class Song {
     private String file;
     private double duration;
     private List<String> genres = new ArrayList<String>();
-    private List<ArtistOtd> artists = new ArrayList<ArtistOtd>();
-    private AlbumOtd album;
+    private List<Artist> artists = new ArrayList<Artist>();
+    private Album album;
     private int weekView;
     private int totalView;
     private int year;
