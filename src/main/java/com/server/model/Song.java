@@ -1,8 +1,6 @@
 package com.server.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.server.model.object.AlbumOtd;
-import com.server.model.object.ArtistOtd;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -32,7 +30,7 @@ public class Song {
     private double duration;
 
     private List<String> genres = new ArrayList<String>();
-    private List<ArtistOtd> artists = new ArrayList<ArtistOtd>();
+    private List<Artist> artists = new ArrayList<Artist>();
 
     @NotNull(message = "Song album cannot be null")
     private Album album;

@@ -1,8 +1,6 @@
 package com.server.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.server.model.Album;
-import com.server.model.object.ArtistOtd;
 import lombok.Data;
 
 import java.util.ArrayList;

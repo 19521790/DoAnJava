@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.server.model.Album;
 import com.server.model.dto.SongDto;
 import com.server.model.Song;
-import com.server.model.object.AlbumOtd;
 import com.server.exception.FileFormatException;
 import com.server.exception.SongException;
 import com.server.repository.AlbumRepository;
@@ -119,6 +118,7 @@ public class SongService {
             songToUpdate.setArtists(song.getArtists() != null ? song.getArtists() : songToUpdate.getArtists());
             songToUpdate.setGenres(song.getGenres() != null ? song.getGenres() : songToUpdate.getGenres());
             songToUpdate.setAlbum(song.getAlbum() != null ? song.getAlbum() : songToUpdate.getAlbum());
+            songToUpdate.setYear(song.getYear());
 
             if (file.getOriginalFilename() != null) {
                 dataService.deleteData(songToUpdate.getFile());

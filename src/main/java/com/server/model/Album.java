@@ -1,7 +1,6 @@
 package com.server.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.server.model.object.ArtistOtd;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
